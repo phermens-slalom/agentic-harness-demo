@@ -17,6 +17,7 @@
 - `agent-template/`: generated agent repository.
 - `deployment/terraform/`: cloud platform provisioning notes and platform contracts.
 - `docs/ROADMAP.md`: backlog, decisions, acceptance criteria, and work log.
+- `site/`: static GitHub Pages project site; see `docs/SITE.md`. Keep it consistent with `docs/`, keep it free of third-party requests, and update the gate replay in `site/assets/js/main.js` if gate outputs change.
 
 ## Invariants
 

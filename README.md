@@ -18,6 +18,7 @@ Start at the [documentation index](docs/README.md): [Vision](docs/VISION.md), [A
 [Examples](docs/EXAMPLES.md), [Glossary](docs/GLOSSARY.md), [Getting started](docs/GETTING_STARTED.md),
 [Contributing](docs/CONTRIBUTING.md), [Security](docs/SECURITY.md), [Decisions](docs/DECISIONS.md),
 [Open questions](docs/OPEN_QUESTIONS.md), [FAQ](docs/FAQ.md) and [Changelog](docs/CHANGELOG.md).
+A visual overview lives in [`site/`](site/) and deploys to GitHub Pages; see [Project site](docs/SITE.md).
 
 ## Layout
 
@@ -36,6 +37,7 @@ Start at the [documentation index](docs/README.md): [Vision](docs/VISION.md), [A
 | `app/harness/adapters/sandbox_builder.py`, `sandbox/` | Optional Cloud Run Job builder | Stub, non-default |
 | `agent-template/` | Source for stage 1 and what each agent repo receives | Starter |
 | `evals/` | Golden tasks, runner, metrics (decision, tier, approver accuracy) | Dry-run working |
+| `site/` | Static project site for GitHub Pages (no build step); published by `.github/workflows/pages.yml` | Working |
 
 ## Prerequisites
 

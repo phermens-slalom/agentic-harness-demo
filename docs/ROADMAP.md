@@ -1346,6 +1346,21 @@ These block or shape items above. Ask them in the session with the agent teams n
 Append-only, newest first. One entry per PR or working session: the date, the item IDs, what changed, and
 anything learned that should change this plan. Never rewrite old entries; correct them with a new one.
 
+### 2026-11-25 · Project site for GitHub Pages
+- Added `site/`: a static, no-build, no-third-party-requests project site (vision, golden workflow, a replay of
+  documented merge-gate outputs, C4 architecture, safety controls and limits, status, comparison with public
+  tools, getting started, FAQ and sources), with hand-drawn SVG art. Added `.github/workflows/pages.yml`
+  (SHA-pinned official Pages actions, least-privilege permissions; zizmor offline run clean),
+  `tests/test_site.py` (links, anchors, assets, no third-party loads, pinned workflow) and `docs/SITE.md`
+  (deploy steps, maintenance rules, sources, image prompts).
+- No policy, gate or node behaviour changed, so no new eval. The site makes claims about the repo, so the
+  tests fail on dead links into the repo.
+- Learned: `docs.github.com`, `adk.dev`, Google Cloud docs, `agents.md`, `c4model.com` and OWASP were not
+  reachable from the build session. Copilot, Vertex AI region and Workload Identity Federation statements
+  are cited to this repo's docs only. TODO(verify) once those hosts are reachable.
+- Open: publishing a Pages site makes it public by default. Whether that is acceptable for a repo marked
+  "not yet reviewed by security" is for the AI governance team and security team (Q-new, not yet numbered).
+
 ### 2026-11-25 · Added M9 (agent intake and authoring) to the roadmap
 - Planning only; no code. Added decisions D-13 to D-15, milestone M9 with items I1 to I7, and open
   questions Q13 to Q16. Scope: an `AgentRequest` issue starts an intake agent that interviews the

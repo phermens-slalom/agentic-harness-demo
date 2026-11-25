@@ -76,6 +76,7 @@ The harness covers **build** and **verify** in code. The bootstrap helps with th
 | `skills/` | A note on where skills come from | Skills are pinned and reviewed |
 | `scripts/` | The end-to-end script and wrappers | A quick check that everything works together |
 | `docs/` | These documents and the roadmap | Explains the repo and tracks the work |
+| `site/` | A static project site (HTML, CSS, SVG) | A visual overview, published to GitHub Pages ([Site](SITE.md)) |
 | `.github/` | The harness's own CI | Lint, type check, tests, evals and security scans on every PR |
 | `AGENTS.md`, `CLAUDE.md` | Rules for coding agents working on this repo | `CLAUDE.md` just imports `AGENTS.md` |
 | `spec.yaml.example` | Example input for the bootstrap | Shows the fields a team fills in |

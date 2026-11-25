@@ -123,6 +123,7 @@ The harness has no database, no web server and no queue today. It is a library a
 | `sandbox/` | An optional builder container and runner | Docker (`node:22-slim`), shell | **Stub** |
 | `skills/` | A note on skills | Markdown | Notes only |
 | `docs/` | Documentation and the roadmap | Markdown | Working |
+| `site/` | The static project site, published to GitHub Pages by `.github/workflows/pages.yml` | HTML, CSS, SVG, a little JavaScript | Working |
 
 How they connect:
 
