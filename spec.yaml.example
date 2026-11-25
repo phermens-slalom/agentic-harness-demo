@@ -1,0 +1,19 @@
+# Example agent spec for `agentic-bootstrap`. Copy to spec.yaml and edit:
+#   cp spec.yaml.example spec.yaml
+#   agentic-bootstrap plan spec.yaml
+#   agentic-bootstrap new spec.yaml ./my-agent
+# Fields are the machine-readable slice of the Mission Brief.
+
+# Required
+name: workshop-assistant        # lowercase slug, 3-41 chars (letters, digits, hyphens)
+division: example-division       # lowercase slug
+owner: a.owner                 # accountable person in the application team
+sponsor: s.sponsor             # business sponsor
+classification: internal       # agent classification, per the CMDB 'AI Agent' CI
+description: Example agent that helps a mechanic with vehicle service history and repair estimates
+
+# Optional (defaults shown)
+location: australia-southeast2 # must be listed in policy/residency.yaml; never "global"
+environments: [nonprod, prod]
+egress_hosts:                  # exact hostnames only: no wildcards, schemes or paths
+  - api.example.com.au

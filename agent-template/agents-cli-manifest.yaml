@@ -1,0 +1,4 @@
+name: __AGENT_NAME__
+agent_directory: agent
+create_params:
+  deployment_target: agent_runtime

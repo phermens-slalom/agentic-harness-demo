@@ -1,0 +1,4 @@
+name: agentic-harness-demo
+agent_directory: app
+create_params:
+  deployment_target: agent_runtime

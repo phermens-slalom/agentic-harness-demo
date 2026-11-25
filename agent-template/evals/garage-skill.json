@@ -1,0 +1,25 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "garage-summary-separates-evidence",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "Write a garage summary. I heard a clunk while turning but haven't inspected the vehicle and don't have its VIN or service history."}]
+      },
+      "rubric_groups": {
+        "garage_summary": {
+          "rubrics": [
+            {
+              "rubric_id": "separates_observations_and_unknowns",
+              "content": {
+                "property": {
+                  "description": "Uses Observed, Unknown, and Next step as headings in that order. Treats the clunk as a reported symptom, identifies missing VIN or service history and an unconfirmed cause, and suggests an inspection or specific check without claiming a diagnosis or booking."
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

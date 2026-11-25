@@ -1,0 +1,18 @@
+# Approved, immutable skill repository revision for the planner and reviewer skills.
+# Skills are behaviour-changing inputs: a skill only loads if its name is listed in routing.yaml AND
+# pinned here with the SHA-256 of its SKILL.md. A floating ref (a branch, a tag, `latest`) is rejected;
+# `revision` must be a full 40-character commit SHA. Changing this file needs AI governance team and Security
+# (it is a harness control, tier 3) plus a behaviour eval for the changed skill.
+# Skill capabilities describe what a skill is *declared* to do. They never grant tools, permissions or
+# egress: those are enforced in code and platform IAM. `instructions` (guidance text only) is the only
+# capability the loader accepts today.
+# TODO(AI governance team, Q7): name the real skills, their source repository and the approved revision.
+source: ""
+revision: ""
+skills: {}
+# Example entry once Q7 is answered:
+#   skills:
+#     planner-style:
+#       sha256: "<64 hex characters of SKILL.md>"
+#       capabilities: [instructions]
+#       owner: ai_governance

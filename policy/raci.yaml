@@ -1,0 +1,16 @@
+# Example build-and-run responsibilities for the agentic SDLC.
+# Adapt these assignments to the organisation adopting the harness.
+# Values: R does it, A accountable (exactly one per row), C consulted, I informed,
+# "approves" = gating approval without accountability.
+roles: [app_team, ai_governance, platform_team, security, product_owner, architecture]
+activities:
+  - {name: "Own and version the platform module, baseline, patterns", app_team: I, ai_governance: R/A, platform_team: approves, security: C, product_owner: "", architecture: C}
+  - {name: "Provision the division agent platform project (PR 1-3)", app_team: R, ai_governance: A, platform_team: approves, security: I, product_owner: C, architecture: ""}
+  - {name: "Security Architecture or design review of every change", app_team: C, ai_governance: C, platform_team: C, security: R/A, product_owner: "", architecture: C}
+  - {name: "Build, test and deploy agents to non-prod", app_team: R/A, ai_governance: C, platform_team: "", security: I, product_owner: I, architecture: C}
+  - {name: "Review agent-repo code (manual now, CLI later)", app_team: R, ai_governance: R/A, platform_team: "", security: "", product_owner: "", architecture: ""}
+  - {name: "Agent identity, registry and egress for own agents", app_team: R, ai_governance: A, platform_team: C, security: C, product_owner: "", architecture: ""}
+  - {name: "Architecture review before production", app_team: C, ai_governance: C, platform_team: "", security: C, product_owner: "", architecture: R/A}
+  - {name: "Production deployment approval", app_team: R, ai_governance: C, platform_team: "", security: "", product_owner: A, architecture: C}
+  - {name: "Handover into support: runbooks, alerts, CMDB", app_team: R, ai_governance: R/A, platform_team: "", security: "", product_owner: I, architecture: ""}
+  - {name: "Day-to-day support, monitoring, incidents", app_team: I, ai_governance: R/A, platform_team: "", security: I, product_owner: "", architecture: ""}

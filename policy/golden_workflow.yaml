@@ -1,0 +1,77 @@
+# The example golden workflow: eight stages grouping 13 onboarding steps.
+# kind: deterministic | non_deterministic | mixed
+# gates: person = a human approves; check = required automated check.
+# nodes: harness workflow nodes (workflow.py) that implement part of the stage.
+stages:
+  - id: frame
+    title: Frame the agent
+    steps: [1]
+    kind: mixed
+    raises: app_team
+    approves: [product_owner, architecture, security]
+    gates: [person]
+    nodes: []
+    harness: Drafts an agent brief and opportunity description; hypotheses become eval criteria.
+  - id: register
+    title: Register identity and support
+    steps: [2, 3]
+    kind: deterministic
+    raises: app_team
+    approves: [ai_governance, security]
+    gates: [person]
+    nodes: []
+    harness: Pre-fills records from the agent brief. Start identity alongside step 1 (lead time).
+  - id: provision
+    title: Provision the project
+    steps: [4, 5, 6, 7]
+    kind: deterministic
+    raises: app_team
+    approves: [ai_governance, platform_team, security]
+    gates: [check, person]
+    nodes: []
+    harness: Bootstrap stage 3 turns a design into three ordered PRs in workload-infrastructure.
+  - id: connect
+    title: Connect to what the agent calls
+    steps: [8, 9]
+    kind: deterministic
+    raises: app_team
+    approves: [ai_governance, security]
+    gates: [person]
+    nodes: []
+    harness: Lists exact egress hosts from the design and raises the small tfvars PR.
+  - id: build
+    title: Build the agent
+    steps: [10]
+    kind: non_deterministic
+    raises: app_team
+    approves: [app_team]
+    gates: []
+    nodes: [route, input_guard, triage, plan, build]
+    harness: Bootstrap stage 1 generates the agent from the template; Copilot builds against AGENTS.md.
+  - id: verify
+    title: Verify
+    steps: [10]
+    kind: deterministic_checks_on_non_deterministic_output
+    raises: app_team
+    approves: [app_team, ai_governance]
+    gates: [check, person]
+    nodes: [review, merge_gate, escalate]
+    harness: Required checks plus evals (no regression), then AI governance approves against its checklist.
+  - id: release
+    title: Release to production
+    steps: [11, 12]
+    kind: mixed
+    raises: app_team
+    approves: [architecture, product_owner, ai_governance]
+    gates: [person]
+    nodes: []
+    harness: Assembles the review pack and draft runbooks from traces, evals and checklist reports.
+  - id: operate
+    title: Operate and learn
+    steps: [13]
+    kind: mixed
+    raises: ai_governance
+    approves: [ai_governance]
+    gates: [person]
+    nodes: []
+    harness: Monitoring skill; proven patterns flow back into the template and skill repository.

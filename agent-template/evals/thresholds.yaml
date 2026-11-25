@@ -1,0 +1,5 @@
+# Thresholds are set by the business owner (__OWNER__), not by the harness or the build team.
+# TODO: agree these before the first production release.
+tool_call_accuracy: null     # share of cases calling the expected tools
+outcome_quality: null        # judge or reviewer score against expected_outcome
+max_regression: 0.0          # allowed drop versus evals/baseline/results.json

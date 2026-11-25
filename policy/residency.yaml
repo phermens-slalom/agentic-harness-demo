@@ -1,0 +1,9 @@
+# Data residency guard. Source: Google docs as reconciled in the platform documentation.
+# Melbourne is the only Australian region for Agent Runtime/Sessions/Agent Gateway;
+# model processing for Australia is listed against Sydney. Global endpoints carry no
+# residency guarantee. Security approves residency for new models/data.
+allowed_locations: [australia-southeast1, australia-southeast2]
+# Not available / not listed in allowed regions (informational, surfaced in errors):
+known_gaps:
+  - "Memory Bank is not supported in australia-southeast2"
+  - "No New Zealand region is listed"

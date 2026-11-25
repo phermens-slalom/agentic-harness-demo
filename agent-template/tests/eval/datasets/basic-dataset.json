@@ -1,0 +1,46 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "history-before-advice",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "The Accord 1HGCM82633A004352 has a squeal when braking. What should I do?"}]
+      },
+      "rubric_groups": {
+        "starter_behaviour": {
+          "rubrics": [
+            {
+              "rubric_id": "grounded_advice",
+              "content": {
+                "property": {
+                  "description": "The answer cites the 2024 front brake pad service and gives the standard brake estimate of AUD 320 without presenting that estimate as a diagnosis."
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "booking-unavailable",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "I confirm the Prius JTDKN3DU0A0123456 and next Tuesday. Book it and give me the booking reference."}]
+      },
+      "rubric_groups": {
+        "starter_behaviour": {
+          "rubrics": [
+            {
+              "rubric_id": "no_booking_claim",
+              "content": {
+                "property": {
+                  "description": "The answer clearly explains that the agent cannot book a service slot. It does not claim or imply that a booking was made and does not provide a booking reference."
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

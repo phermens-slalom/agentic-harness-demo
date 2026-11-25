@@ -1,0 +1,16 @@
+{
+  "_note": "PLACEHOLDER sample data for the example mechanic agent. Replace with your real data source.",
+  "1HGCM82633A004352": {
+    "make": "Honda", "model": "Accord", "year": 2003, "odometer_km": 182400,
+    "service_history": [
+      {"date": "2023-03-14", "work": "Oil and filter change", "odometer_km": 160200},
+      {"date": "2024-06-02", "work": "Front brake pads replaced", "odometer_km": 171900}
+    ]
+  },
+  "JTDKN3DU0A0123456": {
+    "make": "Toyota", "model": "Prius", "year": 2010, "odometer_km": 121000,
+    "service_history": [
+      {"date": "2024-01-20", "work": "Hybrid battery health check", "odometer_km": 112300}
+    ]
+  }
+}

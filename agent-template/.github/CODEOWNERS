@@ -1,0 +1,4 @@
+# TODO: replace these placeholders with the repository's GitHub teams.
+# Example: workload-infrastructure/platform.tf is owned through the platform_team policy.
+*       @your-org/agent-code-owners @your-org/ai_governance
+*.tf    @your-org/platform_team

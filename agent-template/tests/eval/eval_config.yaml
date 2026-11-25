@@ -1,0 +1,6 @@
+metrics_to_run:
+  - final_response_quality
+custom_metrics:
+  - name: final_response_quality
+    metric_spec_parameters:
+      rubric_group_key: starter_behaviour

@@ -1,0 +1,23 @@
+# Python virtual environment, build and cache directories
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+
+# Customised specification files - never commit these!
+.env
+spec.yaml
+
+# End-to-end work and report directories
+.e2e-work/
+e2e-report/
+
+# Eval reports - these are generated during local work and should not be committed
+eval_report.json
+harness-eval-report.json
+
+# In case someone blindly follows the instructions and generates the agent repository locally
+my-agent/

@@ -1,0 +1,15 @@
+# Input guard: deterministic scan of untrusted text before an LLM reads it. Defence in depth only;
+# the merge gate and human approvers stay the control. Scanner: sunglasses (pip install ".[guard]").
+enabled: true
+# shadow = record would-be blocks in the trace and let the task continue (roll-out period);
+# enforce = escalate. Errors/incomplete scans follow fail_closed in both modes only when enforcing.
+mode: shadow
+# true = a scanner crash, a missing install or an incomplete scan blocks the task (escalates).
+fail_closed: true
+# What is scanned, and on which sunglasses channel. Issue text is user-authored; CI output and
+# review feedback are attacker-influenceable text fed back to the builder.
+surfaces:
+  issue: message
+  build_feedback: tool_output
+  # AGENTS.md, the file tree and files read from the repo for the planner and reviewer (R6).
+  repo_context: file

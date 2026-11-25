@@ -1,0 +1,12 @@
+# The reviewer agent applies this checklist; an AI governance reviewer approves against it.
+# Extend via PR; each item should be checkable from the diff.
+items:
+  - Agent code uses Google ADK only; no other agent framework is introduced.
+  - No Model Armor setting is loosened; project templates may only tighten the floor.
+  - Egress hosts are exact (no wildcards) and each has a registry entry.
+  - No new model, region or data store without Security residency approval.
+  - Location is an allowed region; no global endpoints.
+  - No console-only change is assumed; every change is a reviewed PR.
+  - Evals are present for new behaviour and do not regress against baseline.
+  - No secrets, tokens or personal credentials in code, config or prompts.
+  - Runbook and alert changes are included when behaviour or dependencies change.

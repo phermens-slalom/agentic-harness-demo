@@ -1,0 +1,40 @@
+# Issue label -> workflow. Labels are applied by humans or the triage node.
+routes:
+  agent:bugfix: issue_to_merge
+  agent:tests: issue_to_merge
+  agent:deps: issue_to_merge
+# Issues without an agent:* label are ignored by the harness.
+budgets:
+  max_build_iterations: 4
+  # Only enforced when the Builder reports tokens (the Copilot builder reports 0;
+  # the iteration cap is the effective limit there).
+  max_tokens_per_task: 400000
+
+# Read-only repo context given to the planner and reviewer (nodes/repo_context.py). Every cap is
+# enforced before the text reaches a model, and the text is input-guard scanned (surface repo_context).
+# TODO(AI governance team): confirm these caps and the deny list; they are starting values, not agreed limits.
+repo_context:
+  max_files: 5
+  max_bytes_per_file: 20000
+  max_total_bytes: 60000
+  max_tree_entries: 200
+  # Never fed to a model, even when an issue or plan names them. Case-insensitive globs.
+  deny_paths:
+    - ".git/**"
+    - "**/.git/**"
+    - "**/.env"
+    - "**/.env.*"
+    - "**/*.pem"
+    - "**/*.key"
+    - "**/id_rsa*"
+    - "**/*credential*"
+    - "**/*secret*"
+    - "**/*.tfvars"
+    - "**/*.tfstate"
+
+# Skill names to load from skill repository (HARNESS_SKILLS_DIR/<name>/SKILL.md).
+# TODO(AI governance team, Q7): fill with real skill repository skill names; empty lists load nothing.
+# Each name listed here must also be pinned in policy/skills.lock.yaml (revision + SHA-256).
+skills:
+  planner: []
+  reviewer: []

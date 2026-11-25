@@ -1,0 +1,82 @@
+# Deterministic risk tiers and approvals. Reviewed by risk/security, not by an LLM.
+# First matching rule wins per file; the highest tier across changed files decides
+# the PR's tier. Approver ids are the role columns in policy/raci.yaml.
+default_tier: 2
+
+# agent platform rollout phase (see docs/ALIGNMENT_V4.md). Phase 1 = manual AI governance review of every
+# agent PR. Raise this only after the evals show the gate is trustworthy.
+phase: 1
+phases:
+  1: {plan_approval: always, auto_merge_tiers: []}
+  2: {plan_approval: always, auto_merge_tiers: []}
+  3: {plan_approval: tier_at_least_2, auto_merge_tiers: [1]}
+  4: {plan_approval: tier_at_least_2, auto_merge_tiers: [1]}
+
+# Every agent-repo PR needs these two approvals (application team + AI governance).
+base_approvers: [app_team, ai_governance]
+
+# Job names that must be required status checks on the agent repo.
+required_checks: [lint, tests, evals_no_regression, secret_scan]
+
+rules:
+  # These inputs can change future agent behaviour or remove the controls that judge it.
+  # TODO(Security Architecture): sign off on the full control-file boundary.
+  - name: harness-controls
+    tier: 3
+    paths:
+      - ".github/workflows/**"
+      - ".github/CODEOWNERS"
+      - "CODEOWNERS"
+      - ".github/rulesets/**"
+      - ".github/agents/**"
+      - "evals/thresholds*"
+      - "evals/baseline/**"
+      - "policy/**"
+      - "**/SKILL.md"
+      - "**/skills/**"
+      - "**/skills.lock*"
+      - "**/prompts/**"
+      - "**/*prompt*.md"
+      - "**/prompts.py"
+      - "**/*.prompt*"
+    approvers: [ai_governance, security]
+  - name: terraform
+    tier: 3
+    paths: ["**/*.tf"]
+    approvers: [platform_team]
+  # TODO(Security Architecture): confirm which files count as "privileged YAML".
+  - name: privileged-iam-config
+    tier: 3
+    paths: ["**/iam/**", "**/*access*/**", "**/*bindings*.yaml"]
+    approvers: [security]
+  - name: production-deploy
+    tier: 3
+    paths: ["**/prod/**", "**/*prod*.tfvars"]
+    approvers: [product_owner, architecture]
+  - name: sensitive-domains
+    tier: 3
+    paths: ["**/payments/**", "**/auth/**", "**/claims/**", "**/pii/**"]
+    approvers: [security]
+  # Agent steering files: a poisoned edit changes every future agent run, so Security approves (never auto-merge).
+  - name: agent-instructions
+    tier: 3
+    paths: ["**/AGENTS.md", "**/CLAUDE.md", "**/.github/copilot-instructions.md"]
+    approvers: [security]
+  # Executable test config runs on every CI job; must precede tests-and-docs (first match wins).
+  - name: test-config-code
+    tier: 2
+    paths: ["**/conftest.py"]
+  # Dependency changes are a supply-chain risk (typosquat); human approval, not auto-merge.
+  # Was tier 1 (auto-merge at phase 3); raised after the adversarial eval gap-gate-dependency-bump.
+  - name: dependency-manifests
+    tier: 2
+    paths: ["**/requirements*.txt", "**/package.json", "**/package-lock.json", "**/poetry.lock", "**/uv.lock", "**/go.sum"]
+  - name: tests-and-docs
+    tier: 1
+    paths: ["**/test_*.py", "**/*_test.py", "**/*_test.go", "docs/**", "README.md", "CHANGELOG.md"]
+
+limits:
+  # Any PR bigger than this is bumped to at least tier 2 (keeps PRs reviewable).
+  max_lines_for_tier_1: 150
+  # Agent PRs bigger than this are rejected back to planning to be split.
+  max_lines_any_tier: 400

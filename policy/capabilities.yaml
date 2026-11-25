@@ -1,0 +1,39 @@
+# Allowlists for the new-capability detectors in app/harness/nodes/capability_check.py.
+# A detector fires on a *newly added* model, host, region, data store, dependency or tool/protocol
+# integration that is not listed here. A hit only adds approvers: it never auto-approves a change
+# and never blocks one. Reviewed by Security Architecture, not by an LLM.
+# TODO(Security Architecture): agree these starting allowlists. Nothing below grants access; a
+# listed value only means "do not ask for extra review when this appears in a diff".
+
+# Files whose added lines are documentation or test fixtures, not runtime behaviour.
+# Deliberately narrower than "tests/**" (see G2): only per-test files, never conftest.py.
+ignore_paths: ["docs/**", "**/*.md", "**/test_*.py", "**/*_test.py", "**/*_test.go"]
+
+# Model IDs (gemini-*, gemma-*, imagen-*, veo-*, claude-*, text-embedding-*). Empty: every new model is reviewed.
+allowed_models: []
+
+# Exact hostnames. Reserved documentation names and local addresses, plus the Python package index
+# that dependency lock files point at. TODO(Security Architecture): internal package mirror.
+allowed_hosts: [localhost, 127.0.0.1, example.com, example.org, example.net, pypi.org, files.pythonhosted.org]
+
+# Must be a subset of policy/residency.yaml allowed_locations (checked by `validate_policy_directory`).
+allowed_regions: [australia-southeast1, australia-southeast2]
+
+# bigquery | firestore | spanner | gcs | memory_bank. Empty: every new data store is reviewed.
+allowed_data_stores: []
+
+# Pre-approved dependency names (compared case-insensitively, `-`/`_`/`.` equivalent).
+# Empty: every new dependency is reviewed (supply-chain risk).
+allowed_dependencies: []
+
+# Roles (ids from policy/raci.yaml) added to the PR's approvers for each kind of hit.
+# `undeclared_host` applies to hosts missing from the agent spec's egress_hosts; registering a host
+# in the spec does not grant access, so a declared-but-unlisted host still needs `host` approval.
+approvers:
+  model: [security]
+  host: [security]
+  undeclared_host: [security, ai_governance]
+  region: [security]
+  data_store: [security]
+  dependency: [security]
+  tool_protocol: [security, ai_governance]

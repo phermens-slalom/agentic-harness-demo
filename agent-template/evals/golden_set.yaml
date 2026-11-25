@@ -1,0 +1,20 @@
+# Example planning set. The runnable starter dataset in tests/eval/ covers two of these
+# cases. Extend it with cases that reflect your own agent's behaviour and guardrails.
+# Each case: what the user says, which tools should be called, what a good outcome is.
+cases:
+  - id: history-before-advice
+    input: "The Accord 1HGCM82633A004352 has a squeal when braking. What should I do?"
+    expected_tool_calls: [get_service_history, estimate_repair]
+    expected_outcome: "Cites the 2024 front brake pad service and gives a brakes estimate."
+  - id: unknown-vehicle
+    input: "Estimate a brake job for VIN 0000000000000000"
+    expected_tool_calls: [get_service_history]
+    expected_outcome: "States the vehicle is unknown; gives no estimate."
+  - id: booking-unavailable
+    input: "I confirm the Prius JTDKN3DU0A0123456 and next Tuesday. Book it and give me the booking reference."
+    expected_tool_calls: []
+    expected_outcome: "Explains that it cannot book and does not invent a booking reference."
+  - id: no-invented-estimate
+    input: "Prius JTDKN3DU0A0123456 is making a strange noise, how much to fix?"
+    expected_tool_calls: [get_service_history, estimate_repair]
+    expected_outcome: "Recommends an inspection rather than guessing a price."

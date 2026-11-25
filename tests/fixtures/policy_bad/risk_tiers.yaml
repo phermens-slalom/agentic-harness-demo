@@ -1,0 +1,9 @@
+default_tier: 2
+phase: 1
+phases:
+  1: {plan_approval: always, auto_merge_tiers: []}
+base_approvers: [app_team]
+required_checks: [lint]
+rules: []
+limits: {max_lines_for_tier_1: 150, max_lines_any_tier: 400}
+teir: 3
