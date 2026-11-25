@@ -8,6 +8,9 @@ attested releases are planned (S5).
 
 ## 2026-11-25
 
+- **Project site.** A static site in `site/` summarises the vision, workflow, merge gate, architecture, safety,
+  status, getting started and FAQ, with sources and a comparison with public tools. A Pages workflow publishes it
+  and `tests/test_site.py` guards its links. Deploy steps and image prompts are in [Site](SITE.md).
 - **Australian spelling.** Skill provenance trace consumers must use the event name
   `behaviour_artefacts`. Generated evals now use the rubric group `starter_behaviour`,
   and the Makefile cleanup target is `clean-artefacts`.

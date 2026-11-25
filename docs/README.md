@@ -11,6 +11,7 @@ Start here. Pick the path that matches why you are reading.
 | A reviewer or approver | [Vision](VISION.md) → [Security](SECURITY.md) → [Decisions](DECISIONS.md) → [Open questions](OPEN_QUESTIONS.md) |
 | Looking for what is done and what is next | [Roadmap](ROADMAP.md) → [Changelog](CHANGELOG.md) → [Open questions](OPEN_QUESTIONS.md) |
 | Stuck | [FAQ](FAQ.md) |
+| Publishing or updating the project site | [Project site](SITE.md) |
 
 ## All documents
 
@@ -31,6 +32,7 @@ Start here. Pick the path that matches why you are reading.
 | [ADK port notes](ADK_PORT.md) | How the LLM adapters work today, and notes for the ADK 2.0 port |
 | [Alignment summary](ALIGNMENT_V4.md) | What changed from the initial skeleton, and what is still assumed |
 | [Input guard evaluation](SUNGLASSES_EVALUATION.md) | The test of the Sunglasses scanner and the adversarial evals |
+| [Project site](SITE.md) | The static GitHub Pages site: what it holds, how to deploy and update it, sources, image prompts |
 
 ## Rules for these docs
 

@@ -1,0 +1,16 @@
+<svg aria-label="The merge gate, plain code with three signal lights" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 264" width="260" height="264" role="img"><defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5B5BF0"/><stop offset="1" stop-color="#19B6E6"/></linearGradient></defs>
+<g>
+  <ellipse cx="130" cy="252" rx="100" ry="9" fill="#0B1B3A" opacity=".08"/>
+  <rect x="22" y="70" width="42" height="176" rx="14" fill="url(#g3)"/>
+  <rect x="196" y="70" width="42" height="176" rx="14" fill="url(#g3)"/>
+  <rect x="30" y="80" width="10" height="150" rx="5" fill="#fff" opacity=".28"/><rect x="204" y="80" width="10" height="150" rx="5" fill="#fff" opacity=".28"/>
+  <rect x="8" y="30" width="244" height="58" rx="22" fill="#0B1B3A"/>
+  <rect x="8" y="30" width="244" height="58" rx="22" fill="url(#g3)" opacity=".18"/>
+  <circle cx="92" cy="59" r="13" fill="#2FD3A0"/><circle cx="130" cy="59" r="13" fill="#FFB020"/><circle cx="168" cy="59" r="13" fill="#FF6B6B" opacity=".9"/>
+  <circle cx="88" cy="55" r="4" fill="#fff" opacity=".7"/>
+  <text x="130" y="22" text-anchor="middle" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="13" font-weight="700" fill="#0B1B3A" letter-spacing="1.5">MERGE GATE</text>
+  <rect x="64" y="150" width="132" height="96" rx="10" fill="#fff" opacity=".55"/>
+  <path d="M72 246 V160 M96 246 V160 M120 246 V160 M144 246 V160 M168 246 V160 M192 246 V160" stroke="#5B5BF0" stroke-width="3" opacity=".25"/>
+  <text x="130" y="205" text-anchor="middle" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="15" font-weight="700" fill="#0B1B3A">plain code</text>
+  <text x="130" y="224" text-anchor="middle" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="12" fill="#51607C">no LLM</text>
+</g></svg>

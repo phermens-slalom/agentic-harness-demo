@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agentic Harness Demo</title>
+<meta name="description" content="The golden workflow for taking an AI agent live on a cloud platform, as code: reviewable policy, a deterministic merge gate with no LLM, an issue-to-merge loop, a bootstrap CLI and evals that gate the harness itself.">
+<meta property="og:title" content="Agentic Harness Demo">
+<meta property="og:description" content="Let AI write the code. Let plain code decide what merges. Policy, a deterministic merge gate, bootstrap CLI and evals for building agents safely.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#f8faff">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/styles.css">
+<script defer src="assets/js/main.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- Icon sprite (stroke icons, 24px grid) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-frame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3"/></symbol>
+    <symbol id="i-register" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.6-1.6 1.8-2.4 3-2.4s2.4.8 3 2.4M15 10h3M15 13.5h3"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10a4 4 0 0 0 .6-7.96A6 6 0 0 0 6.2 9.2 4.5 4.5 0 0 0 7 18z"/></symbol>
+    <symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v5M15 2v5M6 7h12v4a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.2 8.2-8 9-4.8-.8-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 5-5"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L3 10.5l7 3 3 7z"/><path d="M10 13.5L21 3"/></symbol>
+    <symbol id="i-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></symbol>
+    <symbol id="i-gate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V10a8 8 0 0 1 16 0v11M2.5 21h19M9 21v-6h6v6"/></symbol>
+    <symbol id="i-diff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14h6M12 11v6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M8 7.5h7"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.2c2.6.2 4.2 1.8 4.6 4.3"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-term" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7 9.5l3 2.5-3 2.5M13 15h4"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+    <symbol id="i-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L5 19a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 19l-5-10V3"/><path d="M7.5 15h9"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  </defs>
+</svg>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/img/favicon.svg" alt="" width="30" height="30">Agentic Harness</a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+    <nav class="nav-links" id="nav-links" aria-label="Primary">
+      <a href="#vision">Vision</a>
+      <a href="#how">How it works</a>
+      <a href="#gate">The gate</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#safety">Safety</a>
+      <a href="#status">Status</a>
+      <a href="#compare">Compare</a>
+      <a href="#start">Get started</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn btn-primary btn-sm" href="https://github.com/phermens-slalom/agentic-harness-demo">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ================= HERO ================= -->
+<div class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="pill-row">
+        <span class="pill"><i></i>Early stage · not yet security reviewed</span>
+        <span class="pill ok"><i></i>172 tests · 54 scored golden tasks passing</span>
+      </div>
+      <h1>Let AI write the code. <span class="grad">Let plain code decide what merges.</span></h1>
+      <p class="lede">The golden workflow for taking an agent live on a cloud platform, as code: policy as reviewable data, a deterministic merge gate, an issue-to-merge loop, a staged bootstrap CLI, and evals that gate changes to the harness itself. Humans stay accountable.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#start">Get started <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-ghost" href="#gate">Try the merge gate</a>
+        <a class="btn btn-ghost" href="#architecture">See the architecture</a>
+      </div>
+    </div>
+    <div class="hero-art">
+      <img src="assets/img/hero-scene.svg" width="640" height="540" alt="A builder agent hands a pull request to the merge gate, which has three signal lights and is labelled plain code, no LLM. A person on the far side approves with a green check.">
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="stats" role="list" aria-label="Key facts">
+      <div class="stat" role="listitem"><b>8</b><span>stages in the golden workflow</span></div>
+      <div class="stat" role="listitem"><b>0</b><span>LLM calls in the merge gate</span></div>
+      <div class="stat" role="listitem"><b>3</b><span>risk tiers, set by changed file paths</span></div>
+      <div class="stat" role="listitem"><b>4</b><span>required checks on every agent PR</span></div>
+      <div class="stat" role="listitem"><b>400</b><span>changed lines, then “split the task”</span></div>
+      <div class="stat" role="listitem"><b>2</b><span>allowed regions, both in Australia</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= VISION ================= -->
+<section id="vision">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Vision and purpose</div>
+      <h2>Safe speed for teams building AI agents</h2>
+      <p class="lede">Teams use this harness to build AI agents for deployment on a cloud platform. This repo is the <strong>harness</strong>: the rules, checks and approvals that let an AI coding agent do the build work safely.</p>
+    </div>
+
+    <div class="vision reveal">
+      <blockquote>
+        Humans stay accountable. The harness decides, <em class="grad">with plain code and no AI</em>, whether a change can merge and who must approve it.
+      </blockquote>
+      <div class="cast" aria-label="The cast">
+        <figure><img src="assets/img/character-builder.svg" width="220" height="264" alt="Builder agent" loading="lazy"><figcaption>Builder<br>GitHub Copilot by default</figcaption></figure>
+        <figure><img src="assets/img/character-reviewer.svg" width="220" height="264" alt="Reviewer agent" loading="lazy"><figcaption>Reviewer<br>ADK agent + checklist</figcaption></figure>
+        <figure><img src="assets/img/character-gate.svg" width="260" height="264" alt="Merge gate" loading="lazy"><figcaption>Merge gate<br>plain code</figcaption></figure>
+        <figure><img src="assets/img/character-human.svg" width="200" height="264" alt="Approver" loading="lazy"><figcaption>People<br>accountable</figcaption></figure>
+      </div>
+    </div>
+
+    <table class="compare reveal">
+      <thead><tr><th>Without a harness</th><th>With this harness</th></tr></thead>
+      <tbody>
+        <tr><td><span class="x">✕</span>Each team invents its own path to production.</td><td><span class="v">✓</span>One standard path: the <strong>golden workflow</strong>, eight stages.</td></tr>
+        <tr><td><span class="x">✕</span>An AI builder could change its own tests, rules or permissions.</td><td><span class="v">✓</span>Files that control the gate are always high risk and need people.</td></tr>
+        <tr><td><span class="x">✕</span>Missing evidence can look like a pass.</td><td><span class="v">✓</span>Missing evidence is a stop. The gate <strong>fails closed</strong>.</td></tr>
+        <tr><td><span class="x">✕</span>Approvers are chosen by hand.</td><td><span class="v">✓</span>The gate works out who must approve from the files changed.</td></tr>
+        <tr><td><span class="x">✕</span>Data might leave Australia.</td><td><span class="v">✓</span>Only Australian regions are allowed.</td></tr>
+      </tbody>
+    </table>
+    <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/VISION.md">docs/VISION.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/README.md">README</a>.</p>
+
+    <div class="grid g4" style="margin-top:44px">
+      <div class="card reveal"><div class="icon"><svg aria-hidden="true"><use href="#i-users"/></svg></div><h3>Not a replacement for people</h3><p>Humans approve. The harness only decides <em>what</em> needs approval.</p></div>
+      <div class="card reveal"><div class="icon cy"><svg aria-hidden="true"><use href="#i-layers"/></svg></div><h3>Not the agents themselves</h3><p>Those live in the repos it generates from <code>agent-template/</code>.</p></div>
+      <div class="card reveal"><div class="icon mi"><svg aria-hidden="true"><use href="#i-code"/></svg></div><h3>Not a second framework</h3><p>Google ADK only. A check rejects imports of other agent frameworks.</p></div>
+      <div class="card reveal"><div class="icon am"><svg aria-hidden="true"><use href="#i-send"/></svg></div><h3>Not a deployment tool</h3><p>Deployment is gated and needs explicit human approval.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section id="how" class="alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">How it works</div>
+      <h2>One golden path, eight stages</h2>
+      <p class="lede">The golden workflow is defined as data in <code>policy/golden_workflow.yaml</code>. The harness automates <strong>build</strong> and <strong>verify</strong> in code today. Bootstrap helps with the early stages; the rest are still manual.</p>
+    </div>
+
+    <div class="stages reveal">
+      <div class="stage"><div class="n">01</div><div class="ic"><svg aria-hidden="true"><use href="#i-frame"/></svg></div><b>Frame</b><small>Agent brief; hypotheses become eval criteria</small></div>
+      <div class="stage"><div class="n">02</div><div class="ic"><svg aria-hidden="true"><use href="#i-register"/></svg></div><b>Register</b><small>Identity and support records</small></div>
+      <div class="stage part"><div class="n">03</div><div class="ic"><svg aria-hidden="true"><use href="#i-cloud"/></svg></div><b>Provision</b><small><code>plan</code> lists three ordered PRs</small></div>
+      <div class="stage"><div class="n">04</div><div class="ic"><svg aria-hidden="true"><use href="#i-plug"/></svg></div><b>Connect</b><small>Exact egress hosts only</small></div>
+      <div class="stage auto"><div class="n">05</div><div class="ic"><svg aria-hidden="true"><use href="#i-code"/></svg></div><b>Build</b><small>Template + Copilot, against <code>AGENTS.md</code></small></div>
+      <div class="stage auto"><div class="n">06</div><div class="ic"><svg aria-hidden="true"><use href="#i-shield"/></svg></div><b>Verify</b><small>Checks, evals, checklist, gate</small></div>
+      <div class="stage"><div class="n">07</div><div class="ic"><svg aria-hidden="true"><use href="#i-send"/></svg></div><b>Release</b><small>Review pack and runbooks</small></div>
+      <div class="stage"><div class="n">08</div><div class="ic"><svg aria-hidden="true"><use href="#i-pulse"/></svg></div><b>Operate</b><small>Monitor; patterns flow back</small></div>
+      <div class="stage-bracket" style="grid-column:5 / span 2">automated in code today</div>
+    </div>
+    <div class="stage-legend">
+      <span><i class="dot" style="background:var(--mint)"></i>Automated in code (with fakes)</span>
+      <span><i class="dot" style="background:var(--cyan)"></i>Partly: plan only</span>
+      <span><i class="dot" style="background:var(--indigo-soft);border:1px solid #cfd0ff"></i>Manual today</span>
+    </div>
+
+    <div class="loop reveal">
+      <h3>Inside build and verify: the issue-to-merge loop</h3>
+      <p style="color:var(--muted);margin:6px 0 0">A GitHub issue with an <code>agent:*</code> label goes in. A decision comes out. Issues without a label are ignored.</p>
+      <div class="flow" role="list">
+        <div class="step det" role="listitem"><b>Route</b><span>Label picks the workflow</span></div>
+        <div class="step det" role="listitem"><b>Input guard</b><span>Scan untrusted issue text</span></div>
+        <div class="step ai" role="listitem"><b>Triage</b><span>Gemini via ADK sizes the issue</span></div>
+        <div class="step hum" role="listitem"><b>Plan + approval</b><span>Plan written; a person approves by rule</span></div>
+        <div class="step ai" role="listitem"><b>Build</b><span>Copilot opens a PR; up to 4 rounds</span></div>
+        <div class="step det" role="listitem"><b>Checks</b><span>lint, tests, evals, secret scan</span></div>
+        <div class="step ai" role="listitem"><b>Review</b><span>Reviewer applies the checklist</span></div>
+        <div class="step det" role="listitem"><b>Merge gate</b><span>Plain code returns a decision</span></div>
+        <div class="step hum" role="listitem"><b>People</b><span>Named approvers sign off</span></div>
+      </div>
+      <div class="flow-legend">
+        <span><i class="dot" style="background:var(--mint)"></i>Deterministic code</span>
+        <span><i class="dot" style="background:var(--violet)"></i>AI (Gemini via ADK, or Copilot)</span>
+        <span><i class="dot" style="background:var(--indigo)"></i>Human decision</span>
+      </div>
+      <p class="src">The loop stops and escalates at <strong>4 build rounds</strong> or <strong>400,000 tokens</strong> (<code>policy/routing.yaml</code>). Today it runs against fakes; the real GitHub client is blocked (see <a href="#status">status</a>). Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ARCHITECTURE.md">docs/ARCHITECTURE.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/EXAMPLES.md">docs/EXAMPLES.md</a> (example 12).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= THE GATE ================= -->
+<section id="gate">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">The merge gate</div>
+      <h2>Eight rules, in order. No opinions, no LLM.</h2>
+      <p class="lede">The gate reads paths, diffs and check results, never a model’s opinion. Pick a scenario to see what it answers. Each result below is a documented output of the real code (a replay, not a reimplementation).</p>
+    </div>
+
+    <div class="sim reveal">
+      <div class="scenarios" id="scenarios" role="group" aria-label="Scenarios"></div>
+      <div class="console" aria-live="polite">
+        <div class="bar"><i></i><i></i><i></i><span>merge_gate.decide()</span></div>
+        <div class="out" id="sim-out"></div>
+        <ol class="ladder" id="sim-ladder" aria-label="Gate rules in order"></ol>
+        <div class="foot" id="sim-foot"></div>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:72px">
+      <h3 style="font-size:28px">Risk is derived from file paths</h3>
+      <p class="lede" style="font-size:17px">The first matching rule wins per file and the highest tier across changed files decides the PR. Approvers are the base roles plus whatever the matching rules add.</p>
+    </div>
+    <div class="tiers reveal">
+      <div class="tier" style="--c:var(--mint)"><div class="t">TIER 1 · LOW</div><h3>Tests and docs</h3><ul><li>Plain test modules, <code>docs/**</code>, README</li><li>PRs over 150 lines are bumped to tier 2</li></ul><div class="a">May auto-merge at phase 3 or 4, never at phase 1</div></div>
+      <div class="tier" style="--c:var(--amber)"><div class="t">TIER 2 · DEFAULT</div><h3>Everything else</h3><ul><li>Application code</li><li><code>conftest.py</code> and dependency manifests (supply-chain risk)</li></ul><div class="a">Always needs named approvers</div></div>
+      <div class="tier" style="--c:var(--coral)"><div class="t">TIER 3 · HIGH</div><h3>Controls and sensitive areas</h3><ul><li>Workflows, CODEOWNERS, <code>policy/**</code>, skills, prompts, eval thresholds</li><li>Terraform, IAM, <code>prod</code>, payments, auth, claims, PII</li><li><code>AGENTS.md</code> and other agent steering files</li></ul><div class="a">Never auto-merges</div></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:20px">
+      <div class="card reveal">
+        <h3>Who must approve</h3>
+        <p>Every agent PR needs <span class="role">app_team</span> and <span class="role">ai_governance</span>. Paths add more:</p>
+        <div class="table-scroll"><table class="mini" style="margin-top:6px">
+          <thead><tr><th>Change touches</th><th>Adds</th></tr></thead>
+          <tbody>
+            <tr><td>Gate controls (<code>policy/**</code>, workflows, skills, prompts)</td><td><span class="role">ai_governance</span> <span class="role">security</span></td></tr>
+            <tr><td>Terraform (<code>*.tf</code>)</td><td><span class="role">platform_team</span></td></tr>
+            <tr><td>IAM config, sensitive domains, <code>AGENTS.md</code></td><td><span class="role">security</span></td></tr>
+            <tr><td>Production paths</td><td><span class="role">product_owner</span> <span class="role">architecture</span></td></tr>
+          </tbody></table></div>
+      </div>
+      <div class="card reveal">
+        <h3>Phases: how much the gate trusts itself</h3>
+        <table class="mini" style="margin-top:12px">
+          <thead><tr><th>Phase</th><th>Plan approval</th><th>Auto-merge</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1</strong> (ships here)</td><td>Always</td><td>None</td></tr>
+            <tr><td>2</td><td>Always</td><td>None</td></tr>
+            <tr><td>3 and 4</td><td>Tier 2 and up</td><td>Tier 1 only</td></tr>
+          </tbody></table>
+        <p style="margin-top:14px;font-size:15px;color:var(--muted)">The shipped policy is phase 1: a person reviews every agent PR. The criteria for moving up are still an open question (Q10, draft O3).</p>
+      </div>
+    </div>
+    <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/policy/risk_tiers.yaml">policy/risk_tiers.yaml</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/EXAMPLES.md">docs/EXAMPLES.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/GLOSSARY.md">docs/GLOSSARY.md</a>.</p>
+  </div>
+</section>
+
+<!-- ================= ARCHITECTURE ================= -->
+<section id="architecture" class="alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Architecture</div>
+      <h2>Three levels, one folder per container</h2>
+      <p class="lede">Described in the style of the C4 model: context, containers, components. Every part carries an honest state: <span class="chip w">Working</span> built and tested (may use fakes), <span class="chip s">Stub</span> a placeholder, <span class="chip p">Planned</span> in the roadmap only.</p>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Architecture views">
+      <button class="tab" role="tab" id="t-c1" aria-controls="p-c1" aria-selected="true">C1 · Context</button>
+      <button class="tab" role="tab" id="t-c2" aria-controls="p-c2" aria-selected="false" tabindex="-1">C2 · Containers</button>
+      <button class="tab" role="tab" id="t-c3" aria-controls="p-c3" aria-selected="false" tabindex="-1">C3 · Components</button>
+      <button class="tab" role="tab" id="t-tpl" aria-controls="p-tpl" aria-selected="false" tabindex="-1">Generated agent</button>
+      <button class="tab" role="tab" id="t-tech" aria-controls="p-tech" aria-selected="false" tabindex="-1">Tech stack</button>
+    </div>
+
+    <!-- C1 -->
+    <div class="panel" role="tabpanel" id="p-c1" aria-labelledby="t-c1">
+      <p class="lede">Who and what the harness deals with. It has no database, no web server and no queue today: it is a library and a command-line tool.</p>
+      <div class="c1">
+        <div class="col">
+          <div class="node"><b>Application team</b><small>Fills in the spec, raises issues with an <code>agent:*</code> label, approves PRs</small><span class="chip w">Working (people)</span></div>
+          <div class="node"><b>AI governance</b><small>Approves agent PRs; owns the template and checklist</small><span class="chip w">Working (people)</span></div>
+          <div class="node"><b>Security · platform · product owner · architecture</b><small>Approve the PRs that touch their files. The gate names them.</small><span class="chip w">Working (people)</span></div>
+        </div>
+        <div>
+          <div class="core"><b>Agentic Harness Demo</b><p>Decides whether a change can merge and who must approve it</p></div>
+          <div class="arrow" style="margin-top:12px">▲ policy files (YAML), changed only by reviewed PRs</div>
+        </div>
+        <div class="col">
+          <div class="node"><b>GitHub</b><small>Issues, PRs, checks, Copilot coding agent. Only a fake client exists.</small><span class="chip b">Real client blocked (R2)</span></div>
+          <div class="node"><b>Google Cloud · Vertex AI</b><small>Gemini for triage, planning and review, in allowed regions</small><span class="chip w">Working with fakes</span></div>
+          <div class="node"><b>Generated agent repos</b><small>Output of <code>agentic-bootstrap new</code></small><span class="chip w">Working</span></div>
+          <div class="node"><b><code>workload-infrastructure</code> repo</b><small>Illustrative name; actual layout unconfirmed (Q12)</small><span class="chip s">Plan only</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C2 -->
+    <div class="panel" role="tabpanel" id="p-c2" aria-labelledby="t-c2" hidden>
+      <p class="lede">The main parts, one per top-level folder.</p>
+      <div class="c2">
+        <div class="node big"><code>app/harness/</code><small>The Python package with all the logic: workflow, nodes, adapters, bootstrap CLI. Python, Pydantic, PyYAML, optional ADK and Sunglasses.</small><span class="chip w">Working</span></div>
+        <div class="node big"><code>policy/</code><small>The rules, as data: stages, roles, tiers, routing, regions, checklist, guard, allowlists, skills lock. Strict schemas check every file.</small><span class="chip w">Working · several TODOs need owners</span></div>
+        <div class="node"><code>evals/</code><small>Golden and adversarial tasks plus the runner</small><span class="chip w">Dry-run working</span></div>
+        <div class="node"><code>agent-template/</code><small>The starting repo for one agent</small><span class="chip w">Working starter</span></div>
+        <div class="node"><code>tests/</code><small>pytest, unittest and Hypothesis property tests</small><span class="chip w">Working</span></div>
+        <div class="node"><code>.github/workflows/</code><small>Harness CI: lint, types, tests, evals, Gitleaks, zizmor</small><span class="chip w">Working</span></div>
+        <div class="node"><code>scripts/</code><small>End-to-end script with shell and PowerShell wrappers</small><span class="chip w">Working</span></div>
+        <div class="node"><code>sandbox/</code><small>Optional builder container (Docker, shell)</small><span class="chip s">Stub</span></div>
+        <div class="node"><code>deployment/terraform/</code><small>Notes on how the harness should be hosted. No Terraform files.</small><span class="chip p">Notes only</span></div>
+        <div class="node"><code>skills/</code> · <code>docs/</code><small>Skills guidance and the documentation plus roadmap</small><span class="chip w">Working</span></div>
+      </div>
+      <div class="links">
+        <div><code>app/harness/</code> <strong>reads</strong> <code>policy/</code> on start and checks every file against a strict schema.</div>
+        <div><code>app/harness/</code> <strong>renders</strong> <code>agent-template/</code> when you run <code>agentic-bootstrap new</code>.</div>
+        <div><code>evals/</code> <strong>runs</strong> the workflow and gate on saved tasks and scores the outcomes.</div>
+        <div><code>tests/</code> and <code>evals/</code> both guard <code>policy/</code> and <code>app/harness/nodes/</code>: a change there needs an eval.</div>
+      </div>
+    </div>
+
+    <!-- C3 -->
+    <div class="panel" role="tabpanel" id="p-c3" aria-labelledby="t-c3" hidden>
+      <p class="lede">Inside <code>app/harness/</code>. Ports are the slots; adapters are the real parts that plug into them; nodes are plain code and never call an LLM.</p>
+      <div class="c3">
+        <div class="card">
+          <h4><span class="icon mi" style="width:34px;height:34px;margin:0;border-radius:10px"><svg style="width:18px;height:18px" aria-hidden="true"><use href="#i-gate"/></svg></span>Nodes (no LLM)</h4>
+          <ul>
+            <li><code>merge_gate.py</code> applies the eight rules and returns decision, tier, reason, approvers <span class="chip w">Working</span></li>
+            <li><code>tamper_check.py</code> deleted tests, added skips, fewer asserts, edited baselines or thresholds <span class="chip w">Working</span></li>
+            <li><code>capability_check.py</code> new models, hosts, regions, stores, dependencies, tool links <span class="chip w">Working</span></li>
+            <li><code>input_guard.py</code> scans untrusted text; <code>shadow</code> or <code>enforce</code> <span class="chip w">Working</span></li>
+            <li><code>repo_context.py</code> read-only, capped, guard-scanned context <span class="chip w">Working</span></li>
+            <li><code>diff_parse.py</code> reads a unified diff safely by hunk counts <span class="chip w">Working</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4><span class="icon" style="width:34px;height:34px;margin:0;border-radius:10px"><svg style="width:18px;height:18px" aria-hidden="true"><use href="#i-plug"/></svg></span>Core and adapters</h4>
+          <ul>
+            <li><code>workflow.py</code> <code>IssueToMerge</code>: runs the loop, records a trace, escalates on any adapter or residency error <span class="chip w">Working with fakes</span></li>
+            <li><code>ports.py</code> <code>Triager</code>, <code>Planner</code>, <code>Builder</code>, <code>Reviewer</code>, <code>HumanGate</code>, <code>InputScanner</code>, <code>GitHubPort</code></li>
+            <li><code>adk_agents.py</code> triage, plan, review on ADK with Pydantic output schemas; one retry, then escalate <span class="chip w">Fakes only</span></li>
+            <li><code>copilot_builder.py</code> assigns to Copilot, feeds back checks <span class="chip b">No real client</span></li>
+            <li><code>sunglasses_scanner.py</code> the scanner behind <code>InputScanner</code> <span class="chip w">Working</span></li>
+            <li><code>sandbox_builder.py</code> <span class="chip s">Stub</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4><span class="icon cy" style="width:34px;height:34px;margin:0;border-radius:10px"><svg style="width:18px;height:18px" aria-hidden="true"><use href="#i-term"/></svg></span>Policy loading and bootstrap</h4>
+          <ul>
+            <li><code>policy.py</code>, <code>policy_validation.py</code> strict Pydantic schemas plus cross-file checks <span class="chip w">Working</span></li>
+            <li><code>golden.py</code> checks all 13 steps are covered and each row has one accountable owner <span class="chip w">Working</span></li>
+            <li><code>residency.py</code> allowed locations only; fails closed <span class="chip w">Working</span></li>
+            <li><code>skills.py</code> loads a skill only if pinned by commit and file fingerprint <span class="chip w">Lock is empty</span></li>
+            <li><code>bootstrap/</code> <code>new</code> · <code>check</code> · <code>plan</code> <span class="chip w">Stages 1–2</span> <span class="chip s">3 plan only</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 style="margin:40px 0 4px">The gate’s rule order</h3>
+      <ol class="gate-rules">
+        <li>Over 400 changed lines <span class="res r-rej">reject_to_planning</span></li>
+        <li>A required check failed or is missing <span class="res r-esc">escalated</span></li>
+        <li>CI is not green <span class="res r-esc">escalated</span></li>
+        <li>Tampering found in the diff <span class="res r-esc">escalated</span></li>
+        <li>Reviewer is the builder (lockout) <span class="res r-esc">escalated</span></li>
+        <li>Reviewer did not approve <span class="res r-hum">human_approval</span></li>
+        <li>Tier allows auto-merge and no new capability found <span class="res r-auto">auto_merge</span></li>
+        <li>Otherwise, naming the approvers <span class="res r-hum">human_approval</span></li>
+      </ol>
+      <p class="src">New capabilities add approvers to the result and never turn a decision into a block.</p>
+    </div>
+
+    <!-- Template -->
+    <div class="panel" role="tabpanel" id="p-tpl" aria-labelledby="t-tpl" hidden>
+      <p class="lede">What <code>agentic-bootstrap new</code> hands each team: the same safe starting point, so every agent begins identically. The mechanic-assistant content is placeholder data.</p>
+      <div class="grid g2">
+        <pre class="tree"><span class="c"># a generated agent repo</span>
+agent repo
+├─ agent/          agent.py (ADK root agent) · prompts.py
+│                  tools.py (read-only) · config.py
+│                  telemetry.py (redacted diagnostics)
+│                  skills/ (one pinned skill) · data/
+├─ tests/          unit tests (no cloud) · eval/ starter cases
+├─ evals/          golden_set · thresholds · baseline · holdout
+├─ docs/           mission-brief · runbook
+│                  copilot-agent-environment
+├─ .github/        CODEOWNERS · copilot-instructions.md
+│                  agents/agent-builder.agent.md
+│                  workflows/ agent-checks · copilot-setup-steps
+├─ AGENTS.md       rules for the coding agent
+└─ pyproject.toml · agents-cli-manifest.yaml</pre>
+        <div class="grid" style="gap:14px">
+          <div class="node"><b><code>tools.py</code>: read-only by design</b><small><code>get_service_history</code> and <code>estimate_repair</code> on sample data. No write tools exist: it can read, not book or pay.</small></div>
+          <div class="node"><b><code>telemetry.py</code>: logs the shape, not the content</b><small>Tool name, outcome and timing. Never prompts or arguments.</small></div>
+          <div class="node"><b><code>agent-checks.yml</code>: seven jobs</b><small><code>lint</code>, <code>tests</code>, <code>evals_no_regression</code>, <code>secret_scan</code>, <code>codeql</code>, <code>dependency_review</code>, <code>zizmor</code>. Only <code>evals_no_regression</code> can get cloud identity. It is a <span class="chip s">stub</span> that fails until wired (E3).</small></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tech -->
+    <div class="panel" role="tabpanel" id="p-tech" aria-labelledby="t-tech" hidden>
+      <div class="table-scroll"><table class="mini">
+        <thead><tr><th>Area</th><th>What is used</th></tr></thead>
+        <tbody>
+          <tr><td>Language</td><td>Python <code>&gt;=3.11,&lt;3.14</code>. Local default 3.13. CI tests 3.11, 3.12 and 3.13.</td></tr>
+          <tr><td>Packaging</td><td><code>setuptools</code> (build), <code>uv</code> (installs and lock file), console script <code>agentic-bootstrap</code></td></tr>
+          <tr><td>Runtime packages</td><td><code>pyyaml&gt;=6.0</code>, <code>pydantic&gt;=2.12,&lt;3</code></td></tr>
+          <tr><td>Optional packages</td><td><code>google-adk&gt;=2.12,&lt;3</code> (extra <code>adk</code>), <code>sunglasses==0.6.20</code> (extra <code>guard</code>)</td></tr>
+          <tr><td>Dev packages</td><td><code>pytest</code>, <code>hypothesis</code>, <code>ruff</code>, <code>ty</code>, <code>codespell</code></td></tr>
+          <tr><td>Agent framework</td><td>Google ADK only</td></tr>
+          <tr><td>Models</td><td>Gemini through Vertex AI (AI Studio keys for local use only)</td></tr>
+          <tr><td>Builder</td><td>GitHub Copilot coding agent (default); Cloud Run sandbox is an optional stub</td></tr>
+          <tr><td>CI</td><td>GitHub Actions: lint, type check, tests, dry-run evals, Gitleaks, CodeQL, dependency review, zizmor</td></tr>
+          <tr><td>Config</td><td>YAML in <code>policy/</code>, validated by Pydantic v2 (<code>strict=True</code>, <code>extra="forbid"</code>)</td></tr>
+          <tr><td>Infrastructure</td><td>Terraform; <code>workload-infrastructure</code> and <code>platform.tf</code> are illustrative, unconfirmed names</td></tr>
+        </tbody></table></div>
+    </div>
+    <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ARCHITECTURE.md">docs/ARCHITECTURE.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/pyproject.toml">pyproject.toml</a>.</p>
+  </div>
+</section>
+
+<!-- ================= SAFETY ================= -->
+<section id="safety">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Safety by design</div>
+      <h2>Controls you can read, and limits we state out loud</h2>
+      <p class="lede">The gate never reads a model’s opinion as proof. Traces hold names, counts and sizes, never file content, secrets or full issue bodies.</p>
+    </div>
+
+    <div class="grid g3">
+      <div class="card reveal"><div class="icon mi"><svg aria-hidden="true"><use href="#i-gate"/></svg></div><h3>Plain code decides</h3><p>The merge gate never calls an LLM. It follows rules, so it is predictable and auditable.</p></div>
+      <div class="card reveal"><div class="icon am"><svg aria-hidden="true"><use href="#i-lock"/></svg></div><h3>Fail closed</h3><p>Unknown or missing evidence is a stop, never a pass.</p></div>
+      <div class="card reveal"><div class="icon"><svg aria-hidden="true"><use href="#i-users"/></svg></div><h3>People for the risky parts</h3><p>Files that control the gate or agent behaviour always need people.</p></div>
+      <div class="card reveal"><div class="icon vi"><svg aria-hidden="true"><use href="#i-eye"/></svg></div><h3>Outside text is untrusted</h3><p>Issue text, CI output, repo files and model output are checked before use.</p></div>
+      <div class="card reveal"><div class="icon co"><svg aria-hidden="true"><use href="#i-lock"/></svg></div><h3>No standing secrets</h3><p>GitHub App and Workload Identity Federation. No personal tokens.</p></div>
+      <div class="card reveal"><div class="icon cy"><svg aria-hidden="true"><use href="#i-globe"/></svg></div><h3>Stay in Australia</h3><p><code>australia-southeast1</code> (Sydney) and <code>australia-southeast2</code> (Melbourne). Never <code>global</code>.</p></div>
+    </div>
+
+    <h3 style="margin:56px 0 18px">What each control answers</h3>
+    <div class="threats reveal">
+      <div class="threat"><div class="t"><b>An agent changes the rules that judge it</b>Policy, workflows, thresholds, skills, prompts</div><div class="ar">→</div><div class="c"><b>Tier 3, never auto-merged; AI governance and security approve</b><small>policy/risk_tiers.yaml</small></div></div>
+      <div class="threat"><div class="t"><b>An agent weakens tests to pass</b>Reward hacking</div><div class="ar">→</div><div class="c"><b>Tamper check escalates the PR</b><small>nodes/tamper_check.py</small></div></div>
+      <div class="threat"><div class="t"><b>A quiet new model, host, region, store or dependency</b></div><div class="ar">→</div><div class="c"><b>Capability check adds approvers, withdraws auto-merge</b><small>nodes/capability_check.py</small></div></div>
+      <div class="threat"><div class="t"><b>An agent approves its own work</b></div><div class="ar">→</div><div class="c"><b>Reviewer lockout: escalate</b><small>nodes/merge_gate.py</small></div></div>
+      <div class="threat"><div class="t"><b>Prompt injection in issues, CI output or repo files</b></div><div class="ar">→</div><div class="c"><b>Input guard (Sunglasses), shipped in shadow mode</b><small>nodes/input_guard.py</small></div></div>
+      <div class="threat"><div class="t"><b>A model-chosen file name reads a secret</b></div><div class="ar">→</div><div class="c"><b>No absolute paths, <code>..</code> or deny-listed files; size caps</b><small>nodes/repo_context.py</small></div></div>
+      <div class="threat"><div class="t"><b>A malformed or hostile LLM reply</b></div><div class="ar">→</div><div class="c"><b>Parsed against a schema; one retry, then escalate</b><small>adapters/adk_agents.py</small></div></div>
+      <div class="threat"><div class="t"><b>A changed skill alters behaviour</b></div><div class="ar">→</div><div class="c"><b>Loads only if pinned by commit and file fingerprint</b><small>skills.py · skills.lock.yaml</small></div></div>
+      <div class="threat"><div class="t"><b>Data leaves Australia</b></div><div class="ar">→</div><div class="c"><b>Allowed regions only; Vertex AI backend outside local use</b><small>residency.py</small></div></div>
+      <div class="threat"><div class="t"><b>Agent-written test code mints cloud credentials</b></div><div class="ar">→</div><div class="c"><b>Only the <code>evals_no_regression</code> job gets <code>id-token: write</code></b><small>agent-checks.yml</small></div></div>
+    </div>
+
+    <h3 style="margin:56px 0 6px">What the controls do not cover</h3>
+    <p style="color:var(--muted)">The repo is explicit about these limits. They are listed here because a harness that hides them is not trustworthy.</p>
+    <div class="limits">
+      <div class="limit"><b>The input guard is a pattern matcher.</b> A cheap tripwire, not a defence against a determined attacker. Two phrasings are known to get through.</div>
+      <div class="limit"><b>It ships in <code>shadow</code> mode.</b> A match is recorded but does not stop the task, and a guard must be passed to the workflow.</div>
+      <div class="limit"><b>The capability check sees only the diff.</b> Lock-file-only dependency changes slip past it.</div>
+      <div class="limit"><b>The reviewer does not see the diff yet.</b> It sees file names and repo context (R7 planned).</div>
+      <div class="limit"><b>No audit log or trace export yet.</b> Traces exist in memory per task (O1 planned).</div>
+      <div class="limit"><b>Copilot’s Australian residency is unconfirmed.</b> It could block Copilot as the default builder for classified repos (D-10, Q3).</div>
+      <div class="limit"><b>Not yet reviewed by a security team.</b> Several <code>TODO(owner)</code> markers wait on sign-off.</div>
+      <div class="limit"><b>No security contact is named.</b> Add one before this repo is shared more widely.</div>
+    </div>
+    <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/SECURITY.md">docs/SECURITY.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/SUNGLASSES_EVALUATION.md">docs/SUNGLASSES_EVALUATION.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md">docs/DECISIONS.md</a>.</p>
+  </div>
+</section>
+
+<!-- ================= STATUS ================= -->
+<section id="status" class="alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Where things stand</div>
+      <h2>What is built, what is a stub, what is next</h2>
+      <p class="lede">The <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ROADMAP.md">roadmap</a> is the source of truth. This snapshot is from 25 November 2026.</p>
+    </div>
+    <div class="status">
+      <div class="card w reveal"><h3><span class="chip w">Working</span> built and tested</h3><ul>
+        <li><b>Policy files</b> and their strict validation</li>
+        <li><b>Merge gate</b>, tamper and new-capability detectors, input guard</li>
+        <li><b>Issue-to-merge workflow</b> and <b>ADK adapters</b>, with fakes</li>
+        <li><b>Bootstrap</b> <code>new</code> and <code>check</code>, plus the agent template</li>
+        <li><b>Dry-run evals</b> and the harness CI</li></ul></div>
+      <div class="card s reveal"><h3><span class="chip s">Stub / plan only</span></h3><ul>
+        <li><b>Bootstrap <code>plan</code></b> lists the cloud-project PRs; it does not write Terraform</li>
+        <li><b>Sandbox builder</b>: raises <code>NotImplementedError</code></li>
+        <li><b>Live evals</b>: the mode exits with a stub message</li>
+        <li><b><code>evals_no_regression</code></b> in generated repos fails until wired (E3)</li>
+        <li><b>Skills lock</b> is empty until skill names are agreed (Q7)</li></ul></div>
+      <div class="card p reveal"><h3><span class="chip p">Planned</span> in the roadmap only</h3><ul>
+        <li><b>Real GitHub client</b> on a GitHub App (R2, blocked)</li>
+        <li><b>Gate as a required check</b> and generated CODEOWNERS (R1)</li>
+        <li><b>Durable ADK 2.0 workflow</b>, webhook ingress and queue (R3, R4)</li>
+        <li><b>Model Armor</b>, traces and audit log, live evals (S2, O1, E1)</li>
+        <li><b>Agent intake</b>: an <code>AgentRequest</code> issue builds an agent (M9, planning only)</li></ul></div>
+    </div>
+    <div class="note blocker reveal"><strong>Main blocker (R2).</strong> GitHub’s Copilot issue-assignment API needs a user-to-server token, but the harness rule allows installation tokens only. No client code was added that would look finished but fail. The security team has to decide; several later items wait on it.</div>
+
+    <h3 style="margin:48px 0 0">Milestones</h3>
+    <div class="roadmap">
+      <div class="ms"><b>M0</b><span>Make the gate trustworthy</span><small>Complete</small></div>
+      <div class="ms"><b>M1</b><span>Real GitHub, enforced</span><small>S4 done · R2 blocked</small></div>
+      <div class="ms"><b>M2</b><span>Durable runtime</span><small>R6 done · R3–R5 todo</small></div>
+      <div class="ms"><b>M3</b><span>Security: use what exists</span><small>S1, S3 done · S2, S5, D1 open</small></div>
+      <div class="ms"><b>M4</b><span>Observability and audit</span><small>Planned</small></div>
+      <div class="ms"><b>M5</b><span>Evals that measure agents</span><small>First E3 slice · E1 blocked</small></div>
+      <div class="ms"><b>M6</b><span>Golden-workflow coverage</span><small>Planned · W2 blocked</small></div>
+      <div class="ms"><b>M7</b><span>Hygiene</span><small>H1 done</small></div>
+      <div class="ms"><b>M8</b><span>Agent ready for pilot</span><small>A1–A3 done · live evals todo</small></div>
+      <div class="ms"><b>M9</b><span>Agent intake and authoring</span><small>Planning only, no code</small></div>
+    </div>
+    <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CHANGELOG.md">docs/CHANGELOG.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/OPEN_QUESTIONS.md">docs/OPEN_QUESTIONS.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md">docs/DECISIONS.md</a> (fifteen decisions, D-01 to D-15).</p>
+  </div>
+</section>
+
+<!-- ================= COMPARE ================= -->
+<section id="compare">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Where this sits</div>
+      <h2>A governance layer around builders, not another builder</h2>
+      <p class="lede">Most tools nearby either <em>write</em> code, <em>decide</em> policy in general, or <em>scan</em> for one kind of problem. This harness composes them around one narrow job: deciding what an AI-written PR needs before it merges. The descriptions below paraphrase each project’s own README.</p>
+    </div>
+    <div class="tbl-wrap reveal">
+      <table class="tbl">
+        <thead><tr><th>Tool</th><th>What it is, in its own words</th><th>Relationship to this harness</th></tr></thead>
+        <tbody>
+          <tr><td colspan="3" class="cat">Builders: they write the code</td></tr>
+          <tr><td><a href="https://github.com/All-Hands-AI/OpenHands">OpenHands</a></td><td>A self-hosted developer control centre for coding agents and automations (MIT). Sandboxing is optional; Docker is one option.</td><td class="rel">A builder. The harness is a governance layer a builder’s PR would pass through.</td></tr>
+          <tr><td><a href="https://github.com/openai/codex">Codex CLI</a></td><td>“A coding agent from OpenAI that runs locally on your computer.”</td><td class="rel">A builder. Not integrated here.</td></tr>
+          <tr><td><a href="https://github.com/anthropics/claude-code-action">claude-code-action</a></td><td>Anthropic’s Claude Code action for GitHub PRs and issues. Runs on your own runner; model calls can go to Anthropic, Bedrock, Vertex AI or Foundry.</td><td class="rel">A builder. Not integrated here. The default builder in this harness is GitHub Copilot’s coding agent, behind a <code>Builder</code> port.</td></tr>
+          <tr><td colspan="3" class="cat">Policy engines: decide, in general</td></tr>
+          <tr><td><a href="https://github.com/open-policy-agent/opa">Open Policy Agent</a></td><td>A general-purpose policy engine; policies are written in Rego. CNCF graduated; Apache-2.0.</td><td class="rel">General purpose, where the harness’s gate is narrow and purpose-built, with policy as strict-schema YAML. The two could complement each other; this repo has no OPA integration.</td></tr>
+          <tr><td><a href="https://github.com/cedar-policy/cedar">Cedar</a></td><td>A language for writing and enforcing authorisation policies, kept separate from application code (Apache-2.0).</td><td class="rel">Same note as OPA. The gate’s outputs are merge decisions rather than authorisation checks.</td></tr>
+          <tr><td colspan="3" class="cat">Agent tooling: what the harness builds on</td></tr>
+          <tr><td><a href="https://github.com/google/adk-python">Google ADK</a></td><td>“An open-source, code-first Python framework for building, evaluating, and deploying sophisticated AI agents” (Apache-2.0).</td><td class="rel"><strong>Used.</strong> The only agent framework allowed, for the triage, plan and review roles and for generated agents.</td></tr>
+          <tr><td><a href="https://github.com/google/agents-cli">agents-cli</a></td><td>A CLI and skills that help coding assistants build, evaluate and deploy agents on Google Cloud (Apache-2.0).</td><td class="rel"><strong>Used</strong> by generated agents for lint, evals, scaffold and deploy.</td></tr>
+          <tr><td colspan="3" class="cat">Scanners: narrow, single-purpose checks</td></tr>
+          <tr><td><a href="https://github.com/gitleaks/gitleaks">Gitleaks</a></td><td>Detects hardcoded secrets such as passwords, API keys and tokens (MIT).</td><td class="rel"><strong>Used</strong> in CI, installed from a pinned release and checked by SHA-256.</td></tr>
+          <tr><td><a href="https://github.com/zizmorcore/zizmor">zizmor</a></td><td>Static analysis for CI/CD, including GitHub Actions (MIT).</td><td class="rel"><strong>Used</strong> in CI and in the template’s workflows.</td></tr>
+          <tr><td><a href="https://github.com/sunglasses-dev/sunglasses">Sunglasses</a></td><td>A local, open source (MIT) input scanner for AI agents, in beta. Says a clean result is “a confidence floor and not a guarantee”.</td><td class="rel"><strong>Used</strong> as a cheap tripwire in the input guard, pinned to <code>0.6.20</code>. Model Armor is proposed as the main scanner.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="src">Read on 25 November 2026 from each project’s repository page. This maps roles; it is <strong>not</strong> a feature benchmark, and we have not measured these tools against each other. Other works on policy-as-code for AI: <a href="https://www.cncf.io/blog/2025/08/12/pac-and-ai/">CNCF, “PaC and AI”</a> (found by search, not reviewed in full).</p>
+  </div>
+</section>
+
+<!-- ================= GET STARTED ================= -->
+<section id="start" class="alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Get started</div>
+      <h2>From clone to a generated agent in minutes</h2>
+      <p class="lede">You do not need cloud access to run the tests or the dry-run evals. Local runs can use an AI Studio key; cloud features need Google Cloud sign-in.</p>
+    </div>
+
+    <div class="steps">
+      <div class="gs reveal"><div>
+        <h3>Check the prerequisites</h3>
+        <p>The harness itself needs Python and <code>uv</code>. You only need <code>agents-cli</code> (and Node.js) for generated agent repos.</p>
+        <div class="table-scroll"><table class="mini">
+          <thead><tr><th>Tool</th><th>Why</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Python 3.11, 3.12 or 3.13</td><td>Runs the harness</td><td>Pinned to 3.13 locally; needs <code>&lt;3.14</code></td></tr>
+            <tr><td><a href="https://docs.astral.sh/uv/getting-started/installation/">uv</a></td><td>Installs packages, runs <code>agents-cli</code></td><td></td></tr>
+            <tr><td>Node.js</td><td>Needed by <code>agents-cli</code> setup</td><td>Generated repos only</td></tr>
+            <tr><td><a href="https://github.com/google/agents-cli">agents-cli</a></td><td>Lint, evals, scaffold, deploy</td><td><code>uvx --python 3.13 google-agents-cli setup</code></td></tr>
+          </tbody></table></div>
+      </div></div>
+
+      <div class="gs reveal"><div>
+        <h3>Install</h3>
+        <div class="cmd"><button class="copy" type="button">Copy</button><pre>$ uv sync --extra dev</pre></div>
+        <p style="margin-top:10px">Installs the harness and the dev tools (<code>pytest</code>, <code>hypothesis</code>, <code>ruff</code>, <code>ty</code>, <code>codespell</code>, <code>sunglasses</code>).</p>
+      </div></div>
+
+      <div class="gs reveal"><div>
+        <h3>Run the four checks</h3>
+        <p>The same ones CI runs. Run all four before you open a PR.</p>
+        <div class="cmd"><button class="copy" type="button">Copy</button><pre>$ uv run ruff check .
+$ uv run ty check
+$ uv run pytest -q
+$ uv run python evals/run_evals.py --out .m0-eval-report.json</pre></div>
+        <div class="table-scroll"><table class="mini" style="margin-top:12px">
+          <tbody>
+            <tr><td><code>ruff check .</code></td><td>Style and common errors</td></tr>
+            <tr><td><code>ty check</code></td><td>Type hints are consistent</td></tr>
+            <tr><td><code>pytest -q</code></td><td>The code and the policy files behave</td></tr>
+            <tr><td><code>run_evals.py</code></td><td>The gate and workflow give the right answer on the golden tasks</td></tr>
+          </tbody></table></div>
+      </div></div>
+
+      <div class="gs reveal"><div>
+        <h3>Try the bootstrap</h3>
+        <p>Copy the example spec, fill in <code>name</code>, <code>division</code>, <code>owner</code>, <code>sponsor</code>, <code>classification</code> and <code>description</code>, then run the three stages.</p>
+        <div class="cmd"><button class="copy" type="button">Copy</button><pre>$ cp spec.yaml.example spec.yaml
+$ agentic-bootstrap plan spec.yaml              <span class="c"># three ordered cloud-project PRs, as JSON</span>
+$ agentic-bootstrap new spec.yaml ./my-agent    <span class="c"># render an agent repo from agent-template/</span>
+$ agentic-bootstrap check ./my-agent            <span class="c"># harness policy checks (exit 1 on findings)</span></pre></div>
+        <p style="margin-top:10px"><code>check</code> does not look for secrets; CI uses Gitleaks. After <code>new</code>, run <code>deactivate</code> (or open a new terminal) before working inside the new repo. Inside it: <code>agents-cli install &amp;&amp; agents-cli lint &amp;&amp; uv run pytest</code>.</p>
+      </div></div>
+
+      <div class="gs reveal"><div>
+        <h3>See it all end to end</h3>
+        <div class="cmd"><button class="copy" type="button">Copy</button><pre>$ python scripts/e2e.py          <span class="c"># or: make e2e</span>
+$ python scripts/e2e.py --keep   <span class="c"># leave the generated agent in .e2e-work/</span></pre></div>
+        <p style="margin-top:10px">Runs the harness, creates a new agent, runs the agent’s checks, then cleans up. On Windows PowerShell set UTF-8 first: <code>$env:PYTHONIOENCODING = "utf-8"</code>.</p>
+      </div></div>
+    </div>
+
+    <div class="where">
+      <div class="card reveal">
+        <h3>Settings you may meet</h3>
+        <div class="table-scroll"><table class="mini" style="margin-top:12px">
+          <tbody>
+            <tr><td><code>HARNESS_ENV=local</code></td><td>Allows an AI Studio key for development; anything else needs Vertex AI</td></tr>
+            <tr><td><code>GOOGLE_GENAI_USE_VERTEXAI=TRUE</code></td><td>Use Vertex AI for the models</td></tr>
+            <tr><td><code>GOOGLE_CLOUD_LOCATION</code></td><td>Must be an allowed Australian region, never <code>global</code></td></tr>
+            <tr><td><code>HARNESS_MODEL_DEFAULT</code></td><td>Model name; override per role with <code>_TRIAGE</code>, <code>_PLANNER</code>, <code>_REVIEWER</code></td></tr>
+            <tr><td><code>GHAS_ENABLED=true</code></td><td>Turns on CodeQL and dependency review for private repos, once GitHub Code Security is enabled</td></tr>
+          </tbody></table></div>
+      </div>
+      <div class="card reveal">
+        <h3>Where to change things</h3>
+        <div class="table-scroll"><table class="mini" style="margin-top:12px">
+          <tbody>
+            <tr><td>Who approves what</td><td><code>policy/risk_tiers.yaml</code> (needs an eval)</td></tr>
+            <tr><td>Allowed regions</td><td><code>policy/residency.yaml</code></td></tr>
+            <tr><td>The gate’s rules</td><td><code>app/harness/nodes/merge_gate.py</code></td></tr>
+            <tr><td>A test case for the gate</td><td><code>evals/golden_tasks/</code></td></tr>
+            <tr><td>What new agents start with</td><td><code>agent-template/</code></td></tr>
+          </tbody></table></div>
+        <p style="margin-top:14px;font-size:15px;color:var(--muted)">Never weaken a gate, approval, threshold, baseline or golden task to make a test pass. See <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CONTRIBUTING.md">Contributing</a>.</p>
+      </div>
+    </div>
+    <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/GETTING_STARTED.md">docs/GETTING_STARTED.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/README.md">README</a>. The four checks and the three bootstrap stages were run against this repo on 25 November 2026. Prefix <code>agentic-bootstrap</code> with <code>uv run</code> if the virtual environment is not active.</p>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">FAQ</div>
+      <h2>Quick answers</h2>
+      <p class="lede">Short versions. The full list, with fixes for common errors, is in <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/FAQ.md">docs/FAQ.md</a>.</p>
+    </div>
+    <div class="faq-groups">
+      <div>
+        <h3>About the harness</h3>
+        <details><summary>Does an AI decide whether a change merges?</summary><div class="answer"><p>No. The merge gate is plain code and never calls an LLM. AI is used to triage, plan and review; the gate reads paths, diffs and check results.</p></div></details>
+        <details><summary>Does it deploy anything?</summary><div class="answer"><p>No. Deployment is gated and needs explicit human approval. The harness decides what a change needs to merge.</p></div></details>
+        <details><summary>Who is accountable?</summary><div class="answer"><p>People. <code>policy/raci.yaml</code> is an illustrative, adaptable policy for roles and responsibilities. Tailor it to your repository; the gate uses the configured policy to determine required approvals.</p></div></details>
+        <details><summary>Is it finished?</summary><div class="answer"><p>No. The gate, detectors, policy checks, workflow (with fakes) and bootstrap work. The real GitHub client, live evals, audit log and hosting are not built. See <a href="#status">status</a>.</p></div></details>
+        <details><summary>Why can’t it use a real GitHub client today?</summary><div class="answer"><p>GitHub’s Copilot assignment API needs a kind of token that the “installation token only, no personal tokens” rule does not allow. The security team has to decide (R2).</p></div></details>
+        <details><summary>Can I add another agent framework?</summary><div class="answer"><p>No. Google ADK only.</p></div></details>
+      </div>
+      <div>
+        <h3>Decisions it makes</h3>
+        <details><summary>What does <code>auto_merge</code> need?</summary><div class="answer"><p>Tier 1 (tests and docs), phase 3 or 4, all four required checks green, the reviewer approving, no tampering and no new capability. The policy ships at phase 1, where nothing auto-merges.</p></div></details>
+        <details><summary>What are the four required checks?</summary><div class="answer"><p><code>lint</code>, <code>tests</code>, <code>evals_no_regression</code>, <code>secret_scan</code>. A missing check is not treated as passing: the gate escalates and names it.</p></div></details>
+        <details><summary>Why did a tiny change need security review?</summary><div class="answer"><p>Probably it touched a control file, a sensitive path (<code>payments</code>, <code>auth</code>, <code>claims</code>, <code>pii</code>) or an IAM file, or it added something new such as a host, model, region, data store, dependency or tool link. The reason text says which.</p></div></details>
+        <details><summary>Why was <code>reject_to_planning</code> returned?</summary><div class="answer"><p>The change is over 400 lines. Split the task.</p></div></details>
+        <details><summary>Can the capability check approve a new host or dependency?</summary><div class="answer"><p>No. It only adds approvers. People approve.</p></div></details>
+        <details><summary>Is the input guard on?</summary><div class="answer"><p>It must be passed to the workflow, and its policy ships in <code>shadow</code> mode, which records matches without stopping the task.</p></div></details>
+      </div>
+      <div>
+        <h3>Running and fixing</h3>
+        <details><summary>Install fails on Windows with “Microsoft Visual C++ 14.0 or greater is required”</summary><div class="answer"><p>A very new Python has no ready-made PyYAML build, so it tries to compile. Pin Python to 3.13 (3.12 also works).</p></div></details>
+        <details><summary><code>agents-cli</code> is not found</summary><div class="answer"><p>Open a new terminal after <code>setup</code> and run <code>agents-cli --version</code>. If it is still missing: <code>uv tool install --python 3.13 google-agents-cli</code>.</p></div></details>
+        <details><summary>CI reports a type error I cannot see locally</summary><div class="answer"><p>The <code>ty</code> version is not pinned, so CI can be newer than your machine. Run <code>uv sync --extra dev</code> and try again.</p></div></details>
+        <details><summary>The generated agent’s <code>evals_no_regression</code> check fails</summary><div class="answer"><p>It is a stub that fails until wired to <code>agents-cli eval run</code> through Workload Identity Federation (E3).</p></div></details>
+        <details><summary>My AI Studio key or location is refused</summary><div class="answer"><p>An AI Studio key is allowed only when <code>HARNESS_ENV=local</code>. Locations must be listed in <code>policy/residency.yaml</code>; <code>global</code> is never allowed.</p></div></details>
+      </div>
+      <div>
+        <h3>Changing the repo</h3>
+        <details><summary>A test failed after I changed <code>policy/</code>. Can I loosen the threshold?</summary><div class="answer"><p>No. Never weaken a gate, approval, threshold, baseline or golden task to make a test pass. Fix the cause.</p></div></details>
+        <details><summary>Do I need an eval for every change?</summary><div class="answer"><p>For anything under <code>policy/</code> or <code>app/harness/nodes/</code>, yes: a new or updated golden or adversarial task in <code>evals/golden_tasks/</code>.</p></div></details>
+        <details><summary>How do I add a skill?</summary><div class="answer"><p>Name it in <code>policy/routing.yaml</code> and pin it in <code>policy/skills.lock.yaml</code> with a full commit and the file’s fingerprint. It is a tier-3 change that needs an eval.</p></div></details>
+        <details><summary>What do I do about a <code>TODO(owner)</code>?</summary><div class="answer"><p>Do not invent the answer. Record the dependency and ask the appropriate role or owner.</p></div></details>
+        <details><summary>Can I use a personal access token?</summary><div class="answer"><p>No. Use the GitHub App and Workload Identity Federation.</p></div></details>
+        <details><summary>Where do I report a security problem?</summary><div class="answer"><p>Not yet defined. The repo names no security contact. This is marked <strong>TODO: UNCONFIRMED</strong> in the docs.</p></div></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SOURCES ================= -->
+<section id="sources" class="alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Sources</div>
+      <h2>Where every claim comes from</h2>
+      <p class="lede">Project facts come from this repository’s own docs and policy files. External descriptions were read on 25 November 2026.</p>
+    </div>
+    <div class="sources">
+      <div class="card reveal">
+        <h3>In this repository</h3>
+        <ul>
+          <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/README.md">Documentation index</a>: reading paths for each audience</li>
+          <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/VISION.md">Vision</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ARCHITECTURE.md">Architecture</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/EXAMPLES.md">Examples</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/GLOSSARY.md">Glossary</a></li>
+          <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/GETTING_STARTED.md">Getting started</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CONTRIBUTING.md">Contributing</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/FAQ.md">FAQ</a></li>
+          <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/SECURITY.md">Security</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md">Decisions</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/OPEN_QUESTIONS.md">Open questions</a></li>
+          <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ROADMAP.md">Roadmap</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CHANGELOG.md">Changelog</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ADK_PORT.md">ADK port notes</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/SUNGLASSES_EVALUATION.md">Input guard evaluation</a></li>
+          <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/tree/main/policy">policy/</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/tree/main/evals/golden_tasks">evals/golden_tasks/</a></li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <h3>Public projects referenced</h3>
+        <ul>
+          <li><a href="https://github.com/google/adk-python">google/adk-python</a>: Agent Development Kit</li>
+          <li><a href="https://github.com/google/agents-cli">google/agents-cli</a>: CLI and skills for building agents</li>
+          <li><a href="https://github.com/All-Hands-AI/OpenHands">OpenHands</a> · <a href="https://github.com/openai/codex">Codex CLI</a> · <a href="https://github.com/anthropics/claude-code-action">claude-code-action</a></li>
+          <li><a href="https://github.com/open-policy-agent/opa">Open Policy Agent</a> · <a href="https://github.com/cedar-policy/cedar">Cedar</a></li>
+          <li><a href="https://github.com/gitleaks/gitleaks">Gitleaks</a> · <a href="https://github.com/zizmorcore/zizmor">zizmor</a> · <a href="https://github.com/sunglasses-dev/sunglasses">Sunglasses</a></li>
+          <li><a href="https://www.cncf.io/blog/2025/08/12/pac-and-ai/">CNCF: PaC and AI</a> (search result, not reviewed in full)</li>
+        </ul>
+        <p class="note info" style="margin-top:16px;font-size:14px">Statements about GitHub Copilot, Vertex AI regions and Workload Identity Federation come from the repo’s own docs. They were <strong>not</strong> re-checked against vendor documentation when this site was built.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <a class="brand" href="#top" style="margin-bottom:12px"><img src="assets/img/favicon.svg" alt="" width="30" height="30">Agentic Harness</a>
+      <p>The golden workflow for taking an agent live on a cloud platform, as code. Humans stay accountable.</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="#vision">Vision</a></li><li><a href="#gate">The merge gate</a></li><li><a href="#architecture">Architecture</a></li><li><a href="#start">Get started</a></li><li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Project</h4>
+      <ul>
+        <li><a href="https://github.com/phermens-slalom/agentic-harness-demo">Repository</a></li>
+        <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ROADMAP.md">Roadmap</a></li>
+        <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CONTRIBUTING.md">Contributing</a></li>
+        <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/OPEN_QUESTIONS.md">Open questions</a></li>
+      </ul>
+    </div>
+    <p class="fine">Illustrative content: names such as <code>workload-infrastructure</code>, <code>platform.tf</code> and the insurance examples are placeholders, not a real system. Licence: TODO: UNCONFIRMED. No licence file is in the repo, so do not assume one. Built from the repo’s own docs; where the two disagree, the roadmap wins.</p>
+  </div>
+</footer>
+
+</body>
+</html>
