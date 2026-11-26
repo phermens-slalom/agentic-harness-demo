@@ -17,3 +17,7 @@ def test_estimate_known_issue():
 
 def test_estimate_unknown_issue_needs_inspection():
     assert tools.estimate_repair(VIN, "strange noise")["status"] == "needs_inspection"
+
+
+def test_estimate_rejects_unknown_vehicle():
+    assert tools.estimate_repair("NOPE", "brakes")["status"] == "error"

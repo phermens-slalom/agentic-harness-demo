@@ -19,7 +19,14 @@ from harness.residency import ResidencyError
 from harness.workflow import IssueToMerge
 
 ISSUE = Issue(repo="example-org/quotes", number=42, title="Fix rounding", body="...", labels=["agent:bugfix"])
-GREEN_CHECKS = {"lint": True, "tests": True, "evals_no_regression": True, "secret_scan": True}
+GREEN_CHECKS = {
+    "lint": True,
+    "tests": True,
+    "evals_no_regression": True,
+    "secret_scan": True,
+    "coverage": True,
+    "quality": True,
+}
 GREEN_TESTS = BuildResult(
     pr_number=7,
     changed_files=["tests/test_round.py"],
@@ -88,7 +95,14 @@ class WorkflowTests(unittest.TestCase):
             changed_files=["svc/a.py"],
             lines_changed=10,
             ci_green=True,
-            checks={"lint": True, "tests": True, "evals_no_regression": False, "secret_scan": True},
+            checks={
+                "lint": True,
+                "tests": True,
+                "evals_no_regression": False,
+                "secret_scan": True,
+                "coverage": True,
+                "quality": True,
+            },
         )
         b = ScriptedBuilder([reg, GREEN_SVC])
         out = run(b)
@@ -160,7 +174,14 @@ class WorkflowTests(unittest.TestCase):
             changed_files=["tests/test_round.py"],
             lines_changed=20,
             ci_green=False,
-            checks={"lint": True, "tests": False, "evals_no_regression": True, "secret_scan": True},
+            checks={
+                "lint": True,
+                "tests": False,
+                "evals_no_regression": True,
+                "secret_scan": True,
+                "coverage": True,
+                "quality": True,
+            },
         )
         result = decide(RiskPolicy.load(phase=3), failed, ReviewResult(approved=True))
         self.assertEqual(result.decision, Decision.ESCALATED)

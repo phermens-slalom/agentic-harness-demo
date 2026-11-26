@@ -13,32 +13,32 @@
   scenario:
     builds:
       - {ci_green: false, files: [pricing/round.py], lines: 12, ci_summary: "test_nsw failed"}
-      - {ci_green: true, checks: {lint: true, tests: true, evals_no_regression: true, secret_scan: true}, files: [pricing/round.py, tests/test_round.py], lines: 34}
+      - {ci_green: true, checks: {lint: true, tests: true, evals_no_regression: true, secret_scan: true, coverage: true, quality: true}, files: [pricing/round.py, tests/test_round.py], lines: 34}
 
 - id: quotes-150-add-tests-phase1
   issue: {repo: example-org/quotes, number: 150, title: "Add tests for excess calc", labels: [agent:tests], body: "..."}
   expected: {decision: human_approval, tier: 1, approvers: [app_team, ai_governance]}
   scenario:
-    builds: [{ci_green: true, checks: {lint: true, tests: true, evals_no_regression: true, secret_scan: true}, files: [tests/test_excess.py], lines: 80}]
+    builds: [{ci_green: true, checks: {lint: true, tests: true, evals_no_regression: true, secret_scan: true, coverage: true, quality: true}, files: [tests/test_excess.py], lines: 80}]
 
 - id: quotes-150-add-tests-phase3
   phase: 3
   issue: {repo: example-org/quotes, number: 150, title: "Add tests for excess calc", labels: [agent:tests], body: "..."}
   expected: {decision: auto_merge, tier: 1}
   scenario:
-    builds: [{ci_green: true, checks: {lint: true, tests: true, evals_no_regression: true, secret_scan: true}, files: [tests/test_excess.py], lines: 80}]
+    builds: [{ci_green: true, checks: {lint: true, tests: true, evals_no_regression: true, secret_scan: true, coverage: true, quality: true}, files: [tests/test_excess.py], lines: 80}]
 
 - id: claims-77-payments-touch
   issue: {repo: example-org/claims, number: 77, title: "Refund status typo", labels: [agent:bugfix], body: "..."}
   expected: {decision: human_approval, tier: 3, approvers: [app_team, ai_governance, security]}
   scenario:
-    builds: [{ci_green: true, checks: {lint: true, tests: true, evals_no_regression: true, secret_scan: true}, files: [svc/payments/status.py], lines: 2}]
+    builds: [{ci_green: true, checks: {lint: true, tests: true, evals_no_regression: true, secret_scan: true, coverage: true, quality: true}, files: [svc/payments/status.py], lines: 2}]
 
 - id: agent-210-egress-terraform
   issue: {repo: example-org/sample-agents, number: 210, title: "Add registry entry for new host", labels: [agent:bugfix], body: "..."}
   expected: {decision: human_approval, tier: 3, approvers: [app_team, ai_governance, platform_team]}
   scenario:
-    builds: [{ci_green: true, checks: {lint: true, tests: true, evals_no_regression: true, secret_scan: true}, files: [sample/gateway.tf], lines: 6}]
+    builds: [{ci_green: true, checks: {lint: true, tests: true, evals_no_regression: true, secret_scan: true, coverage: true, quality: true}, files: [sample/gateway.tf], lines: 6}]
 
 - id: agent-215-eval-regression
   issue: {repo: example-org/sample-agents, number: 215, title: "Tighten claim summary prompt", labels: [agent:bugfix], body: "..."}
@@ -46,7 +46,7 @@
   scenario:
     builds:
       - {ci_green: true, files: [agent/prompts.py], lines: 20, checks: {evals_no_regression: false}}
-      - {ci_green: true, files: [agent/prompts.py], lines: 24, checks: {lint: true, tests: true, evals_no_regression: true, secret_scan: true}}
+      - {ci_green: true, files: [agent/prompts.py], lines: 24, checks: {lint: true, tests: true, evals_no_regression: true, secret_scan: true, coverage: true, quality: true}}
 
 - id: quotes-160-flaky
   issue: {repo: example-org/quotes, number: 160, title: "Fix flaky integration test", labels: [agent:tests], body: "..."}

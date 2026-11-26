@@ -29,6 +29,7 @@ class PolicyTests(unittest.TestCase):
     def test_harness_controls_are_tier_3_but_regular_tests_remain_tier_1(self):
         for path in [
             "policy/risk_tiers.yaml",
+            ".github/workflows/coverage.py",
             "evals/thresholds.yaml",
             "evals/baseline/results.json",
             "skills/planner/SKILL.md",

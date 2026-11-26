@@ -18,8 +18,8 @@ include = ["agent*"]
 agent = ["skills/garage-summary/SKILL.md"]
 
 [project.optional-dependencies]
-lint = ["ruff>=0.6", "codespell>=2.3", "ty>=0.0.1"]   # `agents-cli lint` syncs this extra
-dev = ["pytest>=8", "ruff>=0.6", "codespell>=2.3", "ty>=0.0.1"]
+lint = ["ruff>=0.6", "codespell>=2.3", "ty>=0.0.1", "sunglasses==0.6.20"]   # `agents-cli lint` syncs this extra
+dev = ["pytest>=8", "pytest-cov>=5", "pyyaml>=6", "ruff>=0.6", "codespell>=2.3", "ty>=0.0.1", "sunglasses==0.6.20"]
 
 # `agents-cli install` runs a plain `uv sync`, which installs dependency groups (the `dev` group
 # is on by default) but NOT optional extras, so pytest must live here for `uv run pytest`.

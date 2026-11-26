@@ -58,7 +58,7 @@ class BuildResult:
     ci_green: bool
     tokens_used: int = 0
     ci_summary: str = ""
-    # Per required check (lint, tests, evals_no_regression, secret_scan). The merge gate
+    # Per required check (lint, tests, coverage, quality, evals_no_regression, secret_scan). The merge gate
     # requires every configured check to be explicitly green; an empty report is unknown.
     checks: dict[str, bool] = field(default_factory=dict)
     previous_paths: list[str] = field(default_factory=list)
