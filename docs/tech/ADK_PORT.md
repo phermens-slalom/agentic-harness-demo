@@ -18,7 +18,7 @@ Before porting:
 2. Don't wrap node code in broad `except Exception:` — ADK 2.0 relies on exceptions
    propagating for automatic retries, telemetry and HITL pauses.
 3. Check deploy target. Community reports show friction deploying graph workflows to
-   Agent Runtime; Cloud Run is the fallback. pyproject targets `agent_runtime` (agents-cli default, cloud platform direction); switch if the port hits that friction.
+   Agent Runtime; Cloud Run is the fallback. `agents-cli-manifest.yaml` targets `agent_runtime` (agents-cli default, cloud platform direction); switch if the port hits that friction.
 4. Keep `tests/test_workflow.py` passing by running the same fakes through the ported graph.
 
 ## The LLM adapters today (R6)

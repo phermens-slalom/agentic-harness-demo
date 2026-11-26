@@ -14,7 +14,10 @@ attested releases are planned (S5).
   orange so it cannot be mistaken for AI, and each loop step carries a CODE, AI or PERSON label. "To be validated"
   replaces `TODO: UNCONFIRMED` on the site. External facts were re-checked and the site has a validation log linking
   each source. GitHub's docs list Copilot data residency for the US and EU only, which supports D-10. The
-  `(PR #n)` tags on three older entries were dropped: they came from earlier history and clashed with this repo's PRs. The architecture doc and glossary codes were brought up to date, and the stale I1 blocker row was
+  `(PR #n)` tags on three older entries were dropped: they came from earlier history and clashed with this repo's PRs.
+  A docs scan also fixed stale text in the README, VISION, FAQ, SECURITY, GETTING_STARTED, EXAMPLES, ADK port notes,
+  skills note and the template README (commands, the I1 intake files, the unwired `evals_no_regression` job, a
+  placeholder and a duplicated word). The architecture doc and glossary codes were brought up to date, and the stale I1 blocker row was
   replaced by I7.
 - **E3 in progress.** Added required coverage and quality checks, 80% starter coverage and eval marks,
   pre-execution static scans, and an unwired regression comparator. AI Governance will approve the

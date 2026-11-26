@@ -12,10 +12,13 @@ where each part goes; replace it with your agent's own logic.
 | `agent/agent.py` | The ADK root agent |
 | `agent/prompts.py` | Instructions, kept separate for review |
 | `agent/tools.py`, `agent/data/` | Tools and sample data (placeholders) |
+| `agent/telemetry.py` | Redacted tool telemetry: names, outcomes and timing, never prompts or arguments |
+| `agent/skills/` | One pinned, guidance-only example skill |
 | `agent/config.py` | Model and region from the environment |
 | `tests/` | Unit tests for tools and wiring |
 | `evals/`, `tests/eval/` | Golden-set examples, runnable starter cases, thresholds, baseline |
-| `docs/` | Mission brief and runbook |
+| `evals/holdout/` | Notes for CI-only holdout cases the coding agent must not see |
+| `docs/` | Mission brief, runbook and the Copilot environment note |
 | `AGENTS.md`, `.github/` | Instructions for the coding agent, CODEOWNERS, required checks |
 
 Requires `agents-cli` (`uvx --python 3.13 google-agents-cli setup`; needs Python 3.11+, uv, Node.js). See the harness README.

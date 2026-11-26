@@ -75,7 +75,7 @@ What `plan` prints for this form (real output, shortened):
 |---|---|---|---|
 | 1 | Workload | `example-division/workshop-assistant/workload.tf` | AI governance team, platform team |
 | 2 | Environments | `.../env.tf` | AI governance team, platform team |
-| 3 | Project and cloud platform (pin the cloud platform module version) | `workload-infrastructure/platform.tf` (illustrative), `.../project.tf`, `.../egress.tfvars` | `ai_governance`, `platform_team` |
+| 3 | Project and agent platform (pin the platform module version) | `.../project.tf`, `.../platform.tf`, `.../egress.tfvars` | `ai_governance`, `platform_team` |
 
 - `plan` only **lists** the PRs. People still write the Terraform. The folder layout is an assumption (Q12).
 - `new` copies [`agent-template/`](../agent-template) into the new folder and fills in the names.
