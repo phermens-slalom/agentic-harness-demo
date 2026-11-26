@@ -10,7 +10,9 @@ docs, then the site. Fix the site.
 
 | Path | What it is |
 |---|---|
-| `index.html` | The whole site: vision, how it works, a merge-gate replay, architecture, safety, status, comparison, getting started, FAQ and sources |
+| `index.html` | The main page: vision, how it works, a merge-gate replay, architecture, safety, status and blockers, comparison, getting started, FAQ and sources |
+| `roadmap.html` | The roadmap in plain language: what each milestone is worth, the next few steps, what is waiting on people |
+| `glossary.html` | The glossary, mirroring [`GLOSSARY.md`](../GLOSSARY.md) with a filter box |
 | `assets/css/styles.css` | All styling. Light theme, system fonts, no external requests |
 | `assets/js/main.js` | Small, dependency-free: scroll reveal, tabs, copy buttons, the gate replay |
 | `assets/img/` | Hand-drawn SVG art: hero scene, four characters, backgrounds, favicon |
@@ -22,8 +24,9 @@ without JavaScript except the gate replay, the tabs and the copy buttons.
 ### The gate replay is a replay
 
 The "merge gate" section does not reimplement the gate in the browser. Each scenario is a documented output
-of the real code, taken from [`EXAMPLES.md`](../EXAMPLES.md) (examples 2 to 7) or from a task in
-`evals/golden_tasks/` run through `evals/run_evals.py`. If the gate's rules or outputs change, update the
+of the real code, taken from [`EXAMPLES.md`](../EXAMPLES.md) (examples 2 to 7), from a task in
+`evals/golden_tasks/` run through `evals/run_evals.py`, or (reviewer lockout) from the literal reason string in
+`merge_gate.py`, which `tests/test_workflow.py` checks. If the gate's rules or outputs change, update the
 scenarios in `site/assets/js/main.js` in the same PR.
 
 ## Preview locally
@@ -74,11 +77,17 @@ Do this only once the domain owner and the security team agree. Nothing in the r
 2. Run the checks. `tests/test_site.py` fails when a local link, anchor or asset is missing, when a link into
    the repo points at a path that no longer exists, when anything loads from a third-party host, or when the
    Pages workflow stops being SHA-pinned.
-3. Update the figures that were true on 25 November 2026: 172 tests, 54 scored golden tasks (56 in total,
-   two documented open gaps), the milestone statuses, and the `ARCHITECTURE.md` state marks.
-4. Keep the honest parts: the early-stage banner, the "what the controls do not cover" list, and the
-   `TODO: UNCONFIRMED` items (licence, security contact). Do not remove a limit to make the site look better.
-5. Keep Australian English in prose.
+3. Update the figures that were true on 26 November 2026: 265 tests, 65 scored golden tasks (67 in total,
+   two documented open gaps), the blockers, the milestone states on `index.html` and `roadmap.html`, and the
+   `ARCHITECTURE.md` state marks. `tests/test_site.py` checks the task, gap and required-check counts, that
+   `glossary.html` has every term in `GLOSSARY.md`, and that `roadmap.html` has a card for every milestone.
+   The test count is not checked: run `uv run pytest -q` and copy it.
+4. Keep the honest parts: the early-stage banner, the blockers, the "what the controls do not cover" list, and the
+   "to be validated" items (licence, security contact). The site says "to be validated" where the docs say
+   `TODO: UNCONFIRMED`, and a test fails if "unconfirmed" appears on the site. Do not remove a limit to make the site
+   look better.
+5. The glossary page is hand-maintained HTML. Add a new `GLOSSARY.md` term to `glossary.html` in the same PR.
+6. Keep Australian English in prose.
 
 The `https://github.com/.../blob/main/...` links assume the repo is `phermens-slalom/agentic-harness-demo`
 and the default branch is `main`. If the repo moves or is renamed, search and replace that prefix in
@@ -86,7 +95,7 @@ and the default branch is `main`. If the repo moves or is renamed, search and re
 
 ## Sources used for the comparison and facts
 
-Read on 25 November 2026 from each project's repository page:
+Re-read on 26 November 2026 from each project's README and licence file (raw files from `raw.githubusercontent.com`):
 
 - [google/adk-python](https://github.com/google/adk-python): Apache-2.0, "code-first Python framework", built-in evaluation and graph workflows
 - [google/agents-cli](https://github.com/google/agents-cli): Apache-2.0, CLI and skills for building, evaluating and deploying agents on Google Cloud
@@ -103,14 +112,30 @@ Read on 25 November 2026 from each project's repository page:
 Pins used by `pages.yml` (tags resolved to commit SHAs with `git ls-remote` on 25 November 2026):
 `actions/checkout` v7, `actions/upload-pages-artifact` v5.0.0, `actions/deploy-pages` v5.0.1.
 
-### Not re-checked against vendor documentation
+### Checked against vendor documentation (26 November 2026)
 
-The build session could not reach `docs.github.com`, `adk.dev`, Google Cloud documentation, `agents.md`,
-`c4model.com` or OWASP. Statements about the Copilot coding agent, Vertex AI regions and Workload Identity
-Federation therefore come from this repo's own docs ([`VISION.md`](../VISION.md), [`DECISIONS.md`](../DECISIONS.md),
-[`SECURITY.md`](../SECURITY.md)) and are not independently cited on the site. TODO(verify): once those hosts are
-reachable, add citations for the Copilot coding agent, Vertex AI locations (Sydney and Melbourne),
-Workload Identity Federation with GitHub Actions, the AGENTS.md convention and the C4 model.
+- GitHub: the [Copilot API guide](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-via-the-api)
+  says the issue-assignment APIs need a user token (a personal access token or a GitHub App user-to-server token) and
+  the agent-tasks API refuses installation tokens. This is the R2 blocker. Copilot's `copilot-setup-steps.yml`,
+  `.github/agents/*.agent.md`, firewall allowlist and workflow-approval setting are all in GitHub's docs. GitHub now
+  calls it the Copilot cloud agent.
+- Google Cloud: Model Armor is listed for Melbourne (`australia-southeast2`) and not Sydney. With data residency
+  enforced it offers three filters there. Gemini on Vertex AI is listed for Sydney (`australia-southeast1`), and
+  the generative AI locations page does not list Melbourne. Workload Identity Federation with GitHub Actions OIDC is
+  documented.
+- ADK: `ModelArmorPlugin` ships with ADK ([adk.dev](https://adk.dev/integrations/model-armor/)). PyPI has
+  `google-adk` 2.15.1, `google-cloud-modelarmor` 0.7.5 and `sunglasses` 0.6.20 (0.6.28 is newer, so 0.6.20 is a pin).
+- Upstream READMEs confirm the licences and descriptions in the comparison table. The `agents-cli` README uses
+  `uvx google-agents-cli setup`; the `--python 3.13` form is this repo's own pin.
+
+### To be validated
+
+- Copilot data residency in Australia. The GitHub documentation read does not say where the cloud agent processes
+  data. The roadmap's "US and EU only as of April 2026" (D-10, D1) is not confirmed or contradicted by it.
+- Hosts that the session could not reach (blocked by the network allowlist): `agents.md`, `c4model.com`, `owasp.org`,
+  `cncf.io`, `docs.astral.sh` and `github.com` pages (the Gitleaks `v8.30.1` release tag and the Actions pins in
+  `pages.yml` are therefore unchecked). The AGENTS.md convention, the C4 model and the CNCF article stay marked as
+  to be validated on the site.
 
 ## Image prompts
 

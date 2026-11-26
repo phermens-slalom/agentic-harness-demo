@@ -1401,6 +1401,20 @@ Q8's starter marks are 80% coverage and eval pass mark, with baseline approval b
 Append-only, newest first. One entry per PR or working session: the date, the item IDs, what changed, and
 anything learned that should change this plan. Never rewrite old entries; correct them with a new one.
 
+### 2026-11-26 · Site refresh: roadmap and glossary pages, accuracy pass
+- Rebuilt the site's status, blockers, golden-path stage states, architecture views and headline figures from the
+  repo as it stands (265 tests, 65 scored golden tasks, two open gaps, six required checks). Added `roadmap.html`
+  (milestone value, next steps, waiting-on-people table) and `glossary.html`. Added eight gate-replay scenarios taken
+  from golden tasks. Human decisions now use orange instead of indigo in the loop diagram, with text labels.
+- Replaced "TODO: UNCONFIRMED" on the site with "to be validated" wording. The docs keep their own marker.
+- Re-checked vendor facts. R2 holds: the issue-assignment APIs need a user token and the agent-tasks API refuses
+  installation tokens. Not confirmed: the "US and EU only" Copilot residency statement in D-10 and D1 (GitHub's docs say
+  nothing either way), so D1 should record that. The generative AI locations page lists Sydney and not Melbourne for
+  Gemini. `agents.md`, `c4model.com`, `owasp.org`, `cncf.io`, `docs.astral.sh` and `github.com` pages were unreachable.
+- Docs fixed on the way: `ARCHITECTURE.md` (request parser, `RequesterAccess`, template preflight, coverage and
+  eval comparator, CI steps, `armor` extra), glossary roadmap codes (D-15, Q18, M9, I1 to I7) and a stale blocker row
+  (I1 became I7). No policy, gate or node behaviour changed, so no new eval.
+
 ### 2026-11-26 · E3 coverage, quality and preflight
 - Added required `coverage` and `quality` jobs and policy entries. The 80% starter coverage mark
   is enforced; quality runs Ruff, its complexity rule and ty. Added adversarial evals for missing checks

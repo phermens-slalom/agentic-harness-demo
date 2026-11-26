@@ -106,6 +106,11 @@ Other team words you will see:
 | **Baseline** | The last accepted eval results. A new PR may not do worse than it. |
 | **Threshold** | A pass mark for an eval. The business owner sets it, not the builders. |
 | **Holdout** | Secret test cases the coding agent never sees. Described in the template; the runner is still to be built (E3). |
+| **AgentRequest** | A GitHub issue, raised with the issue form, that asks for a new agent. The harness turns it into an untrusted draft (a Mission Brief, a review-only spec and a list of missing fields). A draft grants nothing. |
+| **Intake agent** | Planned (M9). An agent that would interview the requester on the issue and open a PR for the agent they need. It only raises PRs and never approves or merges. |
+| **Connector library** | Planned (I2). A fixed, reviewed set of ways for generated agents to reach other systems. Anything outside it goes to a person. |
+| **Preflight** | The first job in a generated repo's checks. It inspects a candidate checkout without running it, using trusted code from the base revision. A tripwire, not a sandbox. |
+| **Coverage / Quality** | Two required checks in generated repos. Coverage enforces a minimum share of agent code run by tests (80% to start). Quality runs the style, complexity and type checks. |
 | **Dry-run eval** | An eval that uses scripted fakes. It is free and fast. |
 | **Live eval** | An eval that calls real models. It costs money and needs approved cloud access. Not built yet. |
 | **Trace** | A step-by-step log of what the harness did on one task. |
@@ -225,9 +230,9 @@ The roadmap ([`ROADMAP.md`](ROADMAP.md)) numbers its work. Each code is stable.
 
 | Code | Plain English |
 |---|---|
-| **D-01 … D-12** | Decisions. Short design choices with a reason and an owner. See [`DECISIONS.md`](DECISIONS.md). |
-| **Q1 … Q16** | Open questions for this project. See [`OPEN_QUESTIONS.md`](OPEN_QUESTIONS.md). |
-| **M0 … M8** | Milestones (groups of work). M0 makes the gate trustworthy; M8 gets a generated agent ready for the pilot. |
+| **D-01 … D-15** | Decisions. Short design choices with a reason and an owner. See [`DECISIONS.md`](DECISIONS.md). |
+| **Q1 … Q18** | Open questions for this project. See [`OPEN_QUESTIONS.md`](OPEN_QUESTIONS.md). |
+| **M0 … M9** | Milestones (groups of work). M0 makes the gate trustworthy; M8 gets a generated agent ready for the pilot; M9 lets a person request an agent and get a governed PR. |
 | **H0 to H2** | Hygiene items: the repo guide (H0), CI and repo tidy-up (H1), and the generated-project preflight and acceptance test (H2). |
 | **G1 … G7** | Gate items: fail closed, control files in tier 3, tamper detection, plan approval, path matching, least-privilege CI, policy validation. |
 | **R1 … R7** | Runtime items: GitHub checks and CODEOWNERS, real GitHub client, durable workflow, ingress queue, controls, hardened ADK adapters, reviewer sees the diff. |
@@ -237,6 +242,7 @@ The roadmap ([`ROADMAP.md`](ROADMAP.md)) numbers its work. Each code is stable.
 | **E1 … E3** | Evals: live replay, reviewer defects, real template evals. |
 | **W1 … W5** | Workflow coverage: workload PR checks, template from existing reference agent template, release pack, registration, GitHub-native human gate. |
 | **A1 … A3** | Generated-agent items: authorisation boundary, telemetry, governed skill. |
+| **I1 … I7** | Agent intake items: request form and parser, connector library, intake agent, authoring, cross-model review, tailoring through comments, hosted trigger. |
 | **Status words** | `todo`, `doing`, `blocked`, `review`, `done`, `dropped`. |
 | **P0 / P1 / P2** | Priority: before the agent discussion, before the pilot agent, after the pilot. |
 | **S / M / L** (size) | Up to half a day, up to two days, more than two days. |

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roadmap · Agentic Harness Demo</title>
+<meta name="description" content="What each Agentic Harness milestone is worth, where it stands, what is next and what is waiting on a decision.">
+<meta property="og:title" content="Roadmap · Agentic Harness Demo">
+<meta property="og:description" content="What each Agentic Harness milestone is worth, where it stands, what is next and what is waiting on a decision.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#f8faff">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/styles.css">
+<script defer src="assets/js/main.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  </defs>
+</svg>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html#top"><img src="assets/img/favicon.svg" alt="" width="30" height="30">Agentic Harness</a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+    <nav class="nav-links" id="nav-links" aria-label="Primary">
+      <a href="index.html#vision">Vision</a>
+      <a href="index.html#how">Workflow</a>
+      <a href="index.html#gate">Gate</a>
+      <a href="index.html#architecture">Architecture</a>
+      <a href="index.html#safety">Safety</a>
+      <a href="index.html#status">Status</a>
+      <a href="roadmap.html" aria-current="page">Roadmap</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="index.html#start">Get started</a>
+      <a href="index.html#faq">FAQ</a>
+      <a class="btn btn-primary btn-sm" href="https://github.com/phermens-slalom/agentic-harness-demo">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<div class="page-head">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a> / <a href="index.html#status">Status</a> / Roadmap</div>
+    <div class="eyebrow">Roadmap</div>
+    <h1>Where we are going, and what each step is worth</h1>
+    <p class="lede">Ten milestones, in plain language. Each says what it is for, where it stands on 26 November 2026, and what it is waiting on. No dates are committed: the roadmap orders work by priority and by what depends on what. The full backlog is in <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ROADMAP.md">docs/ROADMAP.md</a>.</p>
+    <div class="track" role="list" aria-label="Milestones in order"><a class="tk st-done" href="#m0"><span class="c">M0</span><small>Trusted gate</small><span class="tag">DONE</span></a><a class="tk st-blocked" href="#m1"><span class="c">M1</span><small>Real GitHub</small><span class="tag">BLOCKED</span></a><a class="tk st-blocked" href="#m2"><span class="c">M2</span><small>Durable runtime</small><span class="tag">BLOCKED</span></a><a class="tk st-mostly" href="#m3"><span class="c">M3</span><small>Security</small><span class="tag">MOSTLY</span></a><a class="tk st-later" href="#m4"><span class="c">M4</span><small>Audit</small><span class="tag">LATER</span></a><a class="tk st-now" href="#m5"><span class="c">M5</span><small>Real evals</small><span class="tag">NOW</span></a><a class="tk st-later" href="#m6"><span class="c">M6</span><small>More stages</small><span class="tag">LATER</span></a><a class="tk st-now" href="#m7"><span class="c">M7</span><small>Hygiene</small><span class="tag">NOW</span></a><a class="tk st-now" href="#m8"><span class="c">M8</span><small>Pilot-ready agent</small><span class="tag">NOW</span></a><a class="tk st-next" href="#m9"><span class="c">M9</span><small>Agent intake</small><span class="tag">NEXT</span></a></div>
+    <div class="tk-legend">
+      <span class="st-done"><i></i>Done</span><span class="st-now"><i></i>In progress now</span><span class="st-next"><i></i>Next</span>
+      <span class="st-blocked"><i class="hollow"></i>Waiting on a decision</span><span class="st-later"><i class="hollow"></i>Later</span>
+    </div>
+  </div>
+</div>
+
+<section style="padding-top:56px">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">The next few steps</div>
+      <h2>What we are working on, and what comes after</h2>
+      <p class="lede">These can move without waiting for an outside decision, apart from where noted.</p>
+    </div>
+    <div class="focus">
+      <article class="fcard st-now reveal">
+        <span class="ribbon">NOW</span>
+        <h3>A pilot-ready agent</h3><span class="code">M8</span>
+        <p>A generated agent that a team can run, check and understand offline.</p>
+        <h4>Next up</h4>
+        <ul><li>A command that checks the setup before anything runs</li><li>An end-to-end test of a freshly generated agent</li><li>Two live runs, once a safe non-production setup is approved</li></ul>
+      </article>
+      <article class="fcard st-now reveal">
+        <span class="ribbon">NOW · PARTLY WAITING</span>
+        <h3>Evals that measure agents</h3><span class="code">M5</span>
+        <p>Real quality evidence for each generated agent, with a pass mark nobody can quietly lower.</p>
+        <h4>Next up</h4>
+        <ul><li>Switch on the baseline comparison once the baseline is approved</li><li>Agree where live evals run and how hidden test cases stay hidden</li></ul>
+      </article>
+      <article class="fcard st-next reveal">
+        <span class="ribbon">NEXT</span>
+        <h3>Ask for an agent with a form</h3><span class="code">M9</span>
+        <p>Start from a business problem, not from Python. The first piece, the request form, is done.</p>
+        <h4>Next up</h4>
+        <ul><li>A fixed library of approved connectors to other systems</li><li>A prototype that asks the requester questions</li><li>Generating the agent into a pull request, always for people to approve</li></ul>
+      </article>
+    </div>
+    <div class="note blocker reveal" style="margin-top:26px"><strong>The one that unlocks the most (M1).</strong> Real GitHub is waiting on a security team decision about how the harness may ask Copilot for work. Until then the runtime, audit and hosted intake milestones cannot start. See the <a href="index.html#status">blockers</a>.</div>
+    <h3 style="margin:44px 0 6px">How the pieces depend on each other</h3>
+    <div class="chain reveal">
+      <div class="stop"><b>Decision</b>Security team rules on GitHub access (R2)</div>
+      <div><b>Real GitHub</b>M1: gate enforced by GitHub</div>
+      <div><b>Durable runtime</b>M2: approvals survive restarts</div>
+      <div><b>Audit trail</b>M4: explain every decision</div>
+      <div><b>Hosted intake</b>M9: requests start the work</div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="milestones">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">All milestones</div>
+      <h2>The value of each one</h2>
+      <p class="lede">The codes at the foot of each card are the backlog items. They are explained in the <a href="glossary.html#roadmap-codes">glossary</a>.</p>
+    </div>
+    <div class="ms-grid">
+<article class="msc st-done reveal" id="m0">
+  <div class="top"><span class="code">M0</span><span class="sbadge st-done">DONE</span></div>
+  <h3>Make the gate trustworthy</h3>
+  <dl><div><dt>Value</dt><dd>The merge gate can be relied on. It stops when evidence is missing, notices an agent cheating on its own tests, and always asks people to review the files that control the rules.</dd></div><div><dt>Where it is</dt><dd>Finished on 18 November. Nothing further planned.</dd></div></dl>
+  <p class="refs">H0, G1 to G7</p>
+</article>
+<article class="msc st-blocked reveal" id="m1">
+  <div class="top"><span class="code">M1</span><span class="sbadge st-blocked">WAITING ON A DECISION</span></div>
+  <h3>Real GitHub, enforced</h3>
+  <dl><div><dt>Value</dt><dd>The harness stops being a demo against fakes. It works on real GitHub issues and pull requests, and GitHub itself refuses to merge a change the gate says needs people.</dd></div><div><dt>Where it is</dt><dd>The Copilot setup for generated repos is done. Everything else waits on how the harness is allowed to ask Copilot for work.</dd></div><div><dt>Waiting on</dt><dd class="wait">A security team decision: GitHub says Copilot assignment needs a user token, and the harness rule allows only installation tokens (R2).</dd></div></dl>
+  <p class="refs">S4 done · R2, R1, R7 waiting</p>
+</article>
+<article class="msc st-blocked reveal" id="m2">
+  <div class="top"><span class="code">M2</span><span class="sbadge st-blocked">WAITING ON M1</span></div>
+  <h3>Durable, controllable runtime</h3>
+  <dl><div><dt>Value</dt><dd>The harness can run on its own. Approvals survive a restart, a repeated webhook cannot start duplicate work, and someone can pause it or cap what it spends.</dd></div><div><dt>Where it is</dt><dd>The AI roles now return checked answers, retry once and stop safely. The hosted runtime, queue and kill switch come after real GitHub.</dd></div><div><dt>Waiting on</dt><dd class="wait">Real GitHub (M1), and a hosting decision from the platform team (Q5).</dd></div></dl>
+  <p class="refs">R6 done · R3, R4, R5 waiting</p>
+</article>
+<article class="msc st-mostly reveal" id="m3">
+  <div class="top"><span class="code">M3</span><span class="sbadge st-mostly">MOSTLY DONE</span></div>
+  <h3>Security: use what exists</h3>
+  <dl><div><dt>Value</dt><dd>Known security tools do the scanning, and the harness adds only what is specific to it. New models, hosts, regions, data stores and dependencies get extra approvers instead of slipping through.</dd></div><div><dt>Where it is</dt><dd>Secret and code scanning in CI, new-capability detection and the Model Armor input scanner are in. Model Armor has run on a fixture only.</dd></div><div><dt>Waiting on</dt><dd class="wait">Protecting the harness repo itself needs M1. The builder residency check needs real GitHub and an answer from GitHub about Australian processing (Q3).</dd></div></dl>
+  <p class="refs">S1 to S3 done · S5, D1 waiting</p>
+</article>
+<article class="msc st-later reveal" id="m4">
+  <div class="top"><span class="code">M4</span><span class="sbadge st-later">LATER</span></div>
+  <h3>Observability and audit</h3>
+  <dl><div><dt>Value</dt><dd>Anyone can see why a decision was made, without secrets in the record. The evidence also lets us decide, on facts, when the gate can be trusted with more.</dd></div><div><dt>Where it is</dt><dd>Not started. It follows the durable runtime.</dd></div><div><dt>Waiting on</dt><dd class="wait">The durable runtime (M2).</dd></div></dl>
+  <p class="refs">O1 to O3</p>
+</article>
+<article class="msc st-now reveal" id="m5">
+  <div class="top"><span class="code">M5</span><span class="sbadge st-now">IN PROGRESS</span></div>
+  <h3>Evals that measure agents</h3>
+  <dl><div><dt>Value</dt><dd>We can show how good a generated agent actually is, not only that its checks ran, and a change cannot make it worse without someone noticing.</dd></div><div><dt>Where it is</dt><dd>Coverage and quality are now required checks, a safe first-pass scan runs before anything else, and the starter pass mark is 80%. A comparison against an accepted baseline is written but not switched on.</dd></div><div><dt>Waiting on</dt><dd class="wait">An accepted baseline, an approved evaluation project, region and identity, and a design that keeps hidden test cases hidden (Q18). Live replay also needs pilot repositories.</dd></div></dl>
+  <p class="refs">E3 in progress · E1 blocked · E2 later</p>
+</article>
+<article class="msc st-later reveal" id="m6">
+  <div class="top"><span class="code">M6</span><span class="sbadge st-later">LATER</span></div>
+  <h3>Golden-workflow coverage</h3>
+  <dl><div><dt>Value</dt><dd>The harness helps with more of the eight stages: checks for infrastructure changes, reuse of an existing reference template, a release review pack, registration and approvals inside GitHub.</dd></div><div><dt>Where it is</dt><dd>Not started. Lower priority than the pilot.</dd></div><div><dt>Waiting on</dt><dd class="wait">Access to the reference template (W2).</dd></div></dl>
+  <p class="refs">W1 to W5</p>
+</article>
+<article class="msc st-now reveal" id="m7">
+  <div class="top"><span class="code">M7</span><span class="sbadge st-now">IN PROGRESS</span></div>
+  <h3>Hygiene</h3>
+  <dl><div><dt>Value</dt><dd>The repo stays easy to work in. Formatting, spelling and docs links are now checked on every change.</dd></div><div><dt>Where it is</dt><dd>Last piece: run the end-to-end script in CI on Linux and Windows.</dd></div></dl>
+  <p class="refs">H1 in progress</p>
+</article>
+<article class="msc st-now reveal" id="m8">
+  <div class="top"><span class="code">M8</span><span class="sbadge st-now">IN PROGRESS</span></div>
+  <h3>Generated agent ready for the pilot</h3>
+  <dl><div><dt>Value</dt><dd>A team can pick up a freshly generated agent, run its checks without cloud access, see an allowed and a refused action, read a redacted diagnostic, and know what needs approval before going live.</dd></div><div><dt>Where it is</dt><dd>The starter agent is read-only, reports redacted diagnostics and carries one pinned skill. Next is a preflight command and an end-to-end acceptance test (H2). Two live runs are still to do.</dd></div><div><dt>Waiting on</dt><dd class="wait">Approved non-production cloud setup for the live runs.</dd></div></dl>
+  <p class="refs">A2 done · H2 next · A1, A3 awaiting live runs · E3</p>
+</article>
+<article class="msc st-next reveal" id="m9">
+  <div class="top"><span class="code">M9</span><span class="sbadge st-next">NEXT</span></div>
+  <h3>Agent intake and authoring</h3>
+  <dl><div><dt>Value</dt><dd>A person who owns a business problem can ask for an agent with a form, answer plain-language questions, and get a tested, governed pull request without writing Python. People still approve everything.</dd></div><div><dt>Where it is</dt><dd>The request form and an offline parser that turns it into an untrusted draft are done. Next: a fixed library of approved connectors, then a prototype that asks the questions, then agent authoring. All offline, against fakes.</dd></div><div><dt>Waiting on</dt><dd class="wait">The hosted version needs real GitHub and the runtime (M1, M2), a hosting route and an owner for who sponsors a request (Q17).</dd></div></dl>
+  <p class="refs">I1 done · I2 next · I3 to I6 · I7 blocked</p>
+</article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Waiting on people</div>
+      <h2>Decisions and access we need</h2>
+      <p class="lede">Nothing here has been guessed. Owners are the suggestions recorded in the <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/OPEN_QUESTIONS.md">open questions</a>, not confirmed assignments.</p>
+    </div>
+    <div class="tbl-wrap reveal"><table class="tbl">
+      <thead><tr><th>What is needed</th><th>Suggested owner</th><th>It unlocks</th></tr></thead>
+      <tbody>
+        <tr><td>A ruling on how Copilot assignment fits the “no personal tokens” rule (R2)</td><td>Security team</td><td>M1, and through it M2, M4 and the hosted part of M9</td></tr>
+        <tr><td>GitHub’s answer on Copilot processing in Australia (Q3)</td><td>Security team</td><td>The builder residency check in M3</td></tr>
+        <tr><td>Baseline approval, and an approved evaluation project, region and identity (Q18)</td><td>AI governance team; security and platform teams</td><td>Live evals in M5</td></tr>
+        <tr><td>Access to the existing reference agent template</td><td>AI governance team</td><td>The template work in M6</td></tr>
+        <tr><td>Pilot repositories with history</td><td>Not yet assigned</td><td>Live eval replay in M5</td></tr>
+        <tr><td>Where the harness is hosted, and the webhook route (Q5)</td><td>Platform team</td><td>The durable runtime in M2</td></tr>
+        <tr><td>Who sponsors a request before budget is spent (Q17)</td><td>Not yet assigned</td><td>The hosted trigger in M9</td></tr>
+        <tr><td>The names of the approved planner and reviewer skills (Q7)</td><td>AI governance team</td><td>Pinned skills for the harness’s own agents</td></tr>
+      </tbody></table></div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Recently delivered</div>
+      <h2>The last two days</h2>
+    </div>
+    <ul class="recent">
+      <li><time>26 November 2026</time><b>Required coverage and quality checks</b> for generated agents, a safe first-pass scan, and a baseline comparison that is written but not yet switched on.</li>
+      <li><time>26 November 2026</time><b>Agent request form</b> and an offline parser that turns a request into an untrusted draft. Anyone with repository access may ask; a draft grants nothing.</li>
+      <li><time>26 November 2026</time><b>Model Armor</b> added beside Sunglasses as the input scanner. It also scans review findings and pull request comments. Tested on a fixture, not yet live.</li>
+      <li><time>26 November 2026</time><b>Docs and CI tidy-up.</b> Technical docs moved to their own folder; formatting, spelling and docs links are now checked on every change.</li>
+      <li><time>25 November 2026</time><b>Project site</b>, new-capability detection (models, hosts, regions, data stores, dependencies), a hardened AI-role layer, and the Copilot setup for generated repos.</li>
+    </ul>
+    <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CHANGELOG.md">docs/CHANGELOG.md</a>.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <a class="brand" href="index.html#top" style="margin-bottom:12px"><img src="assets/img/favicon.svg" alt="" width="30" height="30">Agentic Harness</a>
+      <p>The golden workflow for taking an agent live on a cloud platform, as code. Humans stay accountable.</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="index.html#vision">Vision</a></li><li><a href="index.html#gate">The merge gate</a></li><li><a href="index.html#architecture">Architecture</a></li><li><a href="index.html#status">Status</a></li><li><a href="index.html#start">Get started</a></li><li><a href="index.html#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Project</h4>
+      <ul>
+        <li><a href="https://github.com/phermens-slalom/agentic-harness-demo">Repository</a></li>
+        <li><a href="roadmap.html">Roadmap</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ROADMAP.md">full backlog</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CONTRIBUTING.md">Contributing</a></li>
+        <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/OPEN_QUESTIONS.md">Open questions</a></li>
+      </ul>
+    </div>
+    <p class="fine">Illustrative content: names such as <code>workload-infrastructure</code>, <code>platform.tf</code> and the insurance examples are placeholders, not a real system. Licence: to be validated. No licence file is in the repo, so do not assume one. Built from the repo’s own docs; where the two disagree, the roadmap wins.</p>
+  </div>
+</footer>
+
+</body>
+</html>

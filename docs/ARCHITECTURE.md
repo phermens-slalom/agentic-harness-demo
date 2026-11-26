@@ -27,12 +27,12 @@ New words are in the [Glossary](GLOSSARY.md). The big picture is in the [Vision]
 | Language | Python. `requires-python >=3.11,<3.14`. Local default 3.13 (`.python-version`). CI tests 3.11, 3.12 and 3.13. |
 | Packaging | `setuptools` (build), `uv` (installs and lock file), console script `agentic-bootstrap` |
 | Runtime packages | `pyyaml>=6.0`, `pydantic>=2.12,<3` |
-| Optional packages | `google-adk>=2.12,<3` (extra `adk`), `sunglasses==0.6.20` (extra `guard`) |
+| Optional packages | `google-adk>=2.12,<3` (extra `adk`), `sunglasses==0.6.20` (extra `guard`), `google-cloud-modelarmor==0.7.5` (extra `armor`) |
 | Dev packages | `pytest`, `hypothesis`, `ruff`, `ty`, `codespell`, plus `sunglasses` |
 | Agent framework | Google ADK only |
 | Models | Gemini through Vertex AI (AI Studio only for local use) |
 | Builder | GitHub Copilot coding agent (default) |
-| CI | GitHub Actions: lint, type check, tests, dry-run evals, Gitleaks, CodeQL, dependency review, zizmor |
+| CI | GitHub Actions: lint, format check, spelling, type check, tests (which also check docs links), dry-run evals, Gitleaks, CodeQL, dependency review, zizmor |
 | Infrastructure | Terraform; `workload-infrastructure` and `platform.tf` are illustrative, unconfirmed names |
 | Config format | YAML files in `policy/`, checked by Pydantic models |
 
@@ -79,6 +79,7 @@ Who and what the harness deals with.
 | GitHub | Holds the repos, runs CI, hosts the Copilot builder | **Planned** for the real client. Only a fake exists. The real client is blocked (R2). |
 | Google Cloud / Vertex AI | Runs Gemini for triage, planning and review | Working with fakes. Not run live yet. |
 | Generated agent repos | The output of bootstrap `new` | Working |
+| Requesters (anyone with repository access) | Raise an `AgentRequest` issue with the issue form. A person with access to the repository may ask; a draft is only ever a draft. | Working offline. The hosted access lookup is I7. |
 | `workload-infrastructure` repository | Illustrative name for a possible cloud-project repository; actual layout is unconfirmed | Plan only (`agentic-bootstrap plan`) |
 
 The harness has no database, no web server and no queue today. It is a library and a command-line tool.
@@ -114,11 +115,12 @@ The harness has no database, no web server and no queue today. It is a library a
 |---|---|---|---|
 | `app/harness/` | The Python package with all the logic | Python, Pydantic, PyYAML, optional ADK and Sunglasses | Working |
 | `policy/` | The rules, as data | YAML | Working. Several `TODO`s need owners. |
-| `evals/` | Golden tasks and the runner | Python, YAML | Dry-run working. Live mode is a stub. |
+| `evals/` | Golden tasks, request-parsing cases and the runner | Python, YAML | Dry-run working. Live mode is a stub. |
 | `agent-template/` | The starting repo for one agent | Python, ADK, `agents-cli`, YAML, GitHub Actions | Working as a starter |
 | `tests/` | Tests for the harness | `pytest`, `unittest`, `hypothesis` | Working |
 | `scripts/` | End-to-end script (`e2e.py`) with shell and PowerShell wrappers | Python standard library | Working |
 | `.github/workflows/ci.yml` | The harness's own CI | GitHub Actions | Working |
+| `.github/ISSUE_TEMPLATE/` | The `AgentRequest` issue form that asks a requester for the facts an agent needs | GitHub issue form (YAML) | Working. Nothing reads it live yet (I7). |
 | `deployment/terraform/` | A README on how the harness should be hosted | Markdown | Notes only. No Terraform files. |
 | `sandbox/` | An optional builder container and runner | Docker (`node:22-slim`), shell | **Stub** |
 | `skills/` | A note on skills | Markdown | Notes only |
@@ -130,7 +132,7 @@ How they connect:
 - `app/harness/` **reads** `policy/` on start. Every policy file is checked against a strict schema.
 - `app/harness/` **renders** `agent-template/` when you run `agentic-bootstrap new`.
 - `evals/` **runs** the workflow and the gate on saved tasks and scores the outcomes.
-- `.github/workflows/ci.yml` **runs** lint, type check, tests and the dry-run evals on every PR.
+- `.github/workflows/ci.yml` **runs** lint, format and spelling checks, type check, tests and the dry-run evals on every PR.
 - `tests/` and `evals/` both guard `policy/` and `app/harness/nodes/`. A change there needs an eval.
 
 ---
@@ -163,7 +165,8 @@ How they connect:
  │  policy.py  policy_validation.py  golden.py  residency.py  skills.py ◄─┘           │
  │     (load, validate and apply the YAML policy)                                     │
  │                                                                                    │
- │  bootstrap/   cli.py  spec.py  template.py  terraform_plan.py  security_harness.py |
+ │  bootstrap/   cli.py  spec.py  agent_request.py  template.py  terraform_plan.py    │
+ │               security_harness.py                                                  │
  └────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -172,7 +175,7 @@ How they connect:
 | Component | Does | State |
 |---|---|---|
 | `models.py` | Plain data types: `Issue`, `TriageResult`, `Plan`, `BuildResult`, `PRSnapshot`, `ReviewResult`, `ScanVerdict`, `TaskOutcome`, `TraceEvent`, the `Decision` enum and the `AdapterError` family | Working |
-| `ports.py` | The interfaces: `Triager`, `Planner`, `Builder`, `Reviewer`, `HumanGate`, `InputScanner`, `GitHubPort` (assign to Copilot, comment, wait for checks, read a file, list files) | Working |
+| `ports.py` | The interfaces: `Triager`, `Planner`, `Builder`, `Reviewer`, `HumanGate`, `InputScanner`, `GitHubPort` (assign to Copilot, comment, wait for checks, read a file, list files) and `RequesterAccess` (is this person allowed to raise a request in this repository) | Working. Only fakes exist for `GitHubPort` and `RequesterAccess`. |
 | `workflow.py` | `IssueToMerge`: runs the loop and records a trace. Escalates on any adapter or residency error. | Working with fakes |
 
 #### The loop, step by step
@@ -255,12 +258,16 @@ New capabilities add approvers to the result and never turn a decision into a bl
  spec.yaml ─► spec.py (validate) ─┬─► new   ─► template.py ─► a new agent repo
                                   ├─► check ─► security_harness.py ─► findings (exit 1)
                                   └─► plan  ─► terraform_plan.py ─► three ordered PRs (JSON)
+
+ AgentRequest issue ─► agent_request.py ─► untrusted draft (brief + review-only spec + missing fields)
+                       (needs RequesterAccess)   not yet wired to bootstrap or to a model (M9)
 ```
 
 | Component | Does | State |
 |---|---|---|
 | `cli.py` | The `agentic-bootstrap` command with `new`, `check` and `plan` | Working |
 | `spec.py` | Reads and checks the spec: slug names, allowed location, exact egress hosts | Working |
+| `agent_request.py` | Turns an `AgentRequest` issue into an untrusted draft: a Mission Brief, a review-only spec and a list of missing fields. Strict and deterministic. It needs a trusted `RequesterAccess` lookup, calls no model, and grants no host, model or approval. | Working offline. Hosted access lookup and wiring are I7. |
 | `template.py` | Copies `agent-template/`, fills in the names, and writes the Copilot firewall list from the egress hosts | Working |
 | `security_harness.py` | harness-specific checks: required files, no other agent framework, no global location. Copied into each agent repo. | Working |
 | `terraform_plan.py` | Lists the three ordered PRs for `workload-infrastructure` repository with their approvers | Plan only. Folder layout is an assumption (Q12). |
@@ -291,8 +298,10 @@ New capabilities add approvers to the result and never turn a decision into a bl
 |---|---|---|
 | `golden_tasks/example_tasks.yaml` | Ordinary cases | Working |
 | `golden_tasks/adversarial_tasks.yaml` | Attack and look-alike cases. `expected` is always the safe outcome. | Working |
+| `agent_request_parse.yaml` | Cases for the request parser, including a request that tries to smuggle in a host, a model or a skipped approval. Run by `pytest`. | Working |
 | `run_evals.py` | Runs tasks and scores them. Mode `dry-run` works; mode `live` exits with a stub message. | Dry-run working |
 
+Today the runner scores 65 tasks (67 in the files; two are open known gaps, below).
 The run passes only if these hold: decision, tier and approver accuracy at least 0.9; injection detection 1.0
 (when present); guard false positives 0.0; adversarial auto-merges 0. An open known gap is reported but not scored.
 
@@ -304,11 +313,12 @@ The run passes only if these hold: decision, tier and approver accuracy at least
  │                 telemetry.py (redacted tool diagnostics) · data/ · skills/ (one pinned skill)
  │                 harness_bootstrap.py (the harness policy check, so CI can run it)
  ├─ tests/         unit tests (no cloud needed) · eval/ (two starter eval cases)
- ├─ evals/         golden_set.yaml · thresholds.yaml · baseline/ · holdout/ (README only)
+ ├─ evals/         golden_set.yaml · thresholds.yaml (80% starter marks) · baseline/ · holdout/ (README only)
  ├─ docs/          mission-brief.md · runbook.md · copilot-agent-environment.md
  ├─ .github/       CODEOWNERS · copilot-instructions.md · PR template
  │                 agents/agent-builder.agent.md
  │                 workflows/ agent-checks.yml · copilot-setup-steps.yml
+ │                            preflight.py · coverage.py · eval_gate.py
  ├─ AGENTS.md      rules for the coding agent
  └─ pyproject.toml · agents-cli-manifest.yaml (target: agent_runtime)
 ```
@@ -320,14 +330,17 @@ The run passes only if these hold: decision, tier and approver accuracy at least
 | `agent/telemetry.py` | Wraps each tool to log its name, outcome and timing. No prompts or arguments. | Working |
 | `agent/skills/garage-summary/` | One example skill, pinned by fingerprint. Guidance only. | Working |
 | `.github/workflows/agent-checks.yml` | Preflight scans before dependent jobs; jobs include `lint`, `tests`, `coverage`, `quality`, `evals_no_regression`, `secret_scan`, `codeql`, `dependency_review`, `zizmor`. Only `evals_no_regression` can get cloud identity. | Coverage enforces 80%; `evals_no_regression` is a **stub** that fails until wired (E3). Workflow protection is needed to prevent PRs bypassing preflight. |
+| `.github/workflows/preflight.py` | Runs first, from the trusted base revision, over the candidate checkout. Static checks only: it parses files without running them, rejects symbolic links and a candidate-supplied `.gitleaksignore`, scans text with Sunglasses and runs the harness policy check. The `preflight` job then runs Gitleaks. A tripwire, not a sandbox. | Working |
+| `.github/workflows/coverage.py` | Reads the coverage mark from `evals/thresholds.yaml` (80 to 100) and fails closed on a missing or bad value | Working |
+| `.github/workflows/eval_gate.py` | Compares `agents-cli` eval results with the approved baseline and fails closed on missing, incompatible or regressed evidence | **Written, not wired.** Nothing runs it until live evals are set up (E3, Q18). |
 | `.github/workflows/copilot-setup-steps.yml` | Prepares Copilot's environment with pinned actions | Working |
-| `evals/` | Example cases, starter pass marks, baseline | 80% starter marks; baseline requires AI Governance approval |
+| `evals/` | Example cases, starter pass marks, baseline | 80% starter marks; the baseline needs AI Governance approval. The holdout set is a README only. |
 
 ### Harness CI (`.github/workflows/ci.yml`)
 
 | Job | Does |
 |---|---|
-| `test-and-eval` (Python 3.11, 3.12, 3.13) | `ruff check`, `ty check`, `pytest`, dry-run evals, uploads the report |
+| `test-and-eval` (Python 3.11, 3.12, 3.13) | `ruff check`, `ruff format --check`, `codespell`, `ty check`, `pytest` (including the docs-link and site checks), dry-run evals, uploads the report |
 | `secret_scan` | Gitleaks v8.30.1 over the PR commits |
 | `codeql`, `dependency_review` | Run on public repos or when `GHAS_ENABLED=true` |
 | `zizmor` | Checks the workflow files |
@@ -359,6 +372,8 @@ These appear in the roadmap and in comments, but not as working code.
 | Kill switch and budgets | R5 |
 | Reviewer sees the diff | R7 |
 | Traces to Cloud Trace and an audit log in BigQuery | O1 |
-| Live evals, holdout runner, real `evals_no_regression` | E1, E3 |
+| Live evals, holdout runner, real `evals_no_regression` (the comparator exists but is not wired) | E1, E3 |
+| Intake agent, connector library, authoring, cross-model review, hosted trigger | I2 to I7 (I1, the request draft parser, is built) |
+| Generated-project preflight command and acceptance test | H2 |
 | Template based on existing reference agent template | W2 (blocked) |
 | Where the harness runs (Cloud Run, Cloud SQL) | D-05, still a proposal |

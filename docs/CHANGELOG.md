@@ -8,6 +8,13 @@ attested releases are planned (S5).
 
 ## 2026-11-26
 
+- **Site refreshed.** The site now has a roadmap page (what each milestone is worth, the next few steps, what is
+  waiting on people) and a glossary page. The golden-path stages, status, blockers, architecture and figures match
+  today's work (265 tests, 65 scored golden tasks). The gate replay has 16 scenarios. The human-decision colour is now
+  orange so it cannot be mistaken for AI, and each loop step carries a CODE, AI or PERSON label. "To be validated"
+  replaces `TODO: UNCONFIRMED` on the site. Vendor facts were re-checked; Copilot's Australian residency is still
+  to be validated. The architecture doc and glossary codes were brought up to date, and the stale I1 blocker row was
+  replaced by I7.
 - **E3 in progress.** Added required coverage and quality checks, 80% starter coverage and eval marks,
   pre-execution static scans, and an unwired regression comparator. AI Governance will approve the
   baseline. Live regression and isolated holdout evaluations remain open.
