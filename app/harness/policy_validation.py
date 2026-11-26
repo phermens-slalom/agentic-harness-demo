@@ -14,6 +14,8 @@ TEMPLATE_WORKFLOW = (
     Path(__file__).resolve().parents[2] / "agent-template" / ".github" / "workflows" / "agent-checks.yml"
 )
 KNOWN_WORKFLOWS = {"issue_to_merge"}
+# Every surface the workflow scans. A surface missing from input_guard.yaml is silently not scanned.
+GUARD_SURFACES = {"issue", "build_feedback", "review_feedback", "pr_comment", "repo_context"}
 RACI_VALUES = {"", "R", "A", "C", "I", "R/A", "approves"}
 
 
@@ -121,11 +123,16 @@ class Residency(StrictModel):
     known_gaps: list[StrictStr]
 
 
+class ModelArmorPolicy(StrictModel):
+    require_outside_local: StrictBool
+
+
 class InputGuard(StrictModel):
     enabled: StrictBool
     mode: Literal["shadow", "enforce"]
     fail_closed: StrictBool
     surfaces: dict[StrictStr, StrictStr]
+    model_armor: ModelArmorPolicy
 
 
 class CapabilityApprovers(StrictModel):
@@ -228,6 +235,10 @@ def validate_policy_directory(directory: Path | None = None) -> None:
             raise ValueError(f"skills.lock.yaml {skill_name}: sha256 must be 64 hex characters")
         if skill["owner"] not in roles:
             raise ValueError(f"policy references unknown RACI role(s): {skill['owner']}")
+
+    unscanned = sorted(GUARD_SURFACES - set(files["input_guard.yaml"]["surfaces"]))
+    if unscanned:
+        raise ValueError(f"input_guard.yaml surfaces missing (would not be scanned): {', '.join(unscanned)}")
 
     route_targets = set(files["routing.yaml"]["routes"].values())
     unknown_targets = sorted(route_targets - KNOWN_WORKFLOWS)

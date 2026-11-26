@@ -47,6 +47,9 @@ Each `TODO(owner)` means "ask the appropriate role or owner; do not invent the a
 | `policy/risk_tiers.yaml` | Sign off the full control-file boundary | security team |
 | `policy/risk_tiers.yaml` | Confirm which files are "privileged YAML" | security team |
 | `policy/capabilities.yaml` | Agree the starting allowlists (hosts, regions, models, stores, dependencies) and the package mirror | security team |
+| `policy/input_guard.yaml` | Confirm Model Armor templates are required outside local use, and what they screen | security team |
+| `docs/INPUT_GUARD.md` | Confirm the Private Service Connect route for the Model Armor regional endpoint | platform team |
+| `evals/fixtures/model_armor.json` | Replace the authored fixture with responses recorded from an approved non-production template | AI governance team |
 | `policy/routing.yaml` | Confirm the repo-context caps and the deny list | AI governance team |
 | `policy/routing.yaml`, `policy/skills.lock.yaml` | Name the real skills, their source and the approved revision | AI governance team (Q7) |
 | `app/harness/workflow.py` | Read the spec's `egress_hosts` at run time once the GitHub client can read repo files | AI governance team |

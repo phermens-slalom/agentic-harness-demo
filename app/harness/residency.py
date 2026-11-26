@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 from collections.abc import Mapping
 from pathlib import Path
 
@@ -57,3 +58,21 @@ def assert_model_backend(env: Mapping[str, str] | None = None, allowed: list[str
         "only when HARNESS_ENV=local. Set GOOGLE_GENAI_USE_VERTEXAI=TRUE with an allowed "
         "GOOGLE_CLOUD_LOCATION"
     )
+
+
+_TEMPLATE = re.compile(r"^projects/([^/\s]+)/locations/([a-z0-9-]+)/templates/([A-Za-z0-9_-]{1,63})$")
+
+
+def template_location(template: str, allowed: list[str] | None = None) -> str:
+    """Return the location of a Model Armor template resource name, if it is an allowed location.
+
+    The name must be the full `projects/{project}/locations/{location}/templates/{template}`. The
+    location picks the regional endpoint (`modelarmor.{location}.rep.googleapis.com`), so a template
+    outside the allowed locations would send text outside them.
+    """
+    match = _TEMPLATE.match(template)
+    if not match:
+        raise ResidencyError(
+            "Model Armor template must be a full name: projects/{project}/locations/{location}/templates/{template}"
+        )
+    return assert_allowed(match.group(2), allowed)

@@ -12,6 +12,8 @@ Metrics (the ones worth putting on a dashboard):
   approver_accuracy   share whose required approvers match the RACI-derived expectation
 Tasks may set `repo_files:` (path -> content) to give the planner and reviewer read-only repo context,
 and `triage_files:` for the paths triage names.
+Tasks may set `scanner: composite` (Model Armor played back from evals/fixtures/model_armor.json, plus
+Sunglasses), `scenario.reviews` (scripted reviewer verdicts) and `builds[].comments` (PR comments).
 Tasks may set `phase:` to evaluate policy at a later agent platform phase (default: policy file).
 Adversarial tasks (`adversarial: true`) check that bad behaviour is caught or observed:
   guard: enforce|shadow   run the input guard (real sunglasses scanner) in that mode
@@ -38,15 +40,18 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from harness.adapters.composite_scanner import CompositeScanner
 from harness.adapters.fakes import (
     FakeGitHub,
     FakePlanner,
     FakeTriager,
+    FixtureModelArmorClient,
     RecordingHuman,
     ScriptedBuilder,
     ScriptedReviewer,
 )
-from harness.models import BuildResult, Decision, Issue
+from harness.adapters.model_armor_scanner import ModelArmorScanner
+from harness.models import BuildResult, Decision, Issue, ReviewResult
 from harness.nodes.input_guard import InputGuard
 from harness.policy import RiskPolicy
 from harness.workflow import IssueToMerge
@@ -63,16 +68,29 @@ def _expects_flag(tasks: list[dict], task_id: str) -> bool:
     return next(t for t in tasks if t["id"] == task_id)["expected"].get("guard_flagged") is True
 
 
+FIXTURES = Path(__file__).resolve().parent / "fixtures"
+
+
+def _scanner_for(task: dict):
+    try:
+        from harness.adapters.sunglasses_scanner import SunglassesScanner
+
+        sunglasses = SunglassesScanner()
+    except ImportError:
+        raise SystemExit("guard eval tasks need the scanner: pip install -e '.[dev]' (or '.[guard]')")
+    if task.get("scanner") != "composite":
+        return sunglasses
+    # Model Armor is played back from a fixture: CI never calls the live API.
+    fixture = json.loads((FIXTURES / "model_armor.json").read_text())
+    armor = ModelArmorScanner(fixture["template"], client=FixtureModelArmorClient(fixture))
+    return CompositeScanner([("model_armor", armor), ("sunglasses", sunglasses)])
+
+
 def _guard_for(task: dict) -> InputGuard | None:
     mode = task.get("guard")
     if not mode:
         return None
-    try:
-        from harness.adapters.sunglasses_scanner import SunglassesScanner
-
-        scanner = SunglassesScanner()
-    except ImportError:
-        raise SystemExit("guard eval tasks need the scanner: pip install -e '.[dev]' (or '.[guard]')")
+    scanner = _scanner_for(task)
     g = InputGuard.load(scanner)
     assert g is not None, "policy/input_guard.yaml has enabled: false"
     g.mode = mode
@@ -91,6 +109,7 @@ def _dry_run_workflow(task: dict) -> IssueToMerge:
             checks=b.get("checks", {}),
             previous_paths=b.get("previous_paths", []),
             diff=b.get("diff", ""),
+            comments=b.get("comments", []),
         )
         for b in task["scenario"]["builds"]
     ]
@@ -98,7 +117,14 @@ def _dry_run_workflow(task: dict) -> IssueToMerge:
         triager=FakeTriager(files=task.get("triage_files", [])),
         planner=FakePlanner(),
         builder=ScriptedBuilder(builds),
-        reviewer=ScriptedReviewer(),
+        reviewer=ScriptedReviewer(
+            [
+                ReviewResult(approved=r["approved"], blocking_findings=r.get("findings", []))
+                for r in task["scenario"]["reviews"]
+            ]
+            if "reviews" in task["scenario"]
+            else [ReviewResult(approved=True)]
+        ),
         human=RecordingHuman(),
         policy=RiskPolicy.load(phase=task.get("phase")),
         guard=_guard_for(task),

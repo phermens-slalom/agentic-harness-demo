@@ -181,12 +181,12 @@ evals. Update the item status and add a work-log entry in docs/ROADMAP.md.
         `README.md`, `CHANGELOG.md`. A bare `tests/**` no longer counts as tier 1.
   - [ ] One adversarial golden task per newly covered path family, each expecting `human_approval` at
         tier 3 at phase 3.
-  - [ ] `docs/SUNGLASSES_EVALUATION.md` and the policy comments are updated. `TODO(security)`
+  - [ ] `docs/INPUT_GUARD.md` and the policy comments are updated. `TODO(security)`
         sign-off marker added.
 
 ```text
 Read docs/ROADMAP.md item G2 and decision D-02, then policy/risk_tiers.yaml, app/harness/policy.py,
-evals/golden_tasks/adversarial_tasks.yaml and docs/SUNGLASSES_EVALUATION.md.
+evals/golden_tasks/adversarial_tasks.yaml and docs/INPUT_GUARD.md.
 
 Threat model: an agent (or a prompt injection steering it) that can edit the things that grade it can
 make any change pass. Today CI workflows, CODEOWNERS and eval thresholds/baselines are tier 2 with no
@@ -198,7 +198,7 @@ the item, placed so first-match-wins picks it before tests-and-docs. Narrow test
 specified. Before editing, write a short table in your plan of every path that changes tier and
 its old/new tier, and check that nothing which should stay tier 1 (plain test_*.py, docs/**) moves.
 Add one adversarial golden task per newly covered path family. Do not touch merge_gate.py logic.
-Run ruff, ty, pytest and evals. Update the policy comments, SUNGLASSES_EVALUATION.md, the item status
+Run ruff, ty, pytest and evals. Update the policy comments, INPUT_GUARD.md, the item status
 and the work log.
 ```
 
@@ -631,21 +631,26 @@ status and the work log.
 ```
 
 ### S2 · Model Armor as the primary scanner, and scan every untrusted input
-- **Status:** todo · **Priority:** P1 · **Size:** M · **Depends on:** R6 · **Decision:** D-09
+- **Status:** review · **Priority:** P1 · **Size:** M · **Depends on:** R6 · **Decision:** D-09
 - **Model / effort:** Sonnet 5.5 · high
 - **Why:** Sunglasses misses novel phrasing (two known gaps). Reviewer findings and PR comments are fed
   back to the builder without being scanned.
 - **Done when:**
-  - [ ] `adapters/model_armor_scanner.py` implements `InputScanner` using the Model Armor API (regional
+  - [x] `adapters/model_armor_scanner.py` implements `InputScanner` using the Model Armor API (regional
         endpoint, template ID from config). A composite scanner runs Model Armor and Sunglasses, and
         blocks if either does.
-  - [ ] The harness's ADK app registers `ModelArmorPlugin` for model input and output.
-  - [ ] New guarded inputs: `review_feedback`, `pr_comment`, `repo_context` (R6).
-  - [ ] Adversarial tasks for the two known gaps run against the composite scanner. A recorded fixture
+  - [x] The harness's ADK app registers `ModelArmorPlugin` for model input and output.
+  - [x] New guarded inputs: `review_feedback`, `pr_comment`, `repo_context` (R6).
+  - [x] Adversarial tasks for the two known gaps run against the composite scanner. A recorded fixture
         stands in for Model Armor in CI.
+  - Model Armor has not been run against a live template (no approved project), so the CI fixture is authored
+    from the documented response shape, not recorded. Only `australia-southeast2` among the allowed regions
+    supports Model Armor, with three filters (Responsible AI, Sensitive Data Protection, prompt injection and
+    jailbreak). `TODO(security)`: require templates outside local use, and what they screen.
+    `PR comments` are scanned on a new `pr_comment` surface, but nothing fills them until R2.
 
 ```text
-Read docs/ROADMAP.md item S2 and decision D-09, docs/SUNGLASSES_EVALUATION.md, app/harness/ports.py,
+Read docs/ROADMAP.md item S2 and decision D-09, docs/INPUT_GUARD.md, app/harness/ports.py,
 nodes/input_guard.py, adapters/sunglasses_scanner.py, policy/input_guard.yaml and workflow.py.
 
 Read the current Model Armor docs (sanitizeUserPrompt/sanitizeModelResponse, regional endpoints)
@@ -653,7 +658,7 @@ and the ADK Model Armor plugin page; cite them. Implement a ModelArmorScanner be
 (lazy import, .[armor] extra), a CompositeScanner (block if any blocks; fail closed on any error),
 register ModelArmorPlugin on the harness ADK app, and extend the guarded inputs to review feedback,
 PR comments and repo context. CI uses a recorded fixture, never the live API. Update
-SUNGLASSES_EVALUATION.md (rename to INPUT_GUARD.md if it reads better), the item status and the
+INPUT_GUARD.md (renamed from SUNGLASSES_EVALUATION.md), the item status and the
 work log.
 ```
 
@@ -1372,6 +1377,22 @@ anything learned that should change this plan. Never rewrite old entries; correc
   the reviewer is a different model family where residency allows.
 - Consequence to watch: under D-02 everything the intake agent writes is tier 3, so review load stays
   high until Q16 is answered.
+
+### 2026-11-26 · S2 Model Armor as the primary scanner
+- Added `ModelArmorScanner` (`sanitizeUserPrompt` on the regional endpoint, template from config, residency-checked,
+  chunked over the documented limit, any call error raises), `CompositeScanner` (blocked if any scanner blocks, a
+  scanner error blocks, at least one scanner required) and `default_scanner` (Model Armor required outside
+  `HARNESS_ENV=local`). Added the `armor` extra (`google-cloud-modelarmor==0.7.5`) and refreshed `uv.lock`.
+- Registered `ModelArmorPlugin` on the harness's ADK `App` for model input and output; a blocked reply escalates
+  and is not retried. New guarded surfaces: `review_feedback` and `pr_comment` (with `repo_context` from R6).
+  `PRSnapshot` and `BuildResult` gained `comments`. The policy check now fails if a scanned surface is missing.
+- Docs read on cloud.google.com and adk.dev (cited in `docs/INPUT_GUARD.md`); `google-adk` 2.15.1 and
+  `google-cloud-modelarmor` 0.7.5 checked against the installed packages. Found that only Melbourne supports
+  Model Armor among the allowed regions, with limited filters. Renamed `SUNGLASSES_EVALUATION.md` to `INPUT_GUARD.md`.
+- Added 8 golden tasks (composite plus the new surfaces) and runner support for `scanner: composite`,
+  `scenario.reviews` and `builds[].comments`. A mutation test now also covers a blind Model Armor, and the blind
+  Sunglasses test asserts detection below 1.0, since the composite tasks are still caught by Model Armor.
+- Not done: no live call to Model Armor. The fixture is authored, not recorded.
 
 ### 2026-11-25 · Rename `repo-template/` to `agent-template/`
 - Renamed the folder and updated every live reference: the template path in `bootstrap/template.py` and

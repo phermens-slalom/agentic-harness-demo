@@ -6,6 +6,13 @@ The roadmap work log has the detail and wins if they disagree.
 The package version in `pyproject.toml` is `0.2.0`. TODO: UNCONFIRMED release and tagging practice. Tagged,
 attested releases are planned (S5).
 
+## 2026-11-26
+
+- **S2, Model Armor as the main scanner.** A Model Armor scanner and a composite scanner (blocked if either scanner
+  blocks; any scanner error counts as a block) now sit behind the input guard beside Sunglasses. `ModelArmorPlugin`
+  is registered on the harness's ADK app. Review findings and PR comments are now scanned too. `SUNGLASSES_EVALUATION.md`
+  became `INPUT_GUARD.md`. CI plays back a fixture, so Model Armor has not run live. Eight golden tasks added.
+
 ## 2026-11-25
 
 - **Project site.** A static site in `site/` summarises the vision, workflow, merge gate, architecture, safety,

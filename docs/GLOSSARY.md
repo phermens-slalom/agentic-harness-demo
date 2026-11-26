@@ -153,7 +153,10 @@ The **merge gate** ([`merge_gate.py`](../app/harness/nodes/merge_gate.py)) is pl
 | **Enforce mode** | A match, crash or incomplete scan stops the task. |
 | **Prompt injection** | Text that tries to give an AI new orders (for example "ignore previous instructions"). |
 | **Sunglasses** | The pattern-matching scanner used by the input guard. A cheap tripwire, not a full defence. |
-| **Model Armor** | A Google Cloud screening service. Planned as the main scanner (S2). Not built yet. |
+| **Model Armor** | A Google Cloud service that screens prompts and replies for prompt injection and other risks. The main scanner (S2). Wired in and tested with a fixture. Not run against the live service yet. |
+| **Composite scanner** | Runs Model Armor and Sunglasses on the same text. Blocked if either blocks. A scanner that errors counts as a block. |
+| **ModelArmorPlugin** | The part of ADK that screens a model's input and replies with Model Armor. Registered on the harness's own ADK app. |
+| **Template (Model Armor)** | A saved set of Model Armor settings in one cloud region. Not the same as `agent-template/`. |
 | **Adversarial task** | A golden task that tries bad behaviour to prove the harness catches it. |
 | **Known gap** | A documented miss. It is reported as open and must be removed once it is fixed. |
 | **Reward hacking** | An agent passing its checks by cheating (for example by editing the tests) rather than by doing the work. |

@@ -69,7 +69,7 @@
     <div>
       <div class="pill-row">
         <span class="pill"><i></i>Early stage · not yet security reviewed</span>
-        <span class="pill ok"><i></i>172 tests · 54 scored golden tasks passing</span>
+        <span class="pill ok"><i></i>210 tests · 62 scored golden tasks passing</span>
       </div>
       <h1>Let AI write the code. <span class="grad">Let plain code decide what merges.</span></h1>
       <p class="lede">The golden workflow for taking an agent live on a cloud platform, as code: policy as reviewable data, a deterministic merge gate, an issue-to-merge loop, a staged bootstrap CLI, and evals that gate changes to the harness itself. Humans stay accountable.</p>
@@ -168,7 +168,7 @@
       <p style="color:var(--muted);margin:6px 0 0">A GitHub issue with an <code>agent:*</code> label goes in. A decision comes out. Issues without a label are ignored.</p>
       <div class="flow" role="list">
         <div class="step det" role="listitem"><b>Route</b><span>Label picks the workflow</span></div>
-        <div class="step det" role="listitem"><b>Input guard</b><span>Scan untrusted issue text</span></div>
+        <div class="step det" role="listitem"><b>Input guard</b><span>Scan untrusted text</span></div>
         <div class="step ai" role="listitem"><b>Triage</b><span>Gemini via ADK sizes the issue</span></div>
         <div class="step hum" role="listitem"><b>Plan + approval</b><span>Plan written; a person approves by rule</span></div>
         <div class="step ai" role="listitem"><b>Build</b><span>Copilot opens a PR; up to 4 rounds</span></div>
@@ -329,7 +329,9 @@
             <li><code>ports.py</code> <code>Triager</code>, <code>Planner</code>, <code>Builder</code>, <code>Reviewer</code>, <code>HumanGate</code>, <code>InputScanner</code>, <code>GitHubPort</code></li>
             <li><code>adk_agents.py</code> triage, plan, review on ADK with Pydantic output schemas; one retry, then escalate <span class="chip w">Fakes only</span></li>
             <li><code>copilot_builder.py</code> assigns to Copilot, feeds back checks <span class="chip b">No real client</span></li>
-            <li><code>sunglasses_scanner.py</code> the scanner behind <code>InputScanner</code> <span class="chip w">Working</span></li>
+            <li><code>sunglasses_scanner.py</code> the Sunglasses scanner behind <code>InputScanner</code> <span class="chip w">Working</span></li>
+            <li><code>model_armor_scanner.py</code> the Model Armor scanner behind <code>InputScanner</code>; regional endpoint, template from config <span class="chip w">Fixture only</span></li>
+            <li><code>composite_scanner.py</code> runs several scanners; blocked if any blocks, and a scanner error counts as a block <span class="chip w">Working</span></li>
             <li><code>sandbox_builder.py</code> <span class="chip s">Stub</span></li>
           </ul>
         </div>
@@ -394,7 +396,7 @@ agent repo
           <tr><td>Language</td><td>Python <code>&gt;=3.11,&lt;3.14</code>. Local default 3.13. CI tests 3.11, 3.12 and 3.13.</td></tr>
           <tr><td>Packaging</td><td><code>setuptools</code> (build), <code>uv</code> (installs and lock file), console script <code>agentic-bootstrap</code></td></tr>
           <tr><td>Runtime packages</td><td><code>pyyaml&gt;=6.0</code>, <code>pydantic&gt;=2.12,&lt;3</code></td></tr>
-          <tr><td>Optional packages</td><td><code>google-adk&gt;=2.12,&lt;3</code> (extra <code>adk</code>), <code>sunglasses==0.6.20</code> (extra <code>guard</code>)</td></tr>
+          <tr><td>Optional packages</td><td><code>google-adk&gt;=2.12,&lt;3</code> (extra <code>adk</code>), <code>sunglasses==0.6.20</code> (extra <code>guard</code>), <code>google-cloud-modelarmor==0.7.5</code> (extra <code>armor</code>)</td></tr>
           <tr><td>Dev packages</td><td><code>pytest</code>, <code>hypothesis</code>, <code>ruff</code>, <code>ty</code>, <code>codespell</code></td></tr>
           <tr><td>Agent framework</td><td>Google ADK only</td></tr>
           <tr><td>Models</td><td>Gemini through Vertex AI (AI Studio keys for local use only)</td></tr>
@@ -432,7 +434,7 @@ agent repo
       <div class="threat"><div class="t"><b>An agent weakens tests to pass</b>Reward hacking</div><div class="ar">→</div><div class="c"><b>Tamper check escalates the PR</b><small>nodes/tamper_check.py</small></div></div>
       <div class="threat"><div class="t"><b>A quiet new model, host, region, store or dependency</b></div><div class="ar">→</div><div class="c"><b>Capability check adds approvers, withdraws auto-merge</b><small>nodes/capability_check.py</small></div></div>
       <div class="threat"><div class="t"><b>An agent approves its own work</b></div><div class="ar">→</div><div class="c"><b>Reviewer lockout: escalate</b><small>nodes/merge_gate.py</small></div></div>
-      <div class="threat"><div class="t"><b>Prompt injection in issues, CI output or repo files</b></div><div class="ar">→</div><div class="c"><b>Input guard (Sunglasses), shipped in shadow mode</b><small>nodes/input_guard.py</small></div></div>
+      <div class="threat"><div class="t"><b>Prompt injection in issues, CI output, review findings, PR comments or repo files</b></div><div class="ar">→</div><div class="c"><b>Input guard (Model Armor and Sunglasses, blocked if either blocks), shipped in shadow mode</b><small>nodes/input_guard.py</small></div></div>
       <div class="threat"><div class="t"><b>A model-chosen file name reads a secret</b></div><div class="ar">→</div><div class="c"><b>No absolute paths, <code>..</code> or deny-listed files; size caps</b><small>nodes/repo_context.py</small></div></div>
       <div class="threat"><div class="t"><b>A malformed or hostile LLM reply</b></div><div class="ar">→</div><div class="c"><b>Parsed against a schema; one retry, then escalate</b><small>adapters/adk_agents.py</small></div></div>
       <div class="threat"><div class="t"><b>A changed skill alters behaviour</b></div><div class="ar">→</div><div class="c"><b>Loads only if pinned by commit and file fingerprint</b><small>skills.py · skills.lock.yaml</small></div></div>
@@ -452,7 +454,7 @@ agent repo
       <div class="limit"><b>Not yet reviewed by a security team.</b> Several <code>TODO(owner)</code> markers wait on sign-off.</div>
       <div class="limit"><b>No security contact is named.</b> Add one before this repo is shared more widely.</div>
     </div>
-    <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/SECURITY.md">docs/SECURITY.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/SUNGLASSES_EVALUATION.md">docs/SUNGLASSES_EVALUATION.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md">docs/DECISIONS.md</a>.</p>
+    <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/SECURITY.md">docs/SECURITY.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/INPUT_GUARD.md">docs/INPUT_GUARD.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md">docs/DECISIONS.md</a>.</p>
   </div>
 </section>
 
@@ -528,7 +530,8 @@ agent repo
           <tr><td colspan="3" class="cat">Scanners: narrow, single-purpose checks</td></tr>
           <tr><td><a href="https://github.com/gitleaks/gitleaks">Gitleaks</a></td><td>Detects hardcoded secrets such as passwords, API keys and tokens (MIT).</td><td class="rel"><strong>Used</strong> in CI, installed from a pinned release and checked by SHA-256.</td></tr>
           <tr><td><a href="https://github.com/zizmorcore/zizmor">zizmor</a></td><td>Static analysis for CI/CD, including GitHub Actions (MIT).</td><td class="rel"><strong>Used</strong> in CI and in the template’s workflows.</td></tr>
-          <tr><td><a href="https://github.com/sunglasses-dev/sunglasses">Sunglasses</a></td><td>A local, open source (MIT) input scanner for AI agents, in beta. Says a clean result is “a confidence floor and not a guarantee”.</td><td class="rel"><strong>Used</strong> as a cheap tripwire in the input guard, pinned to <code>0.6.20</code>. Model Armor is proposed as the main scanner.</td></tr>
+          <tr><td><a href="https://github.com/sunglasses-dev/sunglasses">Sunglasses</a></td><td>A local, open source (MIT) input scanner for AI agents, in beta. Says a clean result is “a confidence floor and not a guarantee”.</td><td class="rel"><strong>Used</strong> as a cheap tripwire in the input guard, pinned to <code>0.6.20</code>.</td></tr>
+          <tr><td><a href="https://docs.cloud.google.com/model-armor/overview">Model Armor</a></td><td>A Google Cloud service that screens prompts and replies against a saved template, for prompt injection and other risks.</td><td class="rel"><strong>Wired in, not yet run live.</strong> Proposed as the main scanner in the input guard and as an ADK plugin. CI plays back an authored fixture, and in Melbourne it offers three filters.</td></tr>
         </tbody>
       </table>
     </div>
@@ -692,7 +695,7 @@ $ python scripts/e2e.py --keep   <span class="c"># leave the generated agent in 
           <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/VISION.md">Vision</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ARCHITECTURE.md">Architecture</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/EXAMPLES.md">Examples</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/GLOSSARY.md">Glossary</a></li>
           <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/GETTING_STARTED.md">Getting started</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CONTRIBUTING.md">Contributing</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/FAQ.md">FAQ</a></li>
           <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/SECURITY.md">Security</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md">Decisions</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/OPEN_QUESTIONS.md">Open questions</a></li>
-          <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ROADMAP.md">Roadmap</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CHANGELOG.md">Changelog</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ADK_PORT.md">ADK port notes</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/SUNGLASSES_EVALUATION.md">Input guard evaluation</a></li>
+          <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ROADMAP.md">Roadmap</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CHANGELOG.md">Changelog</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ADK_PORT.md">ADK port notes</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/INPUT_GUARD.md">Input guard</a></li>
           <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/tree/main/policy">policy/</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/tree/main/evals/golden_tasks">evals/golden_tasks/</a></li>
         </ul>
       </div>

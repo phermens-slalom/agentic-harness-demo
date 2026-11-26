@@ -6,10 +6,21 @@ enabled: true
 mode: shadow
 # true = a scanner crash, a missing install or an incomplete scan blocks the task (escalates).
 fail_closed: true
-# What is scanned, and on which sunglasses channel. Issue text is user-authored; CI output and
-# review feedback are attacker-influenceable text fed back to the builder.
+# What is scanned, and on which sunglasses channel. Issue text is user-authored; CI output, review
+# feedback and PR comments are attacker-influenceable text that reaches the builder. Model Armor
+# ignores the channel and screens every surface with the same prompt template.
 surfaces:
   issue: message
   build_feedback: tool_output
+  # Findings from the reviewer agent, fed back to the builder (S2).
+  review_feedback: tool_output
+  # PR comments from the GitHub client. Copilot reads them, so they are scanned too (S2).
+  pr_comment: message
   # AGENTS.md, the file tree and files read from the repo for the planner and reviewer (R6).
   repo_context: file
+# Model Armor is the primary scanner and Sunglasses a tripwire beside it (D-09). Templates come from the
+# environment (HARNESS_MODEL_ARMOR_PROMPT_TEMPLATE / _RESPONSE_TEMPLATE), never from this file.
+# TODO(Security Architecture): confirm that Model Armor templates are required outside local use, and
+# what the templates screen (prompt injection and jailbreak at least).
+model_armor:
+  require_outside_local: true

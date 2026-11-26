@@ -53,7 +53,25 @@ class AdversarialEvalTests(unittest.TestCase):
         finally:
             sunglasses_scanner.SunglassesScanner.scan = original
         self.assertEqual(rc, 1)
-        self.assertEqual(report["metrics"]["injection_detection_rate"], 0.0)
+        # Sunglasses-only tasks all go undetected. The composite tasks are still flagged by the Model
+        # Armor fixture (that is the point of a second scanner), so the rate falls below 1.0, not to 0.
+        self.assertLess(report["metrics"]["injection_detection_rate"], 1.0)
+        self.assertGreater(report["metrics"]["adversarial_automerge"], 0)
+
+    def test_blind_model_armor_turns_the_run_red(self):
+        """The composite tasks must really depend on Model Armor: without it the two Sunglasses gaps reopen."""
+        from harness.adapters import model_armor_scanner
+        from harness.models import ScanVerdict
+
+        original = model_armor_scanner.ModelArmorScanner.scan
+        model_armor_scanner.ModelArmorScanner.scan = lambda self, text, channel: ScanVerdict(blocked=False)
+        try:
+            rc, report = _run(_runner())
+        finally:
+            model_armor_scanner.ModelArmorScanner.scan = original
+        self.assertEqual(rc, 1)
+        failed = {t["id"] for t in report["tasks"] if not t["known_gap"] and not t["ok"]}
+        self.assertTrue({"adv-ma-html-comment-composite", "adv-ma-terse-exfil-composite"} <= failed)
 
 
 if __name__ == "__main__":

@@ -29,6 +29,7 @@ A visual overview lives in [`site/`](site/) and deploys to GitHub Pages; see [Pr
 | `app/harness/workflow.py` | Build/Verify graph; trace events carry the stage id | Working, tested |
 | `app/harness/nodes/merge_gate.py` | Deterministic; phase-flagged auto-merge, path-derived approvers, required checks | Working, tested |
 | `app/harness/nodes/capability_check.py` | Deterministic detectors for new models, hosts, regions, data stores, dependencies and tool/protocol integrations; they add approvers, never approve or block | Working, tested |
+| `app/harness/adapters/model_armor_scanner.py`, `composite_scanner.py` | Model Armor (primary) and Sunglasses scanners behind the input guard; blocked if either blocks | Tested with a fixture; not run live |
 | `app/harness/residency.py` | Fails closed on `global` or non-Australian locations | Working, tested |
 | `app/harness/bootstrap/` | `agentic-bootstrap new / check / plan` (template, security harness, Terraform PR plan) | Stages 1-2 working, 3 plan only |
 | `app/harness/adapters/copilot_builder.py` | Default builder over a `GitHubPort` | Logic tested; GitHub client to write |

@@ -31,7 +31,8 @@ more widely.
 | A change adds a new model, host, region, store or dependency quietly | Capability check adds approvers and withdraws auto-merge | `nodes/capability_check.py`, `policy/capabilities.yaml` |
 | Missing or false check results | The gate escalates when any required check is missing or failing | `nodes/merge_gate.py` |
 | An agent approves its own work | Reviewer lockout | `nodes/merge_gate.py` |
-| Prompt injection in issues, CI output or repo files | Input guard (Sunglasses). Ships in `shadow` mode. | `nodes/input_guard.py`, `policy/input_guard.yaml` |
+| Prompt injection in issues, CI output, review findings, PR comments or repo files | Input guard: Model Armor and Sunglasses together, blocked if either blocks. Fails closed on any scanner error. Ships in `shadow` mode. | `nodes/input_guard.py`, `adapters/composite_scanner.py`, `policy/input_guard.yaml` |
+| A model call is steered or leaks | `ModelArmorPlugin` on the harness's ADK app screens model input and replies. Outside local use both templates are required. | `adapters/adk_agents.py` |
 | A model-chosen file name reads a secret | Repo context refuses absolute paths, `..` and a deny list. Caps the size. | `nodes/repo_context.py`, `policy/routing.yaml` |
 | An LLM reply is malformed or hostile | Output is parsed against a schema. One retry, then escalate. | `adapters/adk_agents.py` |
 | Data leaves Australia | Allowed regions only. Model backend must be Vertex AI outside local use. | `residency.py`, `policy/residency.yaml` |
@@ -49,7 +50,8 @@ Be clear about the limits.
 
 | Limit | Detail |
 |---|---|
-| The input guard is a pattern matcher | A cheap tripwire. Not a defence against a determined attacker. Two phrasings are known to get through (an HTML-comment instruction and a terse exfiltration phrasing). |
+| Sunglasses is a pattern matcher | A cheap tripwire. Two phrasings are known to get through it (an HTML-comment instruction and a terse exfiltration phrasing). Model Armor is meant to cover them, but that has not been tried against the live service. |
+| Model Armor has not been run live | CI plays back a fixture authored from the API shape, not recorded responses. It proves the wiring, not detection quality. It is available in Melbourne only among the allowed regions, with three filters. |
 | The guard ships in `shadow` mode | In shadow mode a match is recorded but does not stop the task. It must also be switched on by passing a guard to the workflow. |
 | The capability check sees only the diff | It does not see lock-file-only dependency changes or things added outside the diff. |
 | Pattern matches are review routing, not permission | Tool access must be enforced in code and platform IAM. |
@@ -77,7 +79,7 @@ These need security team. They are also in [Open questions](OPEN_QUESTIONS.md).
 2. How to authenticate Copilot assignment without a personal token (R2).
 3. Whether to let Copilot workflows skip approval (Q4).
 4. Copilot residency for each data classification (Q3, D-10).
-5. Model Armor as the main scanner, with Sunglasses as a tripwire beside it (D-09).
+5. Model Armor as the main scanner, with Sunglasses as a tripwire beside it (D-09): built, but not signed off. Whether templates are required outside local use, and what they screen.
 6. The starting allowlists in `policy/capabilities.yaml` and the caps in `policy/routing.yaml`.
 
-See also: [Decisions](DECISIONS.md), [Input guard evaluation](SUNGLASSES_EVALUATION.md).
+See also: [Decisions](DECISIONS.md), [Input guard](INPUT_GUARD.md).

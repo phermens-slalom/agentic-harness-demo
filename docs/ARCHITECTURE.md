@@ -155,7 +155,8 @@ How they connect:
  │     └─ adapters/       (real parts that fit the ports)             │            │
  │          adk_agents.py        triage, plan, review (Gemini via ADK)│            │
  │          copilot_builder.py   builder over GitHubPort              │            │
- │          sunglasses_scanner.py  scanner behind InputScanner        │            │
+ │          sunglasses_scanner.py, model_armor_scanner.py              │            │
+ │          composite_scanner.py   scanners behind InputScanner       │            │
  │          sandbox_builder.py   optional builder (stub)              │            │
  │          fakes.py             scripted stand-ins for tests         │            │
  │                                                                    │            │
@@ -204,7 +205,7 @@ The loop stops at **4 build rounds** and **400,000 tokens** (from `policy/routin
 | `nodes/tamper_check.py` | Finds signs of weakened tests or evals in the diff: deleted tests, added skips, fewer asserts, edited baselines, lowered thresholds, edited test config | Working |
 | `nodes/capability_check.py` | Finds newly added models, hosts, regions, data stores, dependencies and tool or protocol links in the added lines. Adds approvers. | Working |
 | `nodes/diff_parse.py` | Reads a unified diff safely by hunk counts | Working |
-| `nodes/input_guard.py` | Scans untrusted text before an LLM sees it. Modes: `shadow` and `enforce`. Fails closed. | Working |
+| `nodes/input_guard.py` | Scans untrusted text before an LLM sees it: issue, CI feedback, review findings, PR comments and repo context. Modes: `shadow` and `enforce`. Fails closed. | Working |
 | `nodes/repo_context.py` | Builds capped, read-only context: `AGENTS.md`, file tree and named files. Refuses unsafe or denied paths. | Working |
 
 The merge gate applies these rules in this order:
@@ -226,9 +227,11 @@ New capabilities add approvers to the result and never turn a decision into a bl
 
 | Component | Does | State |
 |---|---|---|
-| `adapters/adk_agents.py` | The triager, planner and reviewer on ADK. Output is a Pydantic model through `output_schema`. One retry on a bad reply, then escalate. One reused runner per role. | Working with fakes. Not run against live Vertex. |
+| `adapters/adk_agents.py` | The triager, planner and reviewer on ADK. Output is a Pydantic model through `output_schema`. One retry on a bad reply, then escalate. One reused runner per role. Registers `ModelArmorPlugin` on its ADK app. | Working with fakes. Not run against live Vertex or Model Armor. |
 | `adapters/copilot_builder.py` | Assigns the issue to Copilot, sends feedback as comments, waits for checks. Passes the `agent-builder` custom agent. | Logic working. The real GitHub client does not exist (R2 is blocked). |
-| `adapters/sunglasses_scanner.py` | The scanner behind `InputScanner`. Imported lazily. | Working |
+| `adapters/sunglasses_scanner.py` | The Sunglasses scanner behind `InputScanner`. Imported lazily. | Working |
+| `adapters/model_armor_scanner.py` | The Model Armor scanner behind `InputScanner`. Regional endpoint, template from config. Needs the `armor` extra. | Working with a fixture. Not run live. |
+| `adapters/composite_scanner.py` | Runs several scanners. Blocked if any blocks. A scanner that errors counts as a block. | Working |
 | `adapters/sandbox_builder.py` | A builder that would run a Cloud Run Job | **Stub** (raises `NotImplementedError`) |
 | `adapters/fakes.py` | Scripted stand-ins, including a fake GitHub | Working |
 
@@ -351,7 +354,6 @@ These appear in the roadmap and in comments, but not as working code.
 | Webhook receiver and queue | R4 |
 | Kill switch and budgets | R5 |
 | Reviewer sees the diff | R7 |
-| Model Armor as the main scanner | S2 |
 | Traces to Cloud Trace and an audit log in BigQuery | O1 |
 | Live evals, holdout runner, real `evals_no_regression` | E1, E3 |
 | Template based on existing reference agent template | W2 (blocked) |
