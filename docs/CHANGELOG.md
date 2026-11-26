@@ -8,6 +8,9 @@ attested releases are planned (S5).
 
 ## 2026-11-26
 
+- **E3 in progress.** Added required coverage and quality checks, 80% starter coverage and eval marks,
+  pre-execution static scans, and an unwired regression comparator. AI Governance will approve the
+  baseline. Live regression and isolated holdout evaluations remain open.
 - **I1, request drafts.** Added the issue form, strict offline parser, repository-access contract and
   evals. Anyone with repository access may request an agent; hosted enforcement is I7. AI governance
   is the contact for reference template access, which W2 still needs.

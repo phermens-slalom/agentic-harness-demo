@@ -319,9 +319,9 @@ The run passes only if these hold: decision, tier and approver accuracy at least
 | `agent/tools.py` | `get_service_history` and `estimate_repair` on sample data. No write tools. | Working (placeholder data) |
 | `agent/telemetry.py` | Wraps each tool to log its name, outcome and timing. No prompts or arguments. | Working |
 | `agent/skills/garage-summary/` | One example skill, pinned by fingerprint. Guidance only. | Working |
-| `.github/workflows/agent-checks.yml` | Jobs: `lint`, `tests`, `evals_no_regression`, `secret_scan`, `codeql`, `dependency_review`, `zizmor`. Only `evals_no_regression` can get cloud identity. | `evals_no_regression` is a **stub** that fails until wired (E3) |
+| `.github/workflows/agent-checks.yml` | Preflight scans before dependent jobs; jobs include `lint`, `tests`, `coverage`, `quality`, `evals_no_regression`, `secret_scan`, `codeql`, `dependency_review`, `zizmor`. Only `evals_no_regression` can get cloud identity. | Coverage enforces 80%; `evals_no_regression` is a **stub** that fails until wired (E3). Workflow protection is needed to prevent PRs bypassing preflight. |
 | `.github/workflows/copilot-setup-steps.yml` | Prepares Copilot's environment with pinned actions | Working |
-| `evals/` | Example cases, pass marks (unset), baseline | Pass marks are `TODO` for the business owner |
+| `evals/` | Example cases, starter pass marks, baseline | 80% starter marks; baseline requires AI Governance approval |
 
 ### Harness CI (`.github/workflows/ci.yml`)
 

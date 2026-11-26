@@ -91,7 +91,7 @@ What `plan` prints for this form (real output, shortened):
 assessor has earned trust, small claims go through alone.
 **Real feature:** tiers and phases in the merge gate.
 
-A change that only adds a test (`tests/test_a.py`) is **tier 1**. The same change, with all four checks green
+A change that only adds a test (`tests/test_a.py`) is **tier 1**. The same change, with all six checks green
 and the reviewer approving, gives different results by phase (real output):
 
 | Phase | Decision | Reason shown |
@@ -235,7 +235,7 @@ If no checks are reported, or a required check is missing, the gate escalates (r
 
 ```text
  decision:  escalated
- reason:    required checks not reported: lint, tests, evals_no_regression, secret_scan
+ reason:    required checks not reported: lint, tests, coverage, quality, evals_no_regression, secret_scan
 ```
 
 | Situation | Result |
@@ -349,7 +349,7 @@ This is an illustration. The steps match the code; the details are made up.
  5  plan          steps, acceptance criteria, files to change
  6  plan approval phase 1: a person approves the plan
  7  build         Copilot opens a PR
- 8  checks        lint, tests, evals_no_regression, secret_scan
+ 8  checks        lint, tests, coverage, quality, evals_no_regression, secret_scan
       ├─ tests fail ─► feedback guarded ─► Copilot tries again (up to 4 rounds)
       └─ all green  ─► reviewer applies the checklist
  9  merge gate    tier 2 (default). The gate lists the approvers.
