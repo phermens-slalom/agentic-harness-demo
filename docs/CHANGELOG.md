@@ -13,7 +13,8 @@ attested releases are planned (S5).
   here and into the open questions.
 - **Work is recorded as done in its own PR.** The PR that does the work sets the roadmap item to `done` and adds
   the log entries. Merging is the approval, so no follow-up PRs are needed. R6, S2 and A2 were closed out this way.
-- **Formatting.** Three files were reformatted, and the format and spelling commands were added to `AGENTS.md`.
+- **CI checks formatting, spelling and docs links.** `ruff format --check` and `codespell` now run in CI, and a new
+  test fails on a broken docs link. Three files that were not clean were reformatted.
 - **S2, Model Armor as the main scanner.** A Model Armor scanner and a composite scanner (blocked if either scanner
   blocks; any scanner error counts as a block) now sit behind the input guard beside Sunglasses. `ModelArmorPlugin`
   is registered on the harness's ADK app. Review findings and PR comments are now scanned too. `SUNGLASSES_EVALUATION.md`

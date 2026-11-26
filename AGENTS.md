@@ -6,8 +6,8 @@
 - Lint: `uv run ruff check .`
 - Type-check: `uv run ty check`
 - Format check: `uv run ruff format --check .` (apply with `uv run ruff format .`)
-- Tests: `uv run pytest -q`
-- Spelling: `uv run codespell AGENTS.md README.md docs app evals tests policy site scripts agent-template`
+- Tests: `uv run pytest -q` (this also checks that every docs link and heading anchor resolves)
+- Spelling: `uv run codespell` (settings are in `pyproject.toml`)
 - Offline policy/evaluation scenarios: `uv run python evals/run_evals.py --out .m0-eval-report.json`
 - End-to-end bootstrap (Windows PowerShell): `$env:PYTHONIOENCODING = "utf-8"; uv run python scripts/e2e.py`
 

@@ -7,7 +7,7 @@ How to change this repo safely. These rules come from [`AGENTS.md`](../AGENTS.md
 
 1. Pick work from the [Roadmap](ROADMAP.md). Take the top `todo` item whose dependencies are `done`.
 2. One item is one branch and one pull request.
-3. Write the tests first. Run the four checks. Update the docs, and set the roadmap item to `done` in the same PR.
+3. Write the tests first. Run the checks. Update the docs, and set the roadmap item to `done` in the same PR.
 4. Never weaken a gate, an approval, a threshold, a baseline or a golden task to make a test pass.
 
 ## The rules that must hold
@@ -26,12 +26,14 @@ How to change this repo safely. These rules come from [`AGENTS.md`](../AGENTS.md
 | Keep the residency and egress limits. | Data stays in Australia. Agents call only approved hosts. |
 | If a `TODO(<owner>)` blocks a decision, do not invent the answer. Record the dependency and ask the appropriate role or owner. | The owner decides. |
 
-## The four checks
+## The checks
 
-Run all four before you open a PR. CI runs them too.
+Run all of these before you open a PR. CI runs the same ones, so a failure here is a failure there.
 
 ```bash
 uv run ruff check .
+uv run ruff format --check .      # apply with: uv run ruff format .
+uv run codespell                  # settings are in pyproject.toml
 uv run ty check
 uv run pytest -q
 uv run python evals/run_evals.py --out .m0-eval-report.json
@@ -40,20 +42,13 @@ uv run python evals/run_evals.py --out .m0-eval-report.json
 CI runs on Python 3.11, 3.12 and 3.13. The `ty` version is not pinned, so CI can be newer than your machine.
 If CI reports a type error you cannot see locally, run `uv sync --extra dev` and try again.
 
-Also keep the code formatted and the spelling clean. CI does not run these two yet, so run them yourself:
-
-```bash
-uv run ruff format --check .      # apply with: uv run ruff format .
-uv run codespell AGENTS.md README.md docs app evals tests policy site scripts agent-template
-```
-
 Do not commit the generated eval report (`.m0-eval-report.json`).
 
 ## Definition of done
 
 A change is done when:
 
-- All four checks pass, locally and in CI.
+- All the checks pass, locally and in CI.
 - Behaviour changes have tests. Gate or policy changes also have a golden or adversarial task in `evals/golden_tasks/`.
 - The gate still never calls an LLM. No new agent framework. No personal tokens.
 - Related docs are updated (`README.md`, `docs/*.md`).

@@ -37,7 +37,7 @@ gate, lean towards more effort, not less.
 
 ### Definition of done (applies to every item)
 
-- `ruff check .`, `ty check`, `pytest -q` and `python evals/run_evals.py` all pass locally and in CI.
+- `ruff check .`, `ruff format --check .`, `codespell`, `ty check`, `pytest -q` and `python evals/run_evals.py` all pass locally and in CI.
 - Behaviour changes come with tests. Gate or policy changes also get a golden or adversarial eval task
   (`evals/golden_tasks/`).
 - The merge gate still never calls an LLM. No new agent framework (ADK only). No personal tokens.
@@ -1015,7 +1015,8 @@ Update the item status and the work log.
 - **Done when:**
   - [x] Harness CI runs lint, `ty`, tests and dry-run evals on Python 3.11, 3.12 and 3.13 on Ubuntu
         (pinned 3.13 remains the local default).
-  - [ ] CI runs `codespell` and `scripts/e2e.py` (offline stages) on Ubuntu and Windows.
+  - [x] CI runs `ruff format --check` and `codespell`.
+  - [ ] CI runs `scripts/e2e.py` (offline stages) on Ubuntu and Windows.
   - [ ] `evals/run_evals.py` inserts its `sys.path` entry *before* the harness imports, or relies on
         the installed package.
   - [x] Stale doc lines are fixed. The alignment note (with its legacy `[tool.agents-cli]` line) was removed and
@@ -1395,10 +1396,12 @@ anything learned that should change this plan. Never rewrite old entries; correc
 - Moved the technical docs into `docs/tech/` (`ADK_PORT.md`, `INPUT_GUARD.md`, `SITE.md`) with an index; project-wide docs
   stay in `docs/`. Updated every link and path. Older work-log entries are left as written: read `docs/ADK_PORT.md`,
   `docs/INPUT_GUARD.md` and `docs/SITE.md` there as `docs/tech/...`.
-- Formatting: ran `ruff format` on three files that were not clean, and added the format and spelling commands to
-  `AGENTS.md` and the contributing guide. CI does not run them yet.
+- Formatting and spelling: ran `ruff format` on three files that were not clean. CI now runs `ruff format --check`
+  and `codespell` (settings in `pyproject.toml`), so neither can drift again. Added `tests/test_docs.py`, which fails
+  CI on a broken docs link or heading anchor. The commands are in `AGENTS.md` and the contributing guide.
 - Comment-only path fixes in `app/harness/workflow.py`, `policy/risk_tiers.yaml`, `.github/workflows/pages.yml` and
-  `tests/test_site.py`. No behaviour changed, so no new eval was added.
+  `tests/test_site.py`. No behaviour changed, so no new eval was added. `.github/workflows/ci.yml` gained two steps
+  (a control file; no new actions).
 
 ### 2026-11-26 · S2 Model Armor as the primary scanner
 - Added `ModelArmorScanner` (`sanitizeUserPrompt` on the regional endpoint, template from config, residency-checked,

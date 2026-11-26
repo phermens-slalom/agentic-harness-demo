@@ -17,6 +17,8 @@ jobs:
         with: {python-version: "${{ matrix.python-version }}"}
       - run: pip install -e ".[dev]"
       - run: ruff check .
+      - run: ruff format --check .
+      - run: codespell
       - run: ty check
       - run: pytest -q
       - run: python evals/run_evals.py --mode dry-run --out eval_report.json

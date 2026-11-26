@@ -27,10 +27,12 @@ This installs the harness and the dev tools (`pytest`, `hypothesis`, `ruff`, `ty
 
 ## Check that everything works
 
-Run these four. They are the same checks CI runs.
+Run these. They are the same checks CI runs.
 
 ```bash
 uv run ruff check .
+uv run ruff format --check .
+uv run codespell
 uv run ty check
 uv run pytest -q
 uv run python evals/run_evals.py --out .m0-eval-report.json
@@ -39,8 +41,10 @@ uv run python evals/run_evals.py --out .m0-eval-report.json
 | Command | What it proves |
 |---|---|
 | `ruff check .` | Style and common errors |
+| `ruff format --check .` | The code is formatted (fix with `ruff format .`) |
+| `codespell` | No misspellings in code or docs |
 | `ty check` | Type hints are consistent |
-| `pytest -q` | The code and the policy files behave |
+| `pytest -q` | The code and the policy files behave, and every docs link and heading anchor resolves |
 | `run_evals.py` | The gate and workflow give the right answer on the golden tasks |
 
 For a full end-to-end run (harness, then a new agent, then the agent's checks, then cleanup):
