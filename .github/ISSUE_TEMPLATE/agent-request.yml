@@ -1,0 +1,85 @@
+name: Request an agent
+description: Tell us what problem you would like an agent to help with.
+title: "[Agent request]: "
+body:
+  - type: markdown
+    attributes:
+      value: "Please do not include passwords, tokens, personal records or other sensitive information."
+  - type: input
+    id: name
+    attributes:
+      label: Agent name
+      description: "A short identifier using lowercase letters, numbers and hyphens, for example claims-helper."
+    validations:
+      required: true
+  - type: input
+    id: division
+    attributes:
+      label: Division
+      description: "Your division's short identifier, using lowercase letters, numbers and hyphens."
+    validations:
+      required: true
+  - type: input
+    id: owner
+    attributes:
+      label: Owner
+      description: "Who will be responsible for the agent?"
+    validations:
+      required: true
+  - type: input
+    id: sponsor
+    attributes:
+      label: Sponsor
+      description: "Who will sponsor this request? If you are unsure, say so."
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and people
+      description: "What problem needs solving, and who has it?"
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Successful outcome
+      description: "What would a successful result look like?"
+    validations:
+      required: true
+  - type: textarea
+    id: systems
+    attributes:
+      label: Systems
+      description: "Which systems should it read from or write to? Say which actions you need."
+    validations:
+      required: true
+  - type: textarea
+    id: data
+    attributes:
+      label: Data
+      description: "Describe the kinds of information involved, without including actual records."
+    validations:
+      required: true
+  - type: dropdown
+    id: classification_choice
+    attributes:
+      label: Data classification
+      description: "Choose whether you know the classification; the organisation's list is not yet confirmed."
+      options:
+        - I know the classification
+        - I am not sure
+    validations:
+      required: true
+  - type: input
+    id: classification
+    attributes:
+      label: Classification name
+      description: "If known, enter the organisation's classification name."
+  - type: textarea
+    id: approvals
+    attributes:
+      label: Action approvals
+      description: "Who should approve the agent's actions, and which actions need approval?"
+    validations:
+      required: true

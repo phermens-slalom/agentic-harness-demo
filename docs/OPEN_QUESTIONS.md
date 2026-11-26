@@ -16,17 +16,19 @@ From the [Roadmap](ROADMAP.md). "Suggested owner" shows a generic role where one
 | Q3 | Is the Copilot coding agent acceptable for each data classification, given residency? | D1 | security team |
 | Q4 | Who approves workflow runs on Copilot PRs, and should "skip approval" be switched on? | R2 | security team |
 | Q5 | Where is the harness hosted (Cloud Run and Cloud SQL in Melbourne?), and what is the webhook route? | R3, R4 | platform team |
-| Q6 | Can we get access to existing reference agent template and the existing bootstrap layer? | W2 | Unassigned |
 | Q7 | What are the pinned skills repository skill names for the planner and reviewer? | R6 | AI governance team |
 | Q8 | What are the business-owned eval, coverage and quality thresholds for each agent? | E3 | Product Owner (to be named) |
 | Q9 | Do work items come from GitHub Issues, or from Jira or Jira Align? | R4 (may need an `IssueSource` port) | Unassigned |
 | Q10 | What are the criteria for moving to a later phase? (Draft in O3.) | O3 | Unassigned |
 | Q11 | Is GitHub Advanced Security licensed (secret scanning, push protection, CodeQL, dependency review)? | S1 | AI governance team |
 | Q12 | What is the actual infrastructure repository and file layout? `workload-infrastructure` and `platform.tf` are illustrative only. | W1 | platform team |
-| Q13 | Who may raise an `AgentRequest`, and who sponsors it before the intake agent creates a branch? | I1, I7 | Unassigned |
 | Q14 | Who owns and reviews the connector library, which connectors come first, and how do Jira and other internal APIs reach agents (approved connector gateway)? | I2 | AI governance team and platform team |
 | Q15 | Which second model family, if any, is approved for cross-model review under Australian residency? | I5 | security team |
 | Q16 | Should agents built only from approved connectors stay tier 3, or may they use a lighter approval route? | M9 | security team, AI governance team |
+| Q17 | Who sponsors an `AgentRequest` before spending budget or creating a branch, and how is sponsorship verified? | I7 | Unassigned |
+
+Resolved: Q6's access contact is the AI governance team, though access is still needed. Q13's requester
+eligibility is any person with repository access; the separate sponsorship decision is tracked as Q17.
 
 ## Blockers
 
@@ -35,7 +37,7 @@ From the [Roadmap](ROADMAP.md). "Suggested owner" shows a generic role where one
 | **R2** Real GitHub client | GitHub's Copilot issue-assignment API needs a user-to-server token. The harness rule allows installation tokens only. | A security team decision. Do not switch auth models quietly. |
 | **I1** Request acceptance | Requester eligibility and sponsorship are not agreed; the offline parser only makes an untrusted draft. | Q13, owner unassigned |
 | R1, R3, R4, R5, R7, O1, W5 | Depend on R2, directly or through R3 | R2 |
-| **W2** Template from existing reference agent template | No access yet | Q6 |
+| **W2** Template from existing reference agent template | No access yet | AI governance team |
 | **E1** Live eval replay | No pilot repos or history yet | Pilot repos |
 | D1 (a possible blocker for Copilot as default builder) | Copilot residency in Australia is unconfirmed | Q3, GitHub's answer |
 

@@ -73,7 +73,7 @@ rules on it.
 | D-10 | **Copilot stays the default builder, but residency is an explicit gate on it.** Builder residency becomes policy. If GitHub can't confirm Australian processing for the coding agent, the Cloud Run sandbox builder (Gemini CLI, Melbourne) becomes the fallback for classified repos. | `residency.py` only guards Vertex today. Copilot's in-region processing was US/EU only as of April 2026. | Proposed (security team). **Possible blocker** |
 | D-11 | **Phase promotion is evidence-based.** The gate runs in shadow mode at the next phase, and a phase is raised only once the agreed thresholds are met (draft in O3). | Today the rule is "raise after the evals show it's trustworthy", with no criteria. | Proposed (Unassigned) |
 | D-12 | **The template is based on an existing reference agent template, pinned by git ref, with a project-specific overlay on top.** `agent-template/` becomes the overlay plus a fallback. Generated repos can be upgraded in place (Copier-style). | Matches prior requirements: the bootstrap starts from existing reference agent template plus project-specific overlay, and must respect teams already on the current version. | Proposed (Unassigned) |
-| D-13 | **An `AgentRequest` issue starts an intake agent that authors the agent.** A business owner or technical person raises an `AgentRequest` GitHub issue. An ADK intake agent interviews them in plain language on the issue, runs `agentic-bootstrap` to add the agent to the division's existing agent repo, writes the agent's Python (prompts, tools, evals) from their answers, and opens a PR. It only ever *raises* PRs. It never approves, merges, edits gate-controlling files outside the normal PR path, or sets business-owned thresholds. Every PR goes through the merge gate and the named approvers. The first build is a local/CLI prototype against fakes; the hosted trigger follows R2, R3 and R4. | People who own a business problem should not need to write Python, evals and CI config to get an agent. The harness already governs what an AI builder may change, so the intake agent is one more governed builder. | Proposed (AI governance team) |
+| D-13 | **An `AgentRequest` issue starts an intake agent that authors the agent.** Any person with access to the repository may raise an `AgentRequest` GitHub issue. An ADK intake agent interviews them in plain language on the issue, runs `agentic-bootstrap` to add the agent to the division's existing agent repo, writes the agent's Python (prompts, tools, evals) from their answers, and opens a PR. It only ever *raises* PRs. It never approves, merges, edits gate-controlling files outside the normal PR path, or sets business-owned thresholds. Every PR goes through the merge gate and the named approvers. The first build is a local/CLI prototype against fakes; the hosted trigger follows R2, R3 and R4. | People who own a business problem should not need to write Python, evals and CI config to get an agent. The harness already governs what an AI builder may change, so the intake agent is one more governed builder. | Proposed (AI governance team) |
 | D-14 | **Generated agents reach outside systems only through a curated connector library.** The library contains tool templates reviewed by the designated teams (read and write patterns, declared egress hosts, IAM notes, approvers). The intake agent composes and configures them. A need the library cannot meet is flagged for a human build, never improvised. A connector that writes needs the trusted-approval boundary from A1. | The LLM must not invent integrations, hosts or credentials. A fixed library keeps the security team's review load bounded and keeps S3's new-capability detectors meaningful. | Proposed (AI governance team, security team) |
 | D-15 | **A different model family reviews what the intake agent generates.** Generator and reviewer are different model families, subject to residency (D-10, `policy/residency.yaml`). Until a second family is approved for use in Australia, use two roles with separate prompts and context and record the gap. The reviewer scores the agent against its Mission Brief and proposes adversarial eval cases. Its opinion is advisory: the merge gate and `agentic-bootstrap check` still decide. | One model grading its own output shares its blind spots. | Proposed (security team) |
 
@@ -938,7 +938,7 @@ CLI JSON output, tests, the item status and the work log.
 ```
 
 ### W2 · Template from existing reference agent template plus a project-specific overlay, and in-place upgrades
-- **Status:** blocked (needs access to existing reference agent template) · **Priority:** P2 · **Size:** L · **Depends on:** none · **Decision:** D-12
+- **Status:** blocked (awaiting access to the reference template from AI governance team) · **Priority:** P2 · **Size:** L · **Depends on:** none · **Decision:** D-12
 - **Model / effort:** Opus 5.5 · high · **plan first**
 - **Done when:**
   - [ ] `agentic-bootstrap new` takes a template source as a git URL and ref, and records it with the answers
@@ -1124,8 +1124,8 @@ Verify provenance and skill behaviour from a generated repo.
 ## M9 · Agent intake and authoring
 
 Today a team needs engineers to turn a bootstrapped starter into an agent that does something useful:
-write the prompts, tools and evals, and tailor them. M9 adds an **intake agent** (D-13) so a business owner
-or technical person can raise an `AgentRequest` issue, answer plain-language questions, and get a PR that
+write the prompts, tools and evals, and tailor them. M9 adds an **intake agent** (D-13) so a person with
+repository access can raise an `AgentRequest` issue, answer plain-language questions, and get a PR that
 holds a working, tested, governed agent. Later changes ("also notify the team", "raise the PRs in Java")
 are comments on the issue or PR.
 
@@ -1161,7 +1161,7 @@ Boundaries that hold for every item in M9:
   the question limit, or a failed guard. Each ends with a clear comment and a human handoff, never a guess.
 
 ### I1 · `AgentRequest` form and the request model
-- **Status:** doing (requester authorisation awaits Q13) · **Priority:** P1 · **Size:** M · **Depends on:** none
+- **Status:** done · **Priority:** P1 · **Size:** M · **Depends on:** none
 - **Model / effort:** Sonnet 5.5 · high
 - **Why:** Everything else needs a stable, validated shape for "what the requester wants". It must be
   plain enough for a non-technical owner and strict enough to become the Mission Brief and `spec.yaml`.
@@ -1169,13 +1169,22 @@ Boundaries that hold for every item in M9:
   - [x] `.github/ISSUE_TEMPLATE/agent-request.yml` (GitHub issue form) asks for: the problem and who has
         it, the outcome that counts as success, systems it should read from or write to, the data
         involved (with a classification choice), who approves its actions, and the division. No jargon.
-  - [ ] A Pydantic `AgentRequest` model (`strict=True`, `extra="forbid"`) parses the issue into a draft
+  - [x] A Pydantic `AgentRequest` model (`strict=True`, `extra="forbid"`) parses the issue into a draft
         plus a list of **missing or unclear fields**, and maps to `AgentSpec` and a Mission Brief.
         A `spec` that cannot validate (`AgentSpec.validate`) is reported, not patched.
-  - [ ] Only a request from a person allowed to raise one is accepted (Q13); others get a polite no.
+  - [x] Only a request from a person allowed to raise one is accepted (Q13); others get a polite no.
   - [x] Property tests: unknown fields are rejected, and the mapping is lossless for required fields.
   - [x] Golden and adversarial eval tasks for the parse step, including an issue body that tries to
         smuggle in a host, a model, or an instruction to skip approval.
+
+The offline `parse_request` entry point requires a trusted `RequesterAccess` lookup for the exact
+repository and authenticated human author. The caller must take both identities from trusted issue
+metadata, not the issue body. The real GitHub access lookup and authenticated event wiring are I7;
+the offline tests use a fake. A successful lookup accepts a draft only, not a build or approval.
+The draft is untrusted and must pass the input guard before reaching a model. The Mission Brief is a
+structured draft and the spec is a review-only candidate: no host, model or approval is granted by text.
+The issue form asks for a sponsor but the sponsorship rule before spending budget or creating a branch
+is still open (Q17); I7 must not guess it. Parsing eval cases run with pytest.
 
 ```text
 Read docs/ROADMAP.md item I1 and decisions D-13 to D-15, app/harness/bootstrap/spec.py,
@@ -1305,7 +1314,7 @@ implement against fakes. Every path that could widen access must end at a human 
 ```
 
 ### I7 · Hosted trigger
-- **Status:** blocked (R2, R3, R4, Q5) · **Priority:** P1 · **Size:** M · **Depends on:** I3, I6, R2, R3, R4
+- **Status:** blocked (R2, R3, R4, Q5, Q17) · **Priority:** P1 · **Size:** M · **Depends on:** I3, I6, R2, R3, R4
 - **Model / effort:** Sonnet 5.5 · high
 - **Why:** Once the prototype works offline, the intake agent has to start when an `AgentRequest` issue is
   opened and run on the harness's runtime, not on someone's machine.
@@ -1314,6 +1323,9 @@ implement against fakes. Every path that could widen access must end at a human 
         idempotent per `(repo, issue)`, using the GitHub App only (no personal tokens).
   - [ ] The real `IssueSource`, `CommentSink` and repo-write adapters sit behind the same ports the
         prototype used; the offline evals still pass unchanged.
+  - [ ] Verify the human issue author's current repository access using trusted metadata and the
+        `RequesterAccess` port. Enforce the agreed sponsorship rule (Q17) before spending budget
+        or creating a branch.
   - [ ] Traces and audit rows (O1) record who raised the request, what was asked, what was generated
         and who approved, without issue bodies or secrets.
   - [ ] If R3/R4 slip, record a decision on whether a thin GitHub Actions trigger is an acceptable
@@ -1337,17 +1349,19 @@ These block or shape items above. Ask them in the session with the agent teams n
 | Q3 | Is the Copilot coding agent acceptable for each data classification, given residency? | D1 | security team |
 | Q4 | Who approves workflow runs on Copilot PRs, and should we enable "skip approval"? | R2 | security team |
 | Q5 | Harness hosting (Cloud Run + Cloud SQL in Melbourne?) and the webhook ingress route | R3, R4 | platform team |
-| Q6 | Access to existing reference agent template and the existing bootstrap layer | W2 | Unassigned |
 | Q7 | pinned skills repository skill names for planner and reviewer | R6 | AI governance team |
 | Q8 | Business-owned eval, coverage and quality thresholds per agent | E3 | Product Owner (to be named) |
 | Q9 | Do agent work items come from GitHub Issues, or from Jira / Jira Align? | R4 (may need an `IssueSource` port) | Unassigned |
 | Q10 | Phase promotion criteria (draft in O3) | O3 | Unassigned |
 | Q11 | Is GitHub Advanced Security licensed (secret scanning, push protection, CodeQL, dependency review)? | S1 | AI governance team |
 | Q12 | Actual infrastructure repository and file layout (`workload-infrastructure` and `platform.tf` are illustrative only) | W1 | platform_team |
-| Q13 | Who may raise an `AgentRequest`, and who sponsors it before the intake agent spends budget or creates a branch? | I1, I7 | Unassigned |
 | Q14 | Who owns and reviews the connector library, which connectors come first, and how do Jira and other internal APIs reach agents (the approved connector gateway)? | I2 | AI governance team, platform team and approved connector platform |
 | Q15 | Which second model family, if any, is approved for cross-model review under Australian residency? | I5 | security team |
 | Q16 | Should agents built only from approved connectors stay tier 3 under D-02, or may they use a lighter approval route? | M9 | security team, AI governance team |
+| Q17 | Who sponsors a request before the intake agent spends budget or creates a branch, and how is sponsorship verified? | I7 | Unassigned |
+
+Resolved: Q6's contact is the AI governance team; W2 still needs the actual template and bootstrap access.
+Q13's requester eligibility is any person with repository access; the separate sponsorship question is Q17.
 
 ---
 
@@ -1378,13 +1392,14 @@ These block or shape items above. Ask them in the session with the agent teams n
 Append-only, newest first. One entry per PR or working session: the date, the item IDs, what changed, and
 anything learned that should change this plan. Never rewrite old entries; correct them with a new one.
 
-### 2026-11-26 · I1 request form and offline draft parsing
-- Added a GitHub issue form and strict deterministic draft parser, missing-field reporting, review-only
-  spec and Mission Brief mappings, property tests and offline parsing eval cases (run by pytest).
-- The draft is untrusted: it does not scan text, authenticate requesters, approve actions, grant egress or
-  start a build. Q13 must resolve requester eligibility and sponsorship before an intake path can accept
-  requests. The organisation's classification choices are also unconfirmed; the form asks for the name
-  rather than inventing a list. I1 remains doing.
+### 2026-11-26 · I1 request form and offline parsing
+- Added the GitHub request form, strict deterministic draft model, review-only spec and brief mapping,
+  repository-access port, property tests and offline parsing eval cases. Unauthorised requests are refused;
+  no input is sent to a model and no capability or build is authorised by a draft.
+- Q13: any person with repository access may request an agent. The hosted access lookup remains I7.
+  Sponsorship before spending or branching was not specified and is tracked separately as Q17.
+- Q6: the AI governance team is the contact for reference template access. W2 remains blocked until
+  access is actually available.
 
 ### 2026-11-25 · Project site for GitHub Pages
 - Added `site/`: a static, no-build, no-third-party-requests project site (vision, golden workflow, a replay of
