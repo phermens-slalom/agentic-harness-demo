@@ -113,6 +113,34 @@ class PolicyValidationTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "max_filez"):
                 validate_policy_directory(root / "policy")
 
+    def test_every_surface_the_workflow_scans_must_be_in_the_guard_policy(self):
+        for surface in ("review_feedback", "pr_comment", "repo_context", "issue", "build_feedback"):
+            with tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                shutil.copytree(ROOT / "policy", root / "policy")
+                shutil.copytree(ROOT / "agent-template", root / "agent-template")
+                guard = root / "policy" / "input_guard.yaml"
+                kept = [ln for ln in guard.read_text().splitlines() if not ln.startswith(f"  {surface}:")]
+                guard.write_text("\n".join(kept) + "\n")
+                with self.assertRaisesRegex(ValueError, f"would not be scanned.*{surface}"):
+                    validate_policy_directory(root / "policy")
+
+    def test_the_model_armor_policy_is_required_and_strict(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            shutil.copytree(ROOT / "policy", root / "policy")
+            shutil.copytree(ROOT / "agent-template", root / "agent-template")
+            guard = root / "policy" / "input_guard.yaml"
+            original = guard.read_text()
+            guard.write_text(
+                original.replace("require_outside_local: true", "require_outside_local: yes-please")
+            )
+            with self.assertRaisesRegex(ValueError, "require_outside_local"):
+                validate_policy_directory(root / "policy")
+            guard.write_text(original.replace("model_armor:\n  require_outside_local: true\n", ""))
+            with self.assertRaisesRegex(ValueError, "model_armor"):
+                validate_policy_directory(root / "policy")
+
     def test_route_target_must_be_a_known_workflow(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

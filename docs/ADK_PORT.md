@@ -67,6 +67,15 @@ output as untrusted input to the guard. Defer A2A until cross-agent delegation i
 Protocol metadata (an MCP tool list, an A2A agent card) never grants access; tool authorisation is enforced in
 code and platform IAM.
 
+### Model Armor
+
+`ModelArmorPlugin` is registered on the harness's own ADK `App` when Model Armor templates are configured
+(`HARNESS_MODEL_ARMOR_PROMPT_TEMPLATE` and `_RESPONSE_TEMPLATE`; both are required outside `HARNESS_ENV=local`).
+It screens the latest user content and the model's reply ([ADK Model Armor plugin](https://adk.dev/integrations/model-armor/)).
+Both templates must be in one allowed location, and the harness keeps `block_on_screening_failure` on. A blocked
+reply raises `AgentOutputError` straight away: it is never retried. The same templates feed the input guard.
+See [`INPUT_GUARD.md`](INPUT_GUARD.md).
+
 ### Skills
 
 `skills.py` loads a planner or reviewer skill only if `policy/routing.yaml` names it **and**

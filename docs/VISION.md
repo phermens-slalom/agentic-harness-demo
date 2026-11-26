@@ -110,8 +110,8 @@ The roadmap ([`ROADMAP.md`](ROADMAP.md)) is the source of truth. In short:
 - **Blocked:** the real GitHub client (R2). GitHub's Copilot assignment API needs a kind of token that the
   "no personal tokens, installation token only" rule does not cover. The security team must decide.
   Several later items wait on it.
-- **Not built:** live evals, real traces and audit log, durable workflow and webhook ingress, Model Armor,
-  the optional sandbox, and the later golden-workflow stages.
+- **Not built:** live evals, real traces and audit log, durable workflow and webhook ingress,
+  the optional sandbox, and the later golden-workflow stages. Model Armor is wired in but has not been run live.
 
 ## What this repo is not
 

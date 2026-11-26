@@ -221,7 +221,8 @@ Facts to be honest about:
 - The scanner is a pattern matcher. It is a cheap tripwire, not a full defence. Two phrasings are known to
   slip past it and are listed as open gaps in the evals.
 - Even if text slips through, the merge gate is still the control. It never sees the scanner.
-- Model Armor is planned as the main scanner (S2, **Planned**).
+- Model Armor now runs beside it, and the text is blocked if either scanner blocks. A scanner that errors also
+  blocks. Model Armor has not been run against the live service yet (see [Input guard](INPUT_GUARD.md)).
 
 ---
 

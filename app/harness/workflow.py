@@ -16,6 +16,7 @@ Workflow API in `adk web` against the version you pin.
 
 from __future__ import annotations
 
+import asyncio
 from collections.abc import Sequence
 
 from .golden import GoldenWorkflow
@@ -69,18 +70,8 @@ class IssueToMerge:
             return out
 
         # 1b. Input guard (deterministic): untrusted issue text is scanned before any LLM reads it
-        if self.guard:
-            g = self.guard.check_issue(issue)
-            if not g.ok or g.shadow_hit:
-                trace(
-                    "input_guard",
-                    surface="issue",
-                    blocked=not g.ok,
-                    shadow=g.shadow_hit,
-                    rules=list(g.rule_ids),
-                )
-            if not g.ok:
-                return await self._escalate(out, trace, g.reason)
+        if blocked := await self._scan("issue", f"{issue.title}\n\n{issue.body}", trace):
+            return await self._escalate(out, trace, blocked)
 
         # 1c. Config checks that must be visible in the trace (no content, only names)
         planner_model = getattr(self.planner, "model_id", None)
@@ -133,22 +124,17 @@ class IssueToMerge:
             out.tokens_used += build.tokens_used
             out.pr_number = build.pr_number
             trace("build", iteration=i, passed=build.passed, lines=build.lines_changed)
+            # PR comments are attacker-influenceable and the builder reads them: scan before anything else.
+            if build.comments and (
+                blocked := await self._scan("pr_comment", "\n\n".join(build.comments), trace)
+            ):
+                return await self._escalate(out, trace, blocked)
             if out.tokens_used > self.routing.max_tokens_per_task:
                 return await self._escalate(out, trace, "token budget exceeded")
             if not build.passed:
                 feedback = f"CI failed: {build.ci_summary or ', '.join(build.failing_checks)}"
-                if self.guard:
-                    g = self.guard.check("build_feedback", feedback)
-                    if not g.ok or g.shadow_hit:
-                        trace(
-                            "input_guard",
-                            surface="build_feedback",
-                            blocked=not g.ok,
-                            shadow=g.shadow_hit,
-                            rules=list(g.rule_ids),
-                        )
-                    if not g.ok:
-                        return await self._escalate(out, trace, g.reason)
+                if blocked := await self._scan("build_feedback", feedback, trace):
+                    return await self._escalate(out, trace, blocked)
                 continue
 
             # 5. Review (LLM, different identity from builder)
@@ -163,6 +149,9 @@ class IssueToMerge:
             trace("review", approved=review.approved, findings=len(review.blocking_findings))
             if not review.approved and i < self.routing.max_build_iterations:
                 feedback = "Review findings:\n" + "\n".join(review.blocking_findings)
+                # The reviewer's findings can quote attacker-influenced diff text and go to the builder.
+                if blocked := await self._scan("review_feedback", feedback, trace):
+                    return await self._escalate(out, trace, blocked)
                 continue
 
             # 6. Merge gate (deterministic)
@@ -199,19 +188,24 @@ class IssueToMerge:
         ctx = await build_repo_context(self.repo, issue.repo, self.routing.repo_context, named_files)
         # Names and sizes only: never file content in the trace.
         trace("repo_context", role=role, files=ctx.included, skipped=len(ctx.skipped), bytes=ctx.size)
-        if self.guard:
-            g = self.guard.check("repo_context", ctx.text)
-            if not g.ok or g.shadow_hit:
-                trace(
-                    "input_guard",
-                    surface="repo_context",
-                    blocked=not g.ok,
-                    shadow=g.shadow_hit,
-                    rules=list(g.rule_ids),
-                )
-            if not g.ok:
-                return "", g.reason
+        if blocked := await self._scan("repo_context", ctx.text, trace):
+            return "", blocked
         return ctx.text, None
+
+    async def _scan(self, surface: str, text: str, trace) -> str | None:
+        """Scan untrusted text with the input guard; return the block reason, or None to carry on.
+
+        The scanner may call a network service (Model Armor), so it runs in a worker thread rather
+        than on the event loop. The trace records the surface and rule ids, never the text.
+        """
+        if not self.guard:
+            return None
+        g = await asyncio.to_thread(self.guard.check, surface, text)
+        if not g.ok or g.shadow_hit:
+            trace(
+                "input_guard", surface=surface, blocked=not g.ok, shadow=g.shadow_hit, rules=list(g.rule_ids)
+            )
+        return None if g.ok else g.reason
 
     async def _escalate(self, out: TaskOutcome, trace, reason: str) -> TaskOutcome:
         out.decision, out.reason = Decision.ESCALATED, reason

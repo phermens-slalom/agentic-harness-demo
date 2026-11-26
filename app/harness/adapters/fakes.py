@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from types import SimpleNamespace
 
 from ..models import BuildResult, Issue, Plan, PRSnapshot, ReviewResult, ScanVerdict, TriageResult
 
@@ -123,3 +124,44 @@ class FakeScanner:
             raise RuntimeError("scanner crashed")
         hit = any(t in text.lower() for t in self.trigger)
         return ScanVerdict(blocked=hit, complete=not self.incomplete, rule_ids=["FAKE-1"] if hit else [])
+
+
+def _snake(name: str) -> str:
+    return "".join("_" + c.lower() if c.isupper() else c for c in name)
+
+
+_ENUM = {"MATCH_FOUND": 2, "NO_MATCH_FOUND": 1, "SUCCESS": 1, "PARTIAL": 2, "FAILURE": 3}
+_ENUM_KEYS = {"matchState", "filterMatchState", "invocationResult"}
+
+
+def _from_rest(value, key: str = ""):
+    """A Model Armor REST JSON value as attribute-style objects, like the client library returns."""
+    if isinstance(value, dict):
+        if key in ("filterResults", "raiFilterTypeResults"):  # maps keyed by filter name stay dicts
+            return {k: _from_rest(v) for k, v in value.items()}
+        return SimpleNamespace(**{_snake(k): _from_rest(v, k) for k, v in value.items()})
+    if key in _ENUM_KEYS and isinstance(value, str):
+        return _ENUM[value]
+    return value
+
+
+class FixtureModelArmorClient:
+    """Plays back a fixture file as Model Armor's `sanitize_user_prompt`. No network, no google libraries.
+
+    `fixture` is {"default": <response>, "rules": [{"contains": text, "response": <response> | "raise": name}]}
+    in the REST JSON shape. The first rule whose `contains` is in the prompt (case-insensitive) wins.
+    """
+
+    def __init__(self, fixture: dict):
+        self.fixture = fixture
+        self.requests: list[dict] = []
+
+    def sanitize_user_prompt(self, request: dict, timeout: float | None = None):
+        self.requests.append(request)
+        text = request["user_prompt_data"]["text"].lower()
+        for rule in self.fixture["rules"]:
+            if rule["contains"].lower() in text:
+                if "raise" in rule:
+                    raise RuntimeError("fixture error")
+                return _from_rest(rule["response"])
+        return _from_rest(self.fixture["default"])

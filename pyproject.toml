@@ -17,6 +17,9 @@ dependencies = [
 adk = ["google-adk>=2.12,<3"]
 # Input guard scanner (MIT, local, zero deps). Exact pin: a pattern-set change is a policy change.
 guard = ["sunglasses==0.6.20"]
+# Model Armor: the primary scanner (D-09) and the ADK ModelArmorPlugin, which ships inside google-adk.
+# Exact pin on the client: a new client version can change how verdicts are returned.
+armor = ["google-adk>=2.12,<3", "google-cloud-modelarmor==0.7.5"]
 lint = ["ruff>=0.6", "codespell>=2.3", "ty>=0.0.1"]          # `agents-cli lint` syncs this extra
 dev = ["sunglasses==0.6.20", "pytest>=8", "hypothesis>=6.120", "ruff>=0.6", "codespell>=2.3", "ty>=0.0.1"]
 
@@ -42,4 +45,4 @@ exclude = ["agent-template"]
 
 [tool.ty.analysis]
 # google-adk is an optional extra (`pip install -e ".[adk]"`), not installed in the dev env.
-allowed-unresolved-imports = ["google.adk.**", "google.genai.**"]
+allowed-unresolved-imports = ["google.adk.**", "google.genai.**", "google.cloud.**", "google.api_core.**"]

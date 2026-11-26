@@ -63,6 +63,9 @@ class BuildResult:
     checks: dict[str, bool] = field(default_factory=dict)
     previous_paths: list[str] = field(default_factory=list)
     diff: str = ""
+    # PR comment text from the GitHub client. Attacker-influenceable and read by the builder
+    # (Copilot reads PR comments), so the workflow scans it before anything else happens.
+    comments: list[str] = field(default_factory=list)
 
     @property
     def failing_checks(self) -> list[str]:
@@ -84,6 +87,7 @@ class PRSnapshot:
     summary: str = ""
     previous_paths: list[str] = field(default_factory=list)
     diff: str = ""
+    comments: list[str] = field(default_factory=list)
 
 
 @dataclass

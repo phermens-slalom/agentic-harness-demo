@@ -46,6 +46,7 @@ class CopilotBuilder:
             checks=snap.checks,
             previous_paths=snap.previous_paths,
             diff=snap.diff,
+            comments=snap.comments,
             ci_summary=snap.summary or ("failing: " + ", ".join(failing) if failing else ""),
         )
 

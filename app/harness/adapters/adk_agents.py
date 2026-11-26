@@ -25,7 +25,9 @@ from pydantic import BaseModel, Field, ValidationError, model_validator
 
 from .. import residency
 from ..models import AdapterError, AgentOutputError, BuildResult, Issue, Plan, ReviewResult, TriageResult
-from ..policy import load_review_checklist
+from ..policy import POLICY_DIR, load_review_checklist
+from ..policy_validation import InputGuard as InputGuardSchema
+from ..policy_validation import load_policy_file
 from ..skills import SkillProvenance, load_skills
 
 T = TypeVar("T", bound=BaseModel)
@@ -87,6 +89,40 @@ async def ask_structured(
             ) from None
 
 
+def model_armor_plugin(env: Mapping[str, str]) -> Any:
+    """The ModelArmorPlugin for the harness's own ADK app, or None when no template is configured.
+
+    Templates come from the environment: HARNESS_MODEL_ARMOR_PROMPT_TEMPLATE screens the input to every
+    model call and HARNESS_MODEL_ARMOR_RESPONSE_TEMPLATE screens the reply. Outside HARNESS_ENV=local both
+    are required (policy/input_guard.yaml), and each must sit in an allowed location. The plugin blocks
+    when screening fails (`block_on_screening_failure` stays at its default, True).
+    """
+    prompt = env.get("HARNESS_MODEL_ARMOR_PROMPT_TEMPLATE") or None
+    response = env.get("HARNESS_MODEL_ARMOR_RESPONSE_TEMPLATE") or None
+    local = env.get("HARNESS_ENV", "").strip().lower() == "local"
+    policy = load_policy_file(POLICY_DIR / "input_guard.yaml", InputGuardSchema)["model_armor"]
+    if not local and policy["require_outside_local"] and not (prompt and response):
+        raise AdapterError(
+            "Model Armor is required outside HARNESS_ENV=local: set HARNESS_MODEL_ARMOR_PROMPT_TEMPLATE and "
+            "HARNESS_MODEL_ARMOR_RESPONSE_TEMPLATE to full template names"
+        )
+    if not (prompt or response):
+        return None
+    for template in (prompt, response):
+        if template:
+            residency.template_location(template)
+    from google.adk.integrations.model_armor import (
+        ModelArmorConfig,
+        ModelArmorPlugin,
+    )  # needs the armor extra
+
+    return ModelArmorPlugin(
+        config=ModelArmorConfig(
+            prompt_template_name=prompt, response_template_name=response, block_on_screening_failure=True
+        )
+    )
+
+
 class AdkStructuredLLM:
     """Real StructuredLLM on ADK. Imports ADK lazily; builds one Runner per (role, instruction, schema)."""
 
@@ -104,7 +140,14 @@ class AdkStructuredLLM:
             from google.adk.runners import InMemoryRunner
 
             agent = LlmAgent(name=role, model=model, instruction=instruction, output_schema=schema)
-            self._runners[key] = InMemoryRunner(agent=agent, app_name=self.APP)
+            plugin = model_armor_plugin(self._env)
+            if plugin is None:
+                self._runners[key] = InMemoryRunner(agent=agent, app_name=self.APP)
+            else:
+                from google.adk.apps import App
+
+                app = App(name=self.APP, root_agent=agent, plugins=[plugin])
+                self._runners[key] = InMemoryRunner(app=app)
         return self._runners[key]
 
     async def ask(self, role: str, model: str, instruction: str, prompt: str, schema: type[T]) -> T:
@@ -121,6 +164,9 @@ class AdkStructuredLLM:
                 session_id=session.id,
                 new_message=types.Content(role="user", parts=[types.Part(text=prompt)]),
             ):
+                if (getattr(event, "custom_metadata", None) or {}).get("model_armor_blocked"):
+                    # Never retried: the same content would be blocked again.
+                    raise AgentOutputError(f"{role} content was blocked by Model Armor")
                 if event.is_final_response() and event.content and event.content.parts:
                     chunk = "".join(p.text or "" for p in event.content.parts if not p.thought)
                     text = chunk or text  # a trailing thought-only event must not erase the reply

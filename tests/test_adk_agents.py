@@ -146,6 +146,8 @@ class Made:
         self.runners: list[object] = []
         self.created = 0
         self.deleted = 0
+        self.apps: list[dict] = []
+        self.plugin_configs: list[dict] = []
 
 
 def fake_adk(events_per_call):
@@ -164,8 +166,23 @@ def fake_adk(events_per_call):
         async def delete_session(self, **kwargs):
             made.deleted += 1
 
+    class App:
+        def __init__(self, **kwargs):
+            self.kwargs = kwargs
+            made.apps.append(kwargs)
+
+    class ModelArmorConfig:
+        def __init__(self, **kwargs):
+            self.kwargs = kwargs
+            made.plugin_configs.append(kwargs)
+
+    class ModelArmorPlugin:
+        def __init__(self, config):
+            self.config = config
+
     class InMemoryRunner:
-        def __init__(self, agent, app_name):
+        def __init__(self, agent=None, app_name=None, app=None):
+            self.app = app
             self.session_service = Sessions()
             made.runners.append(self)
             self.calls = 0
@@ -184,6 +201,11 @@ def fake_adk(events_per_call):
         "google.adk": ModuleType("google.adk"),
         "google.adk.agents": SimpleNamespace(LlmAgent=LlmAgent),
         "google.adk.runners": SimpleNamespace(InMemoryRunner=InMemoryRunner),
+        "google.adk.apps": SimpleNamespace(App=App),
+        "google.adk.integrations": ModuleType("google.adk.integrations"),
+        "google.adk.integrations.model_armor": SimpleNamespace(
+            ModelArmorConfig=ModelArmorConfig, ModelArmorPlugin=ModelArmorPlugin
+        ),
         "google.genai": ModuleType("google.genai"),
         "google.genai.types": types,
     }
@@ -200,7 +222,14 @@ def partial(text):
     return SimpleNamespace(is_final_response=lambda: False, content=SimpleNamespace(parts=[part]))
 
 
-VERTEX = {"GOOGLE_GENAI_USE_VERTEXAI": "TRUE", "GOOGLE_CLOUD_LOCATION": "australia-southeast2"}
+PROMPT_T = "projects/p/locations/australia-southeast2/templates/prompt"
+RESPONSE_T = "projects/p/locations/australia-southeast2/templates/response"
+ARMOR = {
+    "HARNESS_MODEL_ARMOR_PROMPT_TEMPLATE": PROMPT_T,
+    "HARNESS_MODEL_ARMOR_RESPONSE_TEMPLATE": RESPONSE_T,
+}
+BASE = {"GOOGLE_GENAI_USE_VERTEXAI": "TRUE", "GOOGLE_CLOUD_LOCATION": "australia-southeast2"}
+VERTEX = {**BASE, **ARMOR}  # what a deployed harness looks like: Vertex plus Model Armor templates
 REPLY = '{"summary": "ok", "estimated_size": "s", "files": []}'
 
 
@@ -243,6 +272,52 @@ class AdkStructuredLLMTests(unittest.TestCase):
             out = asyncio.run(ask_structured(llm, "triage", "m", "instr", "p", TriageOut))
         self.assertEqual(out.summary, "ok")
         self.assertEqual(made.created, 2)
+
+    def test_model_armor_plugin_is_registered_on_the_app_for_input_and_output(self):
+        made, patch = fake_adk([[final(REPLY)]])
+        with patch:
+            self.ask(AdkStructuredLLM(VERTEX))
+        (app,) = made.apps
+        self.assertEqual(len(app["plugins"]), 1)
+        (config,) = made.plugin_configs
+        self.assertEqual(config["prompt_template_name"], PROMPT_T)
+        self.assertEqual(config["response_template_name"], RESPONSE_T)
+        self.assertTrue(config["block_on_screening_failure"])
+        self.assertIsNotNone(made.runners[0].app)
+
+    def test_locally_without_templates_no_plugin_is_registered(self):
+        made, patch = fake_adk([[final(REPLY)]])
+        with patch:
+            self.ask(AdkStructuredLLM({**BASE, "HARNESS_ENV": "local"}))
+        self.assertEqual((made.apps, made.plugin_configs), ([], []))
+        self.assertIsNone(made.runners[0].app)
+
+    def test_outside_local_both_templates_are_required(self):
+        made, patch = fake_adk([[final(REPLY)]])
+        for env in (BASE, {**BASE, "HARNESS_MODEL_ARMOR_PROMPT_TEMPLATE": PROMPT_T}):
+            with patch, self.assertRaisesRegex(AdapterError, "Model Armor is required"):
+                self.ask(AdkStructuredLLM(env))
+        self.assertEqual(made.runners, [])
+
+    def test_a_template_outside_the_allowed_locations_is_refused(self):
+        _, patch = fake_adk([[final(REPLY)]])
+        bad = {
+            **VERTEX,
+            "HARNESS_MODEL_ARMOR_PROMPT_TEMPLATE": "projects/p/locations/us-central1/templates/t",
+        }
+        with patch, self.assertRaises(ResidencyError):
+            self.ask(AdkStructuredLLM(bad))
+
+    def test_a_model_armor_block_escalates_without_a_retry(self):
+        blocked = SimpleNamespace(
+            custom_metadata={"model_armor_blocked": True}, is_final_response=lambda: True, content=None
+        )
+        made, patch = fake_adk([[blocked], [final(REPLY)]])
+        with patch:
+            llm = AdkStructuredLLM(VERTEX)
+            with self.assertRaisesRegex(AgentOutputError, "blocked by Model Armor"):
+                asyncio.run(ask_structured(llm, "triage", "m", "instr", "p", TriageOut))
+        self.assertEqual(made.created, 1)  # one call only: blocked content is never retried
 
     def test_residency_is_checked_before_any_model_call(self):
         made, patch = fake_adk([[final(REPLY)]])
