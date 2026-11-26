@@ -45,7 +45,7 @@ No. It only adds approvers. People approve.
 ## Running and fixing
 
 **Which commands do I run before a PR?**
-`uv run ruff check .`, `uv run ty check`, `uv run pytest -q`, and `uv run python evals/run_evals.py --out .m0-eval-report.json`. See [Getting started](GETTING_STARTED.md).
+`uv run ruff check .`, `uv run ruff format --check .`, `uv run codespell`, `uv run ty check`, `uv run pytest -q`, and `uv run python evals/run_evals.py --out .m0-eval-report.json`. See [Getting started](GETTING_STARTED.md).
 
 **CI reports a type error I cannot see locally.**
 The `ty` version is not pinned, so CI can be newer than your machine. Run `uv sync --extra dev` and try again.

@@ -18,13 +18,15 @@ Before porting:
 2. Don't wrap node code in broad `except Exception:` — ADK 2.0 relies on exceptions
    propagating for automatic retries, telemetry and HITL pauses.
 3. Check deploy target. Community reports show friction deploying graph workflows to
-   Agent Runtime; Cloud Run is the fallback. pyproject targets `agent_runtime` (agents-cli default, cloud platform direction); switch if the port hits that friction.
+   Agent Runtime; Cloud Run is the fallback. `agents-cli-manifest.yaml` targets `agent_runtime` (agents-cli default, cloud platform direction); switch if the port hits that friction.
 4. Keep `tests/test_workflow.py` passing by running the same fakes through the ported graph.
 
 ## The LLM adapters today (R6)
 
 `adapters/adk_agents.py` is the only place that touches ADK for triage, planning and review. Checked
-against google-adk 2.15.1 (pyproject allows `>=2.12,<3`; R3 pins it exactly):
+on 26 November 2026 against google-adk 2.15.1 and 2.14.0 (the version in `uv.lock`); both expose `LlmAgent.output_schema`,
+`InMemoryRunner`, `Runner.run_async` and `Event.is_final_response`, and the adapter tests pass on both (pyproject allows
+`>=2.12,<3`; R3 pins it exactly):
 
 - **Structured output.** Each role is an `LlmAgent(output_schema=<Pydantic model>)`
   ([LLM agents](https://adk.dev/agents/llm-agents/): in Python the final reply must be a JSON string

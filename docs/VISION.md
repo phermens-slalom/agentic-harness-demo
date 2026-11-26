@@ -77,7 +77,7 @@ The harness covers **build** and **verify** in code. The bootstrap helps with th
 | `scripts/` | The end-to-end script and wrappers | A quick check that everything works together |
 | `docs/` | These documents and the roadmap | Explains the repo and tracks the work |
 | `site/` | A static project site (HTML, CSS, SVG) | A visual overview, published to GitHub Pages ([Site](tech/SITE.md)) |
-| `.github/` | The harness's own CI | Lint, type check, tests, evals and security scans on every PR |
+| `.github/` | The harness's own CI, the Pages deploy and the `AgentRequest` issue form | Lint, format, spelling, type check, tests, evals and security scans on every PR |
 | `AGENTS.md`, `CLAUDE.md` | Rules for coding agents working on this repo | `CLAUDE.md` just imports `AGENTS.md` |
 | `spec.yaml.example` | Example input for the bootstrap | Shows the fields a team fills in |
 | `pyproject.toml`, `uv.lock`, `Makefile` | Packaging, locked versions, shortcuts | |
@@ -103,7 +103,8 @@ The roadmap ([`ROADMAP.md`](ROADMAP.md)) is the source of truth. In short:
 
 - **Working and tested:** the policy files and their checks, the merge gate, the tamper and
   new-capability detectors, the input guard, the issue-to-merge workflow with fakes, the ADK adapters
-  with fakes, the bootstrap `new` and `check`, the template, the dry-run evals and the CI.
+  with fakes, the bootstrap `new` and `check`, the template, the `AgentRequest` form and offline parser (the hosted
+  access lookup is I7), the dry-run evals and the CI.
 - **Phase:** the policy ships at **phase 1**: a person reviews every agent PR. Moving to a later phase
   needs agreed criteria. The roadmap has a draft (O3, not built yet); owner assignment remains unresolved (Q10).
 - **Plan only:** bootstrap `plan` lists the cloud-project PRs. It does not write the Terraform.

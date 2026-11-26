@@ -61,7 +61,7 @@ Be clear about the limits.
 | The reviewer does not see the diff yet | It sees file names and repo context. R7 is planned. |
 | No audit log or trace export yet | O1 is planned. Traces exist in memory per task only. |
 | `evals_no_regression` in generated repos is a stub | It fails until wired up (E3). |
-| Not all CodeQL and dependency review run | They need a public repo or `GHAS_ENABLED=true` (Q11). |
+| CodeQL and dependency review do not always run | They need a public repo or `GHAS_ENABLED=true` (Q11). |
 
 ## Supply chain
 

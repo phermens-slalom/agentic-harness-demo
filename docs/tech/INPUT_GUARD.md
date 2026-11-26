@@ -92,7 +92,10 @@ It screens the latest user content and the model reply, and replaces blocked con
 Both templates must be in one region. The harness keeps `block_on_screening_failure` at its default of `True`,
 so content that could not be screened is blocked. A blocked reply is never retried: the workflow escalates.
 
-Checked against `google-adk` 2.15.1 and `google-cloud-modelarmor` 0.7.5 (the latest on PyPI at the time of writing).
+Checked on 26 November 2026 against `google-adk` 2.15.1 (the latest on PyPI) and 2.14.0 (the version in `uv.lock`), each
+with `google-cloud-modelarmor` 0.7.5, in clean environments. On both, `ModelArmorPlugin` and `ModelArmorConfig` import from
+`google.adk.integrations.model_armor`, `block_on_screening_failure` defaults to `True`, and the adapter, scanner and
+workflow tests pass.
 
 TODO(Security Architecture): confirm that templates are required outside local use, and what they screen
 (prompt injection and jailbreak at least; Sensitive Data Protection can flag ordinary names and addresses in

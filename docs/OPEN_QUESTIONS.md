@@ -39,7 +39,7 @@ approve a project, region or identity.
 | Blocked item | Reason | Needs |
 |---|---|---|
 | **R2** Real GitHub client | GitHub's Copilot issue-assignment API needs a user-to-server token. The harness rule allows installation tokens only. | A security team decision. Do not switch auth models quietly. |
-| **I1** Request acceptance | Requester eligibility and sponsorship are not agreed; the offline parser only makes an untrusted draft. | Q13, owner unassigned |
+| **I7** Hosted trigger | Needs the real GitHub client (R2), the durable runtime (R3, R4), the hosting route (Q5) and a sponsorship rule for requests (Q17). The offline request parser (I1) is done. | R2, platform team, Q17 owner unassigned |
 | R1, R3, R4, R5, R7, O1, W5 | Depend on R2, directly or through R3 | R2 |
 | **W2** Template from existing reference agent template | No access yet | AI governance team |
 | **E1** Live eval replay | No pilot repos or history yet | Pilot repos |

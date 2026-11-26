@@ -55,7 +55,7 @@ python scripts/e2e.py --keep   # leave the generated agent in .e2e-work/ to look
 ```
 
 On Windows PowerShell, set UTF-8 first: `$env:PYTHONIOENCODING = "utf-8"; uv run python scripts/e2e.py`.
-Live evals (`--live-evals`) need approved cloud credentials and `the configured evaluation-region variable`. Skip them unless you have both.
+Live evals (`--live-evals`) need approved cloud credentials and `HARNESS_EVAL_REGION`. Skip them unless you have both.
 
 ## Try the bootstrap
 
@@ -102,7 +102,7 @@ agents-cli install && agents-cli lint && uv run pytest
 | `GOOGLE_CLOUD_LOCATION` | Must be an allowed Australian region. Never `global`. |
 | `HARNESS_MODEL_DEFAULT` | The model name. Override per role with `HARNESS_MODEL_TRIAGE`, `_PLANNER`, `_REVIEWER`. |
 | `HARNESS_MODEL_ARMOR_PROMPT_TEMPLATE` / `HARNESS_MODEL_ARMOR_RESPONSE_TEMPLATE` | Full Model Armor template names (`projects/.../locations/australia-southeast2/templates/...`). Required outside `HARNESS_ENV=local`. Needs `pip install -e ".[armor]"`. See [Input guard](tech/INPUT_GUARD.md). |
-| `HARNESS_SKILLS_DIR` | Folder with a pinned pinned skills repository checkout. Only needed once skills are configured. |
+| `HARNESS_SKILLS_DIR` | Folder with a checkout of the pinned skills repository. Only needed once skills are configured. |
 | `GHAS_ENABLED=true` | Turns on CodeQL and dependency review in CI for private repos. Set only once GitHub Code Security is enabled. |
 
 The ADK adapters need the extra: `pip install -e ".[adk]"`. They have only been tested with fakes. TODO: UNCONFIRMED

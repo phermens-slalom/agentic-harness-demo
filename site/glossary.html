@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossary · Agentic Harness Demo</title>
+<meta name="description" content="Plain-English meanings for the acronyms, teams, ideas and roadmap codes used in the Agentic Harness Demo.">
+<meta property="og:title" content="Glossary · Agentic Harness Demo">
+<meta property="og:description" content="Plain-English meanings for the acronyms, teams, ideas and roadmap codes used in the Agentic Harness Demo.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#f8faff">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/styles.css">
+<script defer src="assets/js/main.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  </defs>
+</svg>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html#top"><img src="assets/img/favicon.svg" alt="" width="30" height="30">Agentic Harness</a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+    <nav class="nav-links" id="nav-links" aria-label="Primary">
+      <a href="index.html#vision">Vision</a>
+      <a href="index.html#how">Workflow</a>
+      <a href="index.html#gate">Gate</a>
+      <a href="index.html#architecture">Architecture</a>
+      <a href="index.html#safety">Safety</a>
+      <a href="index.html#status">Status</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="glossary.html" aria-current="page">Glossary</a>
+      <a href="index.html#start">Get started</a>
+      <a href="index.html#faq">FAQ</a>
+      <a class="btn btn-primary btn-sm" href="https://github.com/phermens-slalom/agentic-harness-demo">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<div class="page-head">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a> / Glossary</div>
+    <div class="eyebrow">Glossary</div>
+    <h1>The words we use, in plain English</h1>
+    <p class="lede">Acronyms, teams, ideas and codes from this project. It mirrors <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/GLOSSARY.md">docs/GLOSSARY.md</a>; where they differ, the docs win. <strong>To be validated</strong> means the repo does not confirm the point yet. It is not a guess.</p>
+  </div>
+</div>
+<div class="wrap">
+  <div class="gl-tools">
+    <input id="gl-q" type="search" placeholder="Filter terms: try “tier”, “WIF” or “R2”" aria-label="Filter the glossary" autocomplete="off">
+    <nav class="gl-nav" aria-label="Glossary sections"><a href="#acronyms">Acronyms</a><a href="#teams-and-roles">Teams and roles</a><a href="#core-ideas">Core ideas</a><a href="#the-gate-and-its-outcomes">The gate and its outcomes</a><a href="#safety-words">Safety words</a><a href="#parts-of-the-code">Parts of the code</a><a href="#google-and-github-products">Google and GitHub products</a><a href="#roadmap-codes">Roadmap codes</a></nav>
+  </div>
+  <p class="gl-empty" id="gl-empty" hidden>No term matches. Try a shorter word.</p>
+<section class="gl-sec" id="acronyms"><h2>Acronyms</h2>
+<div class="table-scroll"><table class="gl" data-cols="3"><thead><tr><th>Term</th><th>Means</th><th>Plain English</th></tr></thead><tbody>
+<tr><td><strong>A2A</strong></td><td>Agent2Agent protocol</td><td>A standard way for one AI agent to talk to another. Not used by the harness. The roadmap says to wait until it is really needed.</td></tr>
+<tr><td><strong>ADK</strong></td><td>Google Agent Development Kit</td><td>The one agent framework allowed in this repo. It is the toolkit that builds the AI agents.</td></tr>
+<tr><td><strong>AGENTS.md</strong></td><td>A file name</td><td>A short instruction sheet for a coding agent. It lists the commands, rules and boundaries for a repo.</td></tr>
+<tr><td><strong>ASCII</strong></td><td>Plain text characters</td><td>Diagrams drawn with keyboard characters.</td></tr>
+<tr><td><strong>CI</strong> (1)</td><td>Continuous integration</td><td>Automatic checks that run on every pull request.</td></tr>
+<tr><td><strong>CI</strong> (2)</td><td>Configuration item</td><td>A record in the CMDB. The &quot;AI Agent&quot; CI is the record for one agent.</td></tr>
+<tr><td><strong>CMDB</strong></td><td>Configuration management database</td><td>A register of systems and their configuration items. Each agent gets an &quot;AI Agent&quot; record.</td></tr>
+<tr><td><strong>CODEOWNERS</strong></td><td>A GitHub file</td><td>A list that says which people or teams must review changes to which files.</td></tr>
+<tr><td><strong>AI governance team</strong></td><td>A generic role name</td><td>Reviews agent work against the review checklist.</td></tr>
+<tr><td><strong>cloud platform</strong></td><td>A generic platform term</td><td>The cloud services used by this project; specific services and constraints are described where relevant.</td></tr>
+<tr><td><strong>GHAS</strong></td><td>GitHub Advanced Security</td><td>A GitHub package with additional security scanning. Licensing and availability remain open questions (Q11).</td></tr>
+<tr><td><strong>GHE.com</strong></td><td>GitHub Enterprise Cloud with data residency</td><td>GitHub&#x27;s enterprise hosting where data stays in a chosen region.</td></tr>
+<tr><td><strong>HCL</strong></td><td>HashiCorp Configuration Language</td><td>The language Terraform files are written in.</td></tr>
+<tr><td><strong>HITL</strong></td><td>Human in the loop</td><td>A person must approve before the work goes on.</td></tr>
+<tr><td><strong>IAM</strong></td><td>Identity and Access Management</td><td>Who or what is allowed to do what in a cloud system.</td></tr>
+<tr><td><strong>LLM</strong></td><td>Large language model</td><td>The AI model (here, Gemini) that reads and writes text.</td></tr>
+<tr><td><strong>MCP</strong></td><td>Model Context Protocol</td><td>A standard way to plug tools into an AI agent. Optional here. If used, it needs review.</td></tr>
+<tr><td><strong>OIDC</strong></td><td>OpenID Connect</td><td>How a GitHub job proves who it is to Google Cloud, without a stored password.</td></tr>
+<tr><td><strong>PR</strong></td><td>Pull request</td><td>A proposed change to the code that others review before it is merged.</td></tr>
+<tr><td><strong>RACI</strong></td><td>Responsible, Accountable, Consulted, Informed</td><td>An adaptable policy format for recording who does, owns, advises and is informed. The example configuration is <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/policy/raci.yaml"><code>policy/raci.yaml</code></a>.</td></tr>
+<tr><td><strong>REST</strong></td><td>Representational State Transfer</td><td>A common way for programs to talk over the web.</td></tr>
+<tr><td><strong>SHA</strong></td><td>Secure hash (git commit ID / file fingerprint)</td><td>A long code that identifies one exact version of something. &quot;Pin to a SHA&quot; means &quot;use this exact version, never a moving one&quot;.</td></tr>
+<tr><td><strong>WIF</strong></td><td>Workload Identity Federation</td><td>A way for GitHub jobs to get short-lived Google Cloud access without keys or passwords.</td></tr>
+<tr><td><strong>YAML</strong></td><td>A text format</td><td>The format used for the policy files in <code>policy/</code>.</td></tr>
+</tbody></table></div>
+</section>
+<section class="gl-sec" id="teams-and-roles"><h2>Teams and roles</h2>
+<p>These are the six role IDs in <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/policy/raci.yaml"><code>policy/raci.yaml</code></a>. They are the words the gate uses when it names who must approve.</p>
+<div class="table-scroll"><table class="gl" data-cols="3"><thead><tr><th>Role ID</th><th>Team</th><th>What the repo says they do</th></tr></thead><tbody>
+<tr><td><code>app_team</code></td><td>Application team</td><td>Builds and owns one agent. Raises the work. Always an approver on agent PRs.</td></tr>
+<tr><td><code>ai_governance</code></td><td>AI governance team</td><td>Owns the golden workflow, the template and the review checklist. Always an approver on agent PRs.</td></tr>
+<tr><td><code>platform_team</code></td><td>platform team</td><td>Reviews Terraform (<code>*.tf</code>) changes. The illustrative <code>workload-infrastructure</code> repository and <code>platform.tf</code> filename do not assert an actual repository layout.</td></tr>
+<tr><td><code>security</code></td><td>security team</td><td>Approves changes to the files that steer or control agents, IAM files and sensitive areas.</td></tr>
+<tr><td><code>product_owner</code></td><td>Product Owner</td><td>Approves production deployment.</td></tr>
+<tr><td><code>architecture</code></td><td>Architecture</td><td>Reviews before production.</td></tr>
+</tbody></table></div>
+<p>Other team words you will see:</p>
+<div class="table-scroll"><table class="gl" data-cols="2"><thead><tr><th>Term</th><th>Plain English</th></tr></thead><tbody>
+<tr><td><strong>security team</strong></td><td>Named in the roadmap as the owner of several security decisions. To be validated: whether this is the same group as the <code>security</code> role.</td></tr>
+<tr><td><strong>Agent teams / app teams</strong></td><td>The teams that build agents using this harness.</td></tr>
+<tr><td><strong>platform team ingress route</strong></td><td>The network path for GitHub events to reach the harness. Not yet agreed.</td></tr>
+</tbody></table></div>
+</section>
+<section class="gl-sec" id="core-ideas"><h2>Core ideas</h2>
+<div class="table-scroll"><table class="gl" data-cols="2"><thead><tr><th>Term</th><th>Plain English</th></tr></thead><tbody>
+<tr><td><strong>Harness</strong></td><td>This repo. It wraps AI agents in rules, checks and approvals so that they can build software safely.</td></tr>
+<tr><td><strong>Agent</strong></td><td>An AI program that can use tools and make choices. The harness has agents that plan and review. The generated agent repos hold the agents that the app teams build.</td></tr>
+<tr><td><strong>Generated agent / agent repo</strong></td><td>A new repo the harness creates from <code>agent-template/</code> for one agent.</td></tr>
+<tr><td><strong>Golden workflow</strong></td><td>The harness&#x27;s standard path for taking an agent live. It has eight stages: frame, register, provision, connect, build, verify, release, operate. Defined in <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/policy/golden_workflow.yaml"><code>policy/golden_workflow.yaml</code></a>.</td></tr>
+<tr><td><strong>Stage</strong></td><td>One step of the golden workflow.</td></tr>
+<tr><td><strong>Onboarding steps (13)</strong></td><td>The 13 example steps in the adaptable RACI configuration. The eight stages group them.</td></tr>
+<tr><td><strong>Issue-to-merge loop</strong></td><td>The part of the harness that turns a GitHub issue into a merged change. It covers the Build and Verify stages only.</td></tr>
+<tr><td><strong>Build stage / Verify stage</strong></td><td>Build: an agent writes the change. Verify: checks and a review decide if it can merge.</td></tr>
+<tr><td><strong>Mission Brief</strong></td><td>A short document that states what an agent is for, who uses it, what data it uses and which hosts it calls. Its test ideas become eval criteria.</td></tr>
+<tr><td><strong>Opportunity Canvas</strong></td><td>Drafted in the Frame stage. To be validated: what it contains.</td></tr>
+<tr><td><strong>Runbook</strong></td><td>A how-to-operate guide for one agent: what it does, how to spot faults, how to roll back.</td></tr>
+<tr><td><strong>Spec (<code>spec.yaml</code>)</strong></td><td>A small file with the facts the bootstrap needs: name, division, owner, sponsor, classification, description, and optional location, environments and egress hosts.</td></tr>
+<tr><td><strong>Division</strong></td><td>The business area that owns an agent.</td></tr>
+<tr><td><strong>Classification</strong></td><td>A label for how sensitive an agent is. To be validated: the list of values; the example uses <code>internal</code>.</td></tr>
+<tr><td><strong>Sponsor</strong></td><td>The business person who backs an agent.</td></tr>
+<tr><td><strong>Egress host</strong></td><td>A website or service that an agent is allowed to call out to. The spec lists exact host names only.</td></tr>
+<tr><td><strong>Registry entry</strong></td><td>A record for each allowed egress host in the Agent Registry.</td></tr>
+<tr><td><strong>Landing zone</strong></td><td>The ready-made cloud setup that new projects are placed in. Referred to for WIF and for provisioning.</td></tr>
+<tr><td><strong>Provision</strong></td><td>Create the cloud project and its settings for an agent.</td></tr>
+<tr><td><strong>Residency (data residency)</strong></td><td>Keeping data and AI processing inside allowed places. Here: Australian regions only.</td></tr>
+<tr><td><strong>Allowed regions</strong></td><td><code>australia-southeast1</code> (Sydney) and <code>australia-southeast2</code> (Melbourne), listed in <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/policy/residency.yaml"><code>policy/residency.yaml</code></a>.</td></tr>
+<tr><td><strong>Global endpoint</strong></td><td>A cloud address with no fixed location. Never allowed.</td></tr>
+<tr><td><strong>Phase</strong></td><td>How much the gate trusts itself. Phase 1: a person reviews every agent PR. Phases 3 and 4: the lowest-risk changes may merge by themselves. The file ships at phase 1.</td></tr>
+<tr><td><strong>Tier</strong></td><td>How risky a change is. Tier 1 is low (tests and docs). Tier 2 is the default. Tier 3 is high (controls, Terraform, IAM, production, sensitive areas, agent instructions).</td></tr>
+<tr><td><strong>Required checks</strong></td><td>Six automatic checks every agent PR must pass: <code>lint</code>, <code>tests</code>, <code>coverage</code>, <code>quality</code>, <code>evals_no_regression</code>, <code>secret_scan</code>.</td></tr>
+<tr><td><strong>Lint</strong></td><td>An automatic style and error check on code.</td></tr>
+<tr><td><strong>Evals</strong></td><td>Tests of how an AI behaves (not just whether code runs).</td></tr>
+<tr><td><strong>Golden task</strong></td><td>A saved example case used to test the harness. It says what the right outcome is.</td></tr>
+<tr><td><strong>Golden set</strong></td><td>In a generated agent: example cases for the agent&#x27;s own behaviour.</td></tr>
+<tr><td><strong>Baseline</strong></td><td>The last accepted eval results. A new PR may not do worse than it.</td></tr>
+<tr><td><strong>Threshold</strong></td><td>A pass mark for an eval. The business owner sets it, not the builders.</td></tr>
+<tr><td><strong>Holdout</strong></td><td>Secret test cases the coding agent never sees. Described in the template; the runner is still to be built (E3).</td></tr>
+<tr><td><strong>AgentRequest</strong></td><td>A GitHub issue, raised with the issue form, that asks for a new agent. The harness turns it into an untrusted draft (a Mission Brief, a review-only spec and a list of missing fields). A draft grants nothing.</td></tr>
+<tr><td><strong>Intake agent</strong></td><td>Planned (M9). An agent that would interview the requester on the issue and open a PR for the agent they need. It only raises PRs and never approves or merges.</td></tr>
+<tr><td><strong>Connector library</strong></td><td>Planned (I2). A fixed, reviewed set of ways for generated agents to reach other systems. Anything outside it goes to a person.</td></tr>
+<tr><td><strong>Preflight</strong></td><td>The first job in a generated repo&#x27;s checks. It inspects a candidate checkout without running it, using trusted code from the base revision. A tripwire, not a sandbox.</td></tr>
+<tr><td><strong>Coverage / Quality</strong></td><td>Two required checks in generated repos. Coverage enforces a minimum share of agent code run by tests (80% to start). Quality runs the style, complexity and type checks.</td></tr>
+<tr><td><strong>Dry-run eval</strong></td><td>An eval that uses scripted fakes. It is free and fast.</td></tr>
+<tr><td><strong>Live eval</strong></td><td>An eval that calls real models. It costs money and needs approved cloud access. Not built yet.</td></tr>
+<tr><td><strong>Trace</strong></td><td>A step-by-step log of what the harness did on one task.</td></tr>
+<tr><td><strong>Escalate</strong></td><td>Stop and hand the task to a person.</td></tr>
+<tr><td><strong>Plan approval</strong></td><td>A person approves the plan before the builder starts.</td></tr>
+<tr><td><strong>Skill</strong></td><td>A text file of guidance that changes how an agent behaves. It does not give the agent any new powers.</td></tr>
+<tr><td><strong>pinned skills repository</strong></td><td>The configured source of approved skills. The harness does not copy skills in; it reads a pinned checkout.</td></tr>
+<tr><td><strong>Skills lock</strong></td><td><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/policy/skills.lock.yaml"><code>policy/skills.lock.yaml</code></a>: the exact approved version and fingerprint of each skill. Empty today.</td></tr>
+<tr><td><strong>Pinning</strong></td><td>Locking to one exact version so nothing changes without a reviewed PR.</td></tr>
+<tr><td><strong>TODO(owner)</strong></td><td>A marker for a decision that needs an accountable role or owner. Do not guess; keep it unresolved until assigned.</td></tr>
+</tbody></table></div>
+</section>
+<section class="gl-sec" id="the-gate-and-its-outcomes"><h2>The gate and its outcomes</h2>
+<p>The <strong>merge gate</strong> (<a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/app/harness/nodes/merge_gate.py"><code>merge_gate.py</code></a>) is plain code. It never calls an LLM.</p>
+<div class="table-scroll"><table class="gl" data-cols="2"><thead><tr><th>Outcome</th><th>Plain English</th></tr></thead><tbody>
+<tr><td><code>auto_merge</code></td><td>The change may merge without a person. Only for tier 1, only at phase 3 or 4, and only if nothing new was detected.</td></tr>
+<tr><td><code>human_approval</code></td><td>A named set of people must approve before it merges.</td></tr>
+<tr><td><code>reject_to_planning</code></td><td>The change is too big (over 400 lines). Split it and plan again.</td></tr>
+<tr><td><code>escalated</code></td><td>Something is wrong or unknown (failed or missing check, tampering, a blocked input). A person must look.</td></tr>
+<tr><td><code>ignored</code></td><td>The issue has no <code>agent:*</code> label, so the harness does nothing.</td></tr>
+</tbody></table></div>
+<div class="table-scroll"><table class="gl" data-cols="2"><thead><tr><th>Term</th><th>Plain English</th></tr></thead><tbody>
+<tr><td><strong>Fail closed</strong></td><td>When unsure, stop. Missing evidence counts as a failure, never as a pass.</td></tr>
+<tr><td><strong>Reviewer lockout</strong></td><td>The agent that built a change cannot approve it.</td></tr>
+<tr><td><strong>Harness controls</strong></td><td>Files that control the gate or agent behaviour (workflows, CODEOWNERS, policy, skills, prompts, eval thresholds). Always tier 3, never auto-merged.</td></tr>
+<tr><td><strong>Privileged YAML</strong></td><td>Config files that grant access. To be validated: which files count (Q1).</td></tr>
+<tr><td><strong>Tamper check</strong></td><td>Looks at a change for signs the agent weakened its own tests or evals (deleted tests, added skips, lowered thresholds).</td></tr>
+<tr><td><strong>Capability check</strong></td><td>Looks at a change for newly added models, hosts, regions, data stores, dependencies or tool and protocol links. It adds approvers. It never approves or blocks by itself.</td></tr>
+<tr><td><strong>Approvers</strong></td><td>The roles that must sign off. The gate works them out from the changed file paths.</td></tr>
+</tbody></table></div>
+</section>
+<section class="gl-sec" id="safety-words"><h2>Safety words</h2>
+<div class="table-scroll"><table class="gl" data-cols="2"><thead><tr><th>Term</th><th>Plain English</th></tr></thead><tbody>
+<tr><td><strong>Input guard</strong></td><td>A scan of untrusted text before an LLM reads it. Ships in <code>shadow</code> mode.</td></tr>
+<tr><td><strong>Shadow mode</strong></td><td>Record what would have been blocked, but let the task continue. Used while we learn about false alarms.</td></tr>
+<tr><td><strong>Enforce mode</strong></td><td>A match, crash or incomplete scan stops the task.</td></tr>
+<tr><td><strong>Prompt injection</strong></td><td>Text that tries to give an AI new orders (for example &quot;ignore previous instructions&quot;).</td></tr>
+<tr><td><strong>Sunglasses</strong></td><td>The pattern-matching scanner used by the input guard. A cheap tripwire, not a full defence.</td></tr>
+<tr><td><strong>Model Armor</strong></td><td>A Google Cloud service that screens prompts and replies for prompt injection and other risks. The main scanner (S2). Wired in and tested with a fixture. Not run against the live service yet.</td></tr>
+<tr><td><strong>Composite scanner</strong></td><td>Runs Model Armor and Sunglasses on the same text. Blocked if either blocks. A scanner that errors counts as a block.</td></tr>
+<tr><td><strong>ModelArmorPlugin</strong></td><td>The part of ADK that screens a model&#x27;s input and replies with Model Armor. Registered on the harness&#x27;s own ADK app.</td></tr>
+<tr><td><strong>Template (Model Armor)</strong></td><td>A saved set of Model Armor settings in one cloud region. Not the same as <code>agent-template/</code>.</td></tr>
+<tr><td><strong>Adversarial task</strong></td><td>A golden task that tries bad behaviour to prove the harness catches it.</td></tr>
+<tr><td><strong>Known gap</strong></td><td>A documented miss. It is reported as open and must be removed once it is fixed.</td></tr>
+<tr><td><strong>Reward hacking</strong></td><td>An agent passing its checks by cheating (for example by editing the tests) rather than by doing the work.</td></tr>
+<tr><td><strong>Gitleaks</strong></td><td>A tool that finds secrets (keys, passwords) in code. Used in CI.</td></tr>
+<tr><td><strong>zizmor</strong></td><td>A tool that checks GitHub workflow files for security mistakes.</td></tr>
+<tr><td><strong>CodeQL / dependency review</strong></td><td>GitHub code-scanning and dependency checks. They run on public repos or when <code>GHAS_ENABLED=true</code>.</td></tr>
+<tr><td><strong>Secret</strong></td><td>A password, key or token. Never kept in code, traces or audit records.</td></tr>
+<tr><td><strong>GitHub App</strong></td><td>The way the harness acts on GitHub. No personal access tokens.</td></tr>
+<tr><td><strong>Least privilege</strong></td><td>Give only the access that is needed and no more.</td></tr>
+</tbody></table></div>
+</section>
+<section class="gl-sec" id="parts-of-the-code"><h2>Parts of the code</h2>
+<div class="table-scroll"><table class="gl" data-cols="2"><thead><tr><th>Term</th><th>Plain English</th></tr></thead><tbody>
+<tr><td><strong>Port</strong></td><td>A named slot in the code (such as <code>GitHubPort</code>) that real or fake parts plug into. Lets the workflow stay the same when parts change.</td></tr>
+<tr><td><strong>Adapter</strong></td><td>A real part that plugs into a port (for example the ADK agents or the Copilot builder).</td></tr>
+<tr><td><strong>Fake</strong></td><td>A scripted stand-in used in tests and dry-run evals. No network.</td></tr>
+<tr><td><strong>Builder</strong></td><td>The part that writes the code change. Default: GitHub Copilot.</td></tr>
+<tr><td><strong>Triager / Planner / Reviewer</strong></td><td>The three LLM roles: size the issue, write the plan, review the result.</td></tr>
+<tr><td><strong>Repo context</strong></td><td>AGENTS.md, the file tree and a few named files, read-only, size-capped and scanned, given to the planner and reviewer.</td></tr>
+<tr><td><strong>Bootstrap</strong></td><td>The <code>agentic-bootstrap</code> command with three stages: <code>new</code> (make an agent repo), <code>check</code> (harness policy checks), <code>plan</code> (the ordered PRs for a cloud project).</td></tr>
+<tr><td><strong>Template (<code>agent-template/</code>)</strong></td><td>The starting repo that <code>new</code> copies for each agent.</td></tr>
+<tr><td><strong>Sandbox</strong></td><td>An optional, not-yet-built way to run a build in a Cloud Run Job. Not the default.</td></tr>
+<tr><td><strong>e2e script</strong></td><td><code>scripts/e2e.py</code>: runs the harness end to end, then cleans up.</td></tr>
+<tr><td><strong><code>agents-cli</code></strong></td><td>Google&#x27;s command-line tool for agent projects (lint, evals, scaffold, deploy).</td></tr>
+<tr><td><strong><code>uv</code></strong></td><td>A Python tool for installs and environments.</td></tr>
+<tr><td><strong>Pydantic</strong></td><td>A Python library that checks data has the right shape.</td></tr>
+<tr><td><strong>Hypothesis</strong></td><td>A Python library that tests rules across many generated inputs (property tests).</td></tr>
+<tr><td><strong>ty / ruff / codespell</strong></td><td>Type checker, style checker and spell checker.</td></tr>
+</tbody></table></div>
+</section>
+<section class="gl-sec" id="google-and-github-products"><h2>Google and GitHub products</h2>
+<div class="table-scroll"><table class="gl" data-cols="2"><thead><tr><th>Term</th><th>Plain English</th></tr></thead><tbody>
+<tr><td><strong>Gemini</strong></td><td>Google&#x27;s AI models, used for triage, planning and review.</td></tr>
+<tr><td><strong>Vertex AI</strong></td><td>Google Cloud&#x27;s service for running models in a chosen region.</td></tr>
+<tr><td><strong>AI Studio key</strong></td><td>A simple API key for Gemini. Allowed for local development only (<code>HARNESS_ENV=local</code>).</td></tr>
+<tr><td><strong>Agent Runtime</strong></td><td>Where deployed agents run on the chosen cloud platform. The deployment target in the template.</td></tr>
+<tr><td><strong>Agent Gateway / Agent Registry</strong></td><td>Cloud platform services for controlling and recording which hosts an agent may call.</td></tr>
+<tr><td><strong>memory service</strong></td><td>An optional service whose regional availability is still to be validated.</td></tr>
+<tr><td><strong>Cloud Run</strong></td><td>Google Cloud&#x27;s service for running containers. The roadmap proposes it to host the harness (not yet agreed).</td></tr>
+<tr><td><strong>Cloud SQL / Cloud Tasks / Cloud Trace / BigQuery</strong></td><td>Google Cloud database, task queue, tracing and data warehouse. Proposed in the roadmap; none are built.</td></tr>
+<tr><td><strong>Secret Manager</strong></td><td>Google Cloud&#x27;s store for secrets.</td></tr>
+<tr><td><strong>Terraform</strong></td><td>A tool that sets up cloud resources from text files.</td></tr>
+<tr><td><strong>cloud platform module</strong></td><td>A Terraform module for cloud resources.</td></tr>
+<tr><td><strong><code>workload-infrastructure</code> repository</strong></td><td>An illustrative repository name only. The actual repository and layout are still to be validated (Q12).</td></tr>
+<tr><td><strong>existing reference agent template</strong></td><td>A generic reference to a possible template source. Access and use are still to be validated (Q6).</td></tr>
+<tr><td><strong>GitHub Copilot coding agent</strong></td><td>GitHub&#x27;s AI that takes an issue and opens a PR. The default builder.</td></tr>
+<tr><td><strong><code>copilot-setup-steps.yml</code></strong></td><td>A workflow file that prepares Copilot&#x27;s work environment.</td></tr>
+<tr><td><strong>Custom agent profile</strong></td><td>A file in <code>.github/agents/</code> that tells Copilot how to behave in this repo.</td></tr>
+<tr><td><strong>Firewall allowlist (Copilot)</strong></td><td>A list of hosts Copilot may reach. Set in GitHub settings, not in a repo file.</td></tr>
+<tr><td><strong>Ruleset / branch protection</strong></td><td>GitHub rules that block merges until checks pass. Planned (R1).</td></tr>
+<tr><td><strong>Check run</strong></td><td>A single status line on a PR.</td></tr>
+<tr><td><strong>External workflow engine</strong></td><td>A possible future integration represented by a port in W5; no product or adoption decision is recorded.</td></tr>
+<tr><td><strong>Antigravity / Gemini CLI</strong></td><td>Google coding-agent tools named as options for the optional sandbox.</td></tr>
+</tbody></table></div>
+</section>
+<section class="gl-sec" id="roadmap-codes"><h2>Roadmap codes</h2>
+<p>The roadmap (<a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ROADMAP.md"><code>ROADMAP.md</code></a>) numbers its work. Each code is stable.</p>
+<div class="table-scroll"><table class="gl" data-cols="2"><thead><tr><th>Code</th><th>Plain English</th></tr></thead><tbody>
+<tr><td><strong>D-01 … D-15</strong></td><td>Decisions. Short design choices with a reason and an owner. See <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md"><code>DECISIONS.md</code></a>.</td></tr>
+<tr><td><strong>Q1 … Q18</strong></td><td>Open questions for this project. See <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/OPEN_QUESTIONS.md"><code>OPEN_QUESTIONS.md</code></a>.</td></tr>
+<tr><td><strong>M0 … M9</strong></td><td>Milestones (groups of work). M0 makes the gate trustworthy; M8 gets a generated agent ready for the pilot; M9 lets a person request an agent and get a governed PR.</td></tr>
+<tr><td><strong>H0 to H2</strong></td><td>Hygiene items: the repo guide (H0), CI and repo tidy-up (H1), and the generated-project preflight and acceptance test (H2).</td></tr>
+<tr><td><strong>G1 … G7</strong></td><td>Gate items: fail closed, control files in tier 3, tamper detection, plan approval, path matching, least-privilege CI, policy validation.</td></tr>
+<tr><td><strong>R1 … R7</strong></td><td>Runtime items: GitHub checks and CODEOWNERS, real GitHub client, durable workflow, ingress queue, controls, hardened ADK adapters, reviewer sees the diff.</td></tr>
+<tr><td><strong>S1 … S5</strong></td><td>Security items: scanners, Model Armor, new-capability detectors, Copilot environment, supply chain.</td></tr>
+<tr><td><strong>D1</strong></td><td>Builder residency (not the same as the <code>D-</code> decisions).</td></tr>
+<tr><td><strong>O1 … O3</strong></td><td>Observability: traces and audit, metrics, shadow gate and phase promotion.</td></tr>
+<tr><td><strong>E1 … E3</strong></td><td>Evals: live replay, reviewer defects, real template evals.</td></tr>
+<tr><td><strong>W1 … W5</strong></td><td>Workflow coverage: workload PR checks, template from existing reference agent template, release pack, registration, GitHub-native human gate.</td></tr>
+<tr><td><strong>A1 … A3</strong></td><td>Generated-agent items: authorisation boundary, telemetry, governed skill.</td></tr>
+<tr><td><strong>I1 … I7</strong></td><td>Agent intake items: request form and parser, connector library, intake agent, authoring, cross-model review, tailoring through comments, hosted trigger.</td></tr>
+<tr><td><strong>Status words</strong></td><td><code>todo</code>, <code>doing</code>, <code>blocked</code>, <code>review</code>, <code>done</code>, <code>dropped</code>.</td></tr>
+<tr><td><strong>P0 / P1 / P2</strong></td><td>Priority: before the agent discussion, before the pilot agent, after the pilot.</td></tr>
+<tr><td><strong>S / M / L</strong> (size)</td><td>Up to half a day, up to two days, more than two days.</td></tr>
+</tbody></table></div>
+</section>
+  <p class="src" style="margin-bottom:72px">Roadmap codes such as R2 or I1 are explained in the last section. See the <a href="roadmap.html">roadmap</a> for what each milestone is worth.</p>
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <a class="brand" href="index.html#top" style="margin-bottom:12px"><img src="assets/img/favicon.svg" alt="" width="30" height="30">Agentic Harness</a>
+      <p>The golden workflow for taking an agent live on a cloud platform, as code. Humans stay accountable.</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="index.html#vision">Vision</a></li><li><a href="index.html#gate">The merge gate</a></li><li><a href="index.html#architecture">Architecture</a></li><li><a href="index.html#status">Status</a></li><li><a href="index.html#start">Get started</a></li><li><a href="index.html#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Project</h4>
+      <ul>
+        <li><a href="https://github.com/phermens-slalom/agentic-harness-demo">Repository</a></li>
+        <li><a href="roadmap.html">Roadmap</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ROADMAP.md">full backlog</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CONTRIBUTING.md">Contributing</a></li>
+        <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/OPEN_QUESTIONS.md">Open questions</a></li>
+      </ul>
+    </div>
+    <p class="fine">Illustrative content: names such as <code>workload-infrastructure</code>, <code>platform.tf</code> and the insurance examples are placeholders, not a real system. Licence: to be validated. No licence file is in the repo, so do not assume one. Built from the repo’s own docs; where the two disagree, the roadmap wins.</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -453,7 +453,7 @@ with fakes. Run ruff, ty, pytest and evals. Update the item status and the work 
 ```
 
 ### S4 · Copilot environment in the template
-- **Status:** done (PR #6) · **Priority:** P1 · **Size:** S · **Depends on:** G6
+- **Status:** done · **Priority:** P1 · **Size:** S · **Depends on:** G6
 - **Model / effort:** Sonnet 5.5 · medium
 - **Why:** The template has no `.github/workflows/copilot-setup-steps.yml`. Copilot's built-in firewall
   and setup steps are the "Configure" rung of the ladder, so use them before building our own sandbox.
@@ -668,7 +668,7 @@ work log.
 ```
 
 ### S3 · Detect new capabilities in a PR (model, host, region, data store, dependency)
-- **Status:** done (PR #7) · **Priority:** P1 · **Size:** M · **Depends on:** G3 (shares the diff parsing)
+- **Status:** done · **Priority:** P1 · **Size:** M · **Depends on:** G3 (shares the diff parsing)
 - **Model / effort:** Opus 5.5 · high
 - **Why:** This answers the open question about security-team review scope ("every PR, or every
   privileged file plus each new pattern, API, model or baseline change?") deterministically.
@@ -725,7 +725,9 @@ work log.
 - **Status:** todo · **Priority:** P1 · **Size:** M · **Depends on:** R2 · **Decision:** D-10
 - **Model / effort:** Opus 5.5 · high (half research, half code)
 - **Why:** As of April 2026, Copilot's in-region processing covered the US and EU, with Australia on
-  GitHub's roadmap for "later 2026". Issue text and code go to whichever models Copilot uses. Today
+  GitHub's roadmap for "later 2026". Re-checked on 26 November 2026: GitHub's [Copilot with data residency](https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/github-copilot-with-data-residency)
+  still lists the United States and European Union only and says more regions are planned "in the near future"
+  (the "later 2026" wording is not on that page). Issue text and code go to whichever models Copilot uses. Today
   `residency.py` only guards Vertex. **This could block the default builder for classified repos.**
 - **Done when:**
   - [ ] `docs/RESIDENCY.md` records what GitHub's current docs say for GHE.com in Australia and for the
@@ -1400,6 +1402,29 @@ Q8's starter marks are 80% coverage and eval pass mark, with baseline approval b
 
 Append-only, newest first. One entry per PR or working session: the date, the item IDs, what changed, and
 anything learned that should change this plan. Never rewrite old entries; correct them with a new one.
+
+### 2026-11-26 · Site refresh: roadmap and glossary pages, accuracy pass
+- Rebuilt the site's status, blockers, golden-path stage states, architecture views and headline figures from the
+  repo as it stands (265 tests, 65 scored golden tasks, two open gaps, six required checks). Added `roadmap.html`
+  (milestone value, next steps, waiting-on-people table) and `glossary.html`. Added eight gate-replay scenarios taken
+  from golden tasks. Human decisions now use orange instead of indigo in the loop diagram, with text labels.
+- Replaced "TODO: UNCONFIRMED" on the site with "to be validated" wording. The docs keep their own marker.
+- Re-checked vendor facts, with the page for each in the site's validation log. R2 holds: the issue-assignment APIs
+  need a user token and the agent-tasks API refuses installation tokens. D-10 holds: GitHub's
+  [Copilot with data residency](https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/github-copilot-with-data-residency) lists the US and EU only (D1 now records this). The generative AI locations
+  page lists Sydney and not Melbourne for Gemini. AGENTS.md, C4 and the CNCF article were read and match. Still
+  unchecked: `genai.owasp.org`, the Gitleaks `v8.30.1` release binary and its SHA-256, and the tag names behind the
+  Pages action pins.
+- Docs fixed on the way: `ARCHITECTURE.md` (request parser, `RequesterAccess`, template preflight, coverage and
+  eval comparator, CI steps, `armor` extra), glossary roadmap codes (D-15, Q18, M9, I1 to I7) and a stale blocker row
+  (I1 became I7). A scan of the other docs fixed the README run commands and Layout table, template README paths,
+  VISION, FAQ, SECURITY, GETTING_STARTED, EXAMPLES (the real `plan` output), the ADK port note and the skills note.
+  The ADK version note was cross-checked: google-adk 2.14.0 (the `uv.lock` pin) and 2.15.1 were installed in clean
+  environments; the symbols the adapters use exist on both, `ModelArmorPlugin` blocks on screening failure by default,
+  and 82 adapter, scanner and workflow tests pass on both. `INPUT_GUARD.md` and `ADK_PORT.md` now say so. The OWASP
+  agentic applications page was read and matches. `github.com` release pages are still blocked, so the Gitleaks
+  `v8.30.1` binary and the tag names behind the Pages pins stay unchecked. No policy, gate or node behaviour changed,
+  so no new eval.
 
 ### 2026-11-26 · E3 coverage, quality and preflight
 - Added required `coverage` and `quality` jobs and policy entries. The 80% starter coverage mark

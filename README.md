@@ -32,6 +32,7 @@ A visual overview lives in [`site/`](site) and deploys to GitHub Pages; see [Pro
 | `app/harness/adapters/model_armor_scanner.py`, `composite_scanner.py` | Model Armor (primary) and Sunglasses scanners behind the input guard; blocked if either blocks | Tested with a fixture; not run live |
 | `app/harness/residency.py` | Fails closed on `global` or non-Australian locations | Working, tested |
 | `app/harness/bootstrap/` | `agentic-bootstrap new / check / plan` (template, security harness, Terraform PR plan) | Stages 1-2 working, 3 plan only |
+| `app/harness/bootstrap/agent_request.py`, `.github/ISSUE_TEMPLATE/agent-request.yml` | The `AgentRequest` issue form and an offline parser that makes an untrusted draft; it grants nothing | Working offline; hosted access lookup is I7 |
 | `app/harness/adapters/copilot_builder.py` | Default builder over a `GitHubPort` | Logic tested; GitHub client to write |
 | `app/harness/adapters/adk_agents.py` | ADK + Gemini triage/plan/review: Pydantic `output_schema`, one retry then escalate, reused runner, residency fail-closed | Tested with fakes; live run needs Vertex |
 | `app/harness/nodes/repo_context.py`, `app/harness/skills.py` | Read-only, capped, guard-scanned repo context; skills only from a pinned revision (`policy/skills.lock.yaml`) | Working, tested |
@@ -42,7 +43,7 @@ A visual overview lives in [`site/`](site) and deploys to GitHub Pages; see [Pro
 
 ## Prerequisites
 
-Required for the harness and for generated agent repos (their `lint`, `evals_no_regression` checks and `AGENTS.md` commands call `agents-cli`):
+Required for the harness and for generated agent repos (their `lint` check and `AGENTS.md` commands call `agents-cli`; `evals_no_regression` will once it is wired, E3):
 
 | Tool | Why | Install |
 | --- | --- | --- |
@@ -64,12 +65,16 @@ Local runs and evals can use an AI Studio key; deployment and cloud features nee
 3. Then run the scripts below:
 
 ```bash
-pip install -e ".[dev]"
-pytest                                   # policy, gate, workflow, golden, bootstrap, builder
-python evals/run_evals.py                # dry-run evals + metrics
-agentic-bootstrap plan spec.yaml             # illustrative workload-infrastructure plan
-agentic-bootstrap new spec.yaml ./my-agent   # render agent repo from agent-template/
-agentic-bootstrap check ./my-agent           # harness policy checks (exit 1 on findings)
+uv sync --extra dev
+uv run ruff check .
+uv run ruff format --check .
+uv run codespell
+uv run ty check
+uv run pytest -q                         # policy, gate, workflow, golden, bootstrap, builder, docs links, site
+uv run python evals/run_evals.py --out .m0-eval-report.json   # dry-run evals + metrics
+uv run agentic-bootstrap plan spec.yaml             # illustrative workload-infrastructure plan
+uv run agentic-bootstrap new spec.yaml ./my-agent   # render agent repo from agent-template/
+uv run agentic-bootstrap check ./my-agent           # harness policy checks (exit 1 on findings)
 ```
 
 `agentic-bootstrap check` validates harness-specific framework, residency, and required-file rules; it does not
@@ -86,9 +91,9 @@ The full backlog, decisions and per-task Claude Code prompts live in [`docs/ROAD
 The list below is the short version.
 
 1. Walk `policy/` with the security and platform teams; resolve the `TODO`s (privileged YAML paths, role-to-team mappings).
-2. Resolve the R2 auth blocker with security team: GitHub's Copilot issue-assignment API currently requires a GitHub App user-to-server token, not the installation token required by this harness. Then implement the `GitHubPort`; see [`docs/ROADMAP.md`](docs/ROADMAP.md#r2--real-githubport-on-the-github-app-copilot-aware).
+2. Resolve the R2 auth blocker with security team: GitHub's Copilot issue-assignment API requires a user token (a personal access token or a GitHub App user-to-server token), and its agent-tasks API refuses installation tokens, which this harness requires. Then implement the `GitHubPort`; see [`docs/ROADMAP.md`](docs/ROADMAP.md#r2--real-githubport-on-the-github-app-copilot-aware).
 3. Install `.[adk]`, set `GOOGLE_GENAI_USE_VERTEXAI=TRUE`, `GOOGLE_CLOUD_LOCATION=australia-southeast2`, `HARNESS_MODEL_DEFAULT`, `HARNESS_SKILLS_DIR` (pinned skills repository); exercise the adapters in `adk web`.
-4. Wire `agents-cli eval run` / `eval compare` into `agent-template/.github/workflows/agent-checks.yml`; replace golden tasks with closed PRs from representative repositories.
+4. Wire `agents-cli eval run` and the existing `eval_gate.py` comparator into the `evals_no_regression` job of `agent-template/.github/workflows/agent-checks.yml` (E3); replace golden tasks with closed PRs from representative repositories.
 5. Stage 3: generate HCL from designs against the cloud platform module. Port to an ADK 2.0 Workflow (`docs/tech/ADK_PORT.md`).
 
 ## Ground rules

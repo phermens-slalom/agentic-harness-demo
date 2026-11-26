@@ -8,6 +8,18 @@ attested releases are planned (S5).
 
 ## 2026-11-26
 
+- **Site refreshed.** The site now has a roadmap page (what each milestone is worth, the next few steps, what is
+  waiting on people) and a glossary page. The golden-path stages, status, blockers, architecture and figures match
+  today's work (265 tests, 65 scored golden tasks). The gate replay has 16 scenarios. The human-decision colour is now
+  orange so it cannot be mistaken for AI, and each loop step carries a CODE, AI or PERSON label. "To be validated"
+  replaces `TODO: UNCONFIRMED` on the site. External facts were re-checked and the site has a validation log linking
+  each source. GitHub's docs list Copilot data residency for the US and EU only, which supports D-10. The
+  `(PR #n)` tags on three older entries were dropped: they came from earlier history and clashed with this repo's PRs.
+  A docs scan also fixed stale text in the README, VISION, FAQ, SECURITY, GETTING_STARTED, EXAMPLES, ADK port notes,
+  skills note and the template README (commands, the I1 intake files, the unwired `evals_no_regression` job, a
+  placeholder and a duplicated word). The ADK version note was cross-checked on 2.14.0 (locked) and 2.15.1, and the
+  OWASP reference was read. The architecture doc and glossary codes were brought up to date, and the stale I1 blocker row was
+  replaced by I7.
 - **E3 in progress.** Added required coverage and quality checks, 80% starter coverage and eval marks,
   pre-execution static scans, and an unwired regression comparator. AI Governance will approve the
   baseline. Live regression and isolated holdout evaluations remain open.
@@ -44,11 +56,11 @@ attested releases are planned (S5).
 - **R6, ADK adapters hardened.** Each AI role returns a checked, structured reply. A bad reply is retried once,
   then escalated. One runner is reused per role. Residency fails closed (AI Studio keys only for local use).
   The planner and reviewer get read-only, size-capped, scanned repo context. Skills load only from a pinned,
-  fingerprinted version. Four golden tasks added. (PR #8)
+  fingerprinted version. Four golden tasks added.
 - **S3, new-capability detectors.** The gate now spots new models, hosts, regions, data stores, dependencies
-  and tool or protocol links in a diff, and adds approvers. Nine golden tasks added. (PR #7)
+  and tool or protocol links in a diff, and adds approvers. Nine golden tasks added.
 - **S4, Copilot environment in the template.** Generated repos get a Copilot setup workflow, a custom agent
-  profile and a generated firewall-allowlist note. Checked against GitHub's docs. (PR #6)
+  profile and a generated firewall-allowlist note. Checked against GitHub's docs.
 
 ## 2026-11-18
 
