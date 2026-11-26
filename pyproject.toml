@@ -46,3 +46,8 @@ exclude = ["agent-template"]
 [tool.ty.analysis]
 # google-adk is an optional extra (`pip install -e ".[adk]"`), not installed in the dev env.
 allowed-unresolved-imports = ["google.adk.**", "google.genai.**", "google.cloud.**", "google.api_core.**"]
+
+[tool.codespell]
+# One place for the spelling check, so `codespell` runs the same locally and in CI. Skip generated,
+# locked and binary files and tool caches.
+skip = ".git,.venv,.ruff_cache,.pytest_cache,.hypothesis,__pycache__,*.egg-info,uv.lock,*.svg,*.png,*.ico"

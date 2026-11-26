@@ -8,6 +8,15 @@ attested releases are planned (S5).
 
 ## 2026-11-26
 
+- **Docs restructured.** Technical docs moved to `docs/tech/` (input guard, ADK port notes, project site), with an
+  index; project-wide docs stay in `docs/`. The version-numbered alignment note was removed and its content moved
+  here and into the open questions.
+- **Work is recorded as done in its own PR.** The PR that does the work sets the roadmap item to `done` and adds
+  the log entries. Merging is the approval, so no follow-up PRs are needed. R6, S2 and A2 were closed out this way.
+- **H1 trimmed, H2 added.** The `run_evals.py` import-order fix is done. The preflight command and the
+  generated-project acceptance test moved to a new item, H2, because they are new behaviour.
+- **CI checks formatting, spelling and docs links.** `ruff format --check` and `codespell` now run in CI, and a new
+  test fails on a broken docs link. Three files that were not clean were reformatted.
 - **S2, Model Armor as the main scanner.** A Model Armor scanner and a composite scanner (blocked if either scanner
   blocks; any scanner error counts as a block) now sit behind the input guard beside Sunglasses. `ModelArmorPlugin`
   is registered on the harness's ADK app. Review findings and PR comments are now scanned too. `SUNGLASSES_EVALUATION.md`
@@ -17,7 +26,7 @@ attested releases are planned (S5).
 
 - **Project site.** A static site in `site/` summarises the vision, workflow, merge gate, architecture, safety,
   status, getting started and FAQ, with sources and a comparison with public tools. A Pages workflow publishes it
-  and `tests/test_site.py` guards its links. Deploy steps and image prompts are in [Site](SITE.md).
+  and `tests/test_site.py` guards its links. Deploy steps and image prompts are in [Site](tech/SITE.md).
 - **Australian spelling.** Skill provenance trace consumers must use the event name
   `behaviour_artefacts`. Generated evals now use the rubric group `starter_behaviour`,
   and the Makefile cleanup target is `clean-artefacts`.
@@ -61,3 +70,25 @@ attested releases are planned (S5).
 - **First working version.** The golden workflow and RACI as data, a merge gate, an issue-to-merge loop, the
   bootstrap CLI, the template, the dry-run evals, and the Sunglasses input guard with adversarial evals.
   Later changes tightened the risk tiers and added shadow mode.
+
+### Design choices behind the first working version
+
+Moved here from a former "alignment" note, which was removed so the docs stay generic.
+
+- **Spine.** The eight-stage golden workflow and the adaptable example RACI are policy data in `policy/`,
+  validated in tests. The issue-to-merge loop covers the Build and Verify stages only.
+- **Merge gate.** Auto-merge is phase-flagged and off in phase 1. The gate returns the required approvers,
+  derived from changed paths (`*.tf` to `platform_team`, privileged YAML to `security`, production paths to
+  `product_owner` and `architecture`), on top of `app_team` and `ai_governance`.
+- **Required checks.** `lint`, `tests`, `evals_no_regression` and `secret_scan`. A failing check feeds back
+  into the build loop.
+- **Builder.** GitHub Copilot through `GitHubPort` is the default. A Cloud Run sandbox builder is kept as an option.
+- **Residency and review.** A guard on the Vertex location, with allowed regions in `policy/residency.yaml`.
+  The reviewer applies the review checklist.
+- **Bootstrap CLI.** Three stages: `new`, `check` and `plan`.
+- **Deploy target.** `agent_runtime`, set in `agent-template/agents-cli-manifest.yaml`. The ADK 2.0 notes still
+  mention graph-workflow friction on that target ([ADK port notes](tech/ADK_PORT.md)).
+- **Removed.** Vendored skills (now a pinned skills repository through `HARNESS_SKILLS_DIR`); a Gemini CLI or
+  Antigravity coding agent as the default; a Pub/Sub trigger assumption and its stub workflow; and the
+  `infra/**` rule (replaced by the `*.tf` rule).
+- **Dependencies.** Already minimal: `pyyaml` and `pydantic`, with ADK optional.

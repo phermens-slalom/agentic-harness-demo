@@ -1,5 +1,5 @@
 name: pages
-# Publishes the static project site in site/ to GitHub Pages. See docs/SITE.md.
+# Publishes the static project site in site/ to GitHub Pages. See docs/tech/SITE.md.
 on:
   push:
     branches: [main]

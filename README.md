@@ -3,8 +3,8 @@
 The golden workflow for taking an agent live on a cloud platform, as code: policy and role assignments as adaptable data,
 a deterministic merge gate, an issue-to-merge loop for the Build and Verify stages, a staged
 bootstrap CLI, and evals that gate changes to the harness itself.
-Humans stay accountable; `policy/raci.yaml` is an illustrative, adaptable starting point for roles and responsibilities. See `docs/ALIGNMENT_V4.md`
-for what changed from the first skeleton and what is still open.
+Humans stay accountable; `policy/raci.yaml` is an illustrative, adaptable starting point for roles and responsibilities. See [`docs/CHANGELOG.md`](docs/CHANGELOG.md)
+for what changed and [`docs/OPEN_QUESTIONS.md`](docs/OPEN_QUESTIONS.md) for what is still open.
 
 ```ascii
 frame ▸ register ▸ provision ▸ connect ▸ build ▸ verify ▸ release ▸ operate     (policy/golden_workflow.yaml)
@@ -18,7 +18,7 @@ Start at the [documentation index](docs/README.md): [Vision](docs/VISION.md), [A
 [Examples](docs/EXAMPLES.md), [Glossary](docs/GLOSSARY.md), [Getting started](docs/GETTING_STARTED.md),
 [Contributing](docs/CONTRIBUTING.md), [Security](docs/SECURITY.md), [Decisions](docs/DECISIONS.md),
 [Open questions](docs/OPEN_QUESTIONS.md), [FAQ](docs/FAQ.md) and [Changelog](docs/CHANGELOG.md).
-A visual overview lives in [`site/`](site/) and deploys to GitHub Pages; see [Project site](docs/SITE.md).
+A visual overview lives in [`site/`](site) and deploys to GitHub Pages; see [Project site](docs/tech/SITE.md).
 
 ## Layout
 
@@ -86,10 +86,10 @@ The full backlog, decisions and per-task Claude Code prompts live in [`docs/ROAD
 The list below is the short version.
 
 1. Walk `policy/` with the security and platform teams; resolve the `TODO`s (privileged YAML paths, role-to-team mappings).
-2. Resolve the R2 auth blocker with security team: GitHub's Copilot issue-assignment API currently requires a GitHub App user-to-server token, not the installation token required by this harness. Then implement the `GitHubPort`; see [`docs/ROADMAP.md`](docs/ROADMAP.md#r2-real-githubport-on-the-github-app-copilot-aware).
+2. Resolve the R2 auth blocker with security team: GitHub's Copilot issue-assignment API currently requires a GitHub App user-to-server token, not the installation token required by this harness. Then implement the `GitHubPort`; see [`docs/ROADMAP.md`](docs/ROADMAP.md#r2--real-githubport-on-the-github-app-copilot-aware).
 3. Install `.[adk]`, set `GOOGLE_GENAI_USE_VERTEXAI=TRUE`, `GOOGLE_CLOUD_LOCATION=australia-southeast2`, `HARNESS_MODEL_DEFAULT`, `HARNESS_SKILLS_DIR` (pinned skills repository); exercise the adapters in `adk web`.
 4. Wire `agents-cli eval run` / `eval compare` into `agent-template/.github/workflows/agent-checks.yml`; replace golden tasks with closed PRs from representative repositories.
-5. Stage 3: generate HCL from designs against the cloud platform module. Port to an ADK 2.0 Workflow (`docs/ADK_PORT.md`).
+5. Stage 3: generate HCL from designs against the cloud platform module. Port to an ADK 2.0 Workflow (`docs/tech/ADK_PORT.md`).
 
 ## Ground rules
 

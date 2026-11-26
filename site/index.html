@@ -69,7 +69,7 @@
     <div>
       <div class="pill-row">
         <span class="pill"><i></i>Early stage · not yet security reviewed</span>
-        <span class="pill ok"><i></i>210 tests · 62 scored golden tasks passing</span>
+        <span class="pill ok"><i></i>213 tests · 62 scored golden tasks passing</span>
       </div>
       <h1>Let AI write the code. <span class="grad">Let plain code decide what merges.</span></h1>
       <p class="lede">The golden workflow for taking an agent live on a cloud platform, as code: policy as reviewable data, a deterministic merge gate, an issue-to-merge loop, a staged bootstrap CLI, and evals that gate changes to the harness itself. Humans stay accountable.</p>
@@ -454,7 +454,7 @@ agent repo
       <div class="limit"><b>Not yet reviewed by a security team.</b> Several <code>TODO(owner)</code> markers wait on sign-off.</div>
       <div class="limit"><b>No security contact is named.</b> Add one before this repo is shared more widely.</div>
     </div>
-    <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/SECURITY.md">docs/SECURITY.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/INPUT_GUARD.md">docs/INPUT_GUARD.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md">docs/DECISIONS.md</a>.</p>
+    <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/SECURITY.md">docs/SECURITY.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/tech/INPUT_GUARD.md">docs/tech/INPUT_GUARD.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md">docs/DECISIONS.md</a>.</p>
   </div>
 </section>
 
@@ -493,12 +493,12 @@ agent repo
       <div class="ms"><b>M0</b><span>Make the gate trustworthy</span><small>Complete</small></div>
       <div class="ms"><b>M1</b><span>Real GitHub, enforced</span><small>S4 done · R2 blocked</small></div>
       <div class="ms"><b>M2</b><span>Durable runtime</span><small>R6 done · R3–R5 todo</small></div>
-      <div class="ms"><b>M3</b><span>Security: use what exists</span><small>S1, S3 done · S2, S5, D1 open</small></div>
+      <div class="ms"><b>M3</b><span>Security: use what exists</span><small>S1–S3 done · S5, D1 open</small></div>
       <div class="ms"><b>M4</b><span>Observability and audit</span><small>Planned</small></div>
       <div class="ms"><b>M5</b><span>Evals that measure agents</span><small>First E3 slice · E1 blocked</small></div>
       <div class="ms"><b>M6</b><span>Golden-workflow coverage</span><small>Planned · W2 blocked</small></div>
-      <div class="ms"><b>M7</b><span>Hygiene</span><small>H1 done</small></div>
-      <div class="ms"><b>M8</b><span>Agent ready for pilot</span><small>A1–A3 done · live evals todo</small></div>
+      <div class="ms"><b>M7</b><span>Hygiene</span><small>H1 in progress</small></div>
+      <div class="ms"><b>M8</b><span>Agent ready for pilot</span><small>A1–A3 built · E3, H2 open</small></div>
       <div class="ms"><b>M9</b><span>Agent intake and authoring</span><small>Planning only, no code</small></div>
     </div>
     <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CHANGELOG.md">docs/CHANGELOG.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/OPEN_QUESTIONS.md">docs/OPEN_QUESTIONS.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md">docs/DECISIONS.md</a> (fifteen decisions, D-01 to D-15).</p>
@@ -695,7 +695,7 @@ $ python scripts/e2e.py --keep   <span class="c"># leave the generated agent in 
           <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/VISION.md">Vision</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ARCHITECTURE.md">Architecture</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/EXAMPLES.md">Examples</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/GLOSSARY.md">Glossary</a></li>
           <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/GETTING_STARTED.md">Getting started</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CONTRIBUTING.md">Contributing</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/FAQ.md">FAQ</a></li>
           <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/SECURITY.md">Security</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md">Decisions</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/OPEN_QUESTIONS.md">Open questions</a></li>
-          <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ROADMAP.md">Roadmap</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CHANGELOG.md">Changelog</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ADK_PORT.md">ADK port notes</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/INPUT_GUARD.md">Input guard</a></li>
+          <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ROADMAP.md">Roadmap</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CHANGELOG.md">Changelog</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/tech/ADK_PORT.md">ADK port notes</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/tech/INPUT_GUARD.md">Input guard</a></li>
           <li><a href="https://github.com/phermens-slalom/agentic-harness-demo/tree/main/policy">policy/</a> · <a href="https://github.com/phermens-slalom/agentic-harness-demo/tree/main/evals/golden_tasks">evals/golden_tasks/</a></li>
         </ul>
       </div>

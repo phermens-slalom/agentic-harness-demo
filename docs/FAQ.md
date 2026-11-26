@@ -100,7 +100,7 @@ Do not invent the answer. Record the dependency and ask the appropriate role or 
 No. Use the GitHub App and Workload Identity Federation.
 
 **Is the input guard on, and does it use Model Armor?**
-It must be passed to the workflow, and its policy ships in `shadow` mode, which records matches without stopping the task. When a Model Armor template is configured it runs beside Sunglasses and the text is blocked if either blocks it. Outside `HARNESS_ENV=local` a template is required. Model Armor has not been run live yet. See [Input guard](INPUT_GUARD.md) and [Security](SECURITY.md).
+It must be passed to the workflow, and its policy ships in `shadow` mode, which records matches without stopping the task. When a Model Armor template is configured it runs beside Sunglasses and the text is blocked if either blocks it. Outside `HARNESS_ENV=local` a template is required. Model Armor has not been run live yet. See [Input guard](tech/INPUT_GUARD.md) and [Security](SECURITY.md).
 
 **Where do I report a security problem?**
 TODO: UNCONFIRMED. No contact is named in the repo.

@@ -7,7 +7,7 @@ How to change this repo safely. These rules come from [`AGENTS.md`](../AGENTS.md
 
 1. Pick work from the [Roadmap](ROADMAP.md). Take the top `todo` item whose dependencies are `done`.
 2. One item is one branch and one pull request.
-3. Write the tests first. Run the four checks. Update the docs and the roadmap.
+3. Write the tests first. Run the checks. Update the docs, and set the roadmap item to `done` in the same PR.
 4. Never weaken a gate, an approval, a threshold, a baseline or a golden task to make a test pass.
 
 ## The rules that must hold
@@ -26,12 +26,14 @@ How to change this repo safely. These rules come from [`AGENTS.md`](../AGENTS.md
 | Keep the residency and egress limits. | Data stays in Australia. Agents call only approved hosts. |
 | If a `TODO(<owner>)` blocks a decision, do not invent the answer. Record the dependency and ask the appropriate role or owner. | The owner decides. |
 
-## The four checks
+## The checks
 
-Run all four before you open a PR. CI runs them too.
+Run all of these before you open a PR. CI runs the same ones, so a failure here is a failure there.
 
 ```bash
 uv run ruff check .
+uv run ruff format --check .      # apply with: uv run ruff format .
+uv run codespell                  # settings are in pyproject.toml
 uv run ty check
 uv run pytest -q
 uv run python evals/run_evals.py --out .m0-eval-report.json
@@ -46,11 +48,11 @@ Do not commit the generated eval report (`.m0-eval-report.json`).
 
 A change is done when:
 
-- All four checks pass, locally and in CI.
+- All the checks pass, locally and in CI.
 - Behaviour changes have tests. Gate or policy changes also have a golden or adversarial task in `evals/golden_tasks/`.
 - The gate still never calls an LLM. No new agent framework. No personal tokens.
 - Related docs are updated (`README.md`, `docs/*.md`).
-- The roadmap item status is updated and a dated work-log entry is added.
+- The roadmap item is set to `done` (or left `doing` or `blocked`, saying what is left) and a dated work-log entry is added, in this same PR. Merging is the approval: do not open a follow-up PR just to mark the work done.
 - Anything that needs a stakeholder is marked `TODO(<owner>)` and listed in [Open questions](OPEN_QUESTIONS.md).
 
 ## Step by step
@@ -61,7 +63,7 @@ A change is done when:
 4. **Test first.** Write the tests and watch them fail. Then change the code.
 5. **Keep it small.** The generated-agent rule is about 150 changed lines per PR. Split larger work.
 6. **Add evals** for gate, policy and node changes. Put them in `evals/golden_tasks/`.
-7. **Update docs and the roadmap**, in the same PR.
+7. **Update docs and the roadmap**, in the same PR. Set the item to `done` here, not in a later PR.
 8. **Open a pull request.** Use a short, conventional commit message, for example `feat(gate): ...` or `fix(template): ...`.
 9. **Say what you could not verify.** Cite sources. Mark unknowns `TODO(verify)` or `TODO: UNCONFIRMED`.
 

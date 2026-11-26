@@ -82,4 +82,4 @@ These need security team. They are also in [Open questions](OPEN_QUESTIONS.md).
 5. Model Armor as the main scanner, with Sunglasses as a tripwire beside it (D-09): built, but not signed off. Whether templates are required outside local use, and what they screen.
 6. The starting allowlists in `policy/capabilities.yaml` and the caps in `policy/routing.yaml`.
 
-See also: [Decisions](DECISIONS.md), [Input guard](INPUT_GUARD.md).
+See also: [Decisions](DECISIONS.md), [Input guard](tech/INPUT_GUARD.md).
