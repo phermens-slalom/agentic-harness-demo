@@ -98,7 +98,7 @@ Other team words you will see:
 | **Global endpoint** | A cloud address with no fixed location. Never allowed. |
 | **Phase** | How much the gate trusts itself. Phase 1: a person reviews every agent PR. Phases 3 and 4: the lowest-risk changes may merge by themselves. The file ships at phase 1. |
 | **Tier** | How risky a change is. Tier 1 is low (tests and docs). Tier 2 is the default. Tier 3 is high (controls, Terraform, IAM, production, sensitive areas, agent instructions). |
-| **Required checks** | Four automatic checks every agent PR must pass: `lint`, `tests`, `evals_no_regression`, `secret_scan`. |
+| **Required checks** | Six automatic checks every agent PR must pass: `lint`, `tests`, `coverage`, `quality`, `evals_no_regression`, `secret_scan`. |
 | **Lint** | An automatic style and error check on code. |
 | **Evals** | Tests of how an AI behaves (not just whether code runs). |
 | **Golden task** | A saved example case used to test the harness. It says what the right outcome is. |

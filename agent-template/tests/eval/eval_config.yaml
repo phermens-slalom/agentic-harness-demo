@@ -4,3 +4,5 @@ custom_metrics:
   - name: final_response_quality
     metric_spec_parameters:
       rubric_group_key: starter_behaviour
+thresholds:
+  final_response_quality: 0.8

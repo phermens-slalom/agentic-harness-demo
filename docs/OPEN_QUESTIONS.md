@@ -17,7 +17,6 @@ From the [Roadmap](ROADMAP.md). "Suggested owner" shows a generic role where one
 | Q4 | Who approves workflow runs on Copilot PRs, and should "skip approval" be switched on? | R2 | security team |
 | Q5 | Where is the harness hosted (Cloud Run and Cloud SQL in Melbourne?), and what is the webhook route? | R3, R4 | platform team |
 | Q7 | What are the pinned skills repository skill names for the planner and reviewer? | R6 | AI governance team |
-| Q8 | What are the business-owned eval, coverage and quality thresholds for each agent? | E3 | Product Owner (to be named) |
 | Q9 | Do work items come from GitHub Issues, or from Jira or Jira Align? | R4 (may need an `IssueSource` port) | Unassigned |
 | Q10 | What are the criteria for moving to a later phase? (Draft in O3.) | O3 | Unassigned |
 | Q11 | Is GitHub Advanced Security licensed (secret scanning, push protection, CodeQL, dependency review)? | S1 | AI governance team |
@@ -26,9 +25,14 @@ From the [Roadmap](ROADMAP.md). "Suggested owner" shows a generic role where one
 | Q15 | Which second model family, if any, is approved for cross-model review under Australian residency? | I5 | security team |
 | Q16 | Should agents built only from approved connectors stay tier 3, or may they use a lighter approval route? | M9 | security team, AI governance team |
 | Q17 | Who sponsors an `AgentRequest` before spending budget or creating a branch, and how is sponsorship verified? | I7 | Unassigned |
+| Q18 | Which approved evaluation project, regions and WIF identity should be used, and how can holdouts remain hidden from PR-authored code? | E3 | security team and platform team |
 
 Resolved: Q6's access contact is the AI governance team, though access is still needed. Q13's requester
 eligibility is any person with repository access; the separate sponsorship decision is tracked as Q17.
+Q8's starter thresholds are 80% coverage and eval pass mark; AI Governance approves the baseline.
+The user accepts the risk of PR code accessing credentials on GitHub Actions, subject to minimising
+credentials and deterministic pre-execution scanning. This does not resolve holdout isolation or
+approve a project, region or identity.
 
 ## Blockers
 
@@ -39,6 +43,7 @@ eligibility is any person with repository access; the separate sponsorship decis
 | R1, R3, R4, R5, R7, O1, W5 | Depend on R2, directly or through R3 | R2 |
 | **W2** Template from existing reference agent template | No access yet | AI governance team |
 | **E1** Live eval replay | No pilot repos or history yet | Pilot repos |
+| **E3** Live and holdout evals | No accepted baseline, approved evaluation setup or reviewed holdout isolation | AI Governance baseline approval; Q18 |
 | D1 (a possible blocker for Copilot as default builder) | Copilot residency in Australia is unconfirmed | Q3, GitHub's answer |
 
 ## TODOs in the code and policy
@@ -62,7 +67,6 @@ Each `TODO(owner)` means "ask the appropriate role or owner; do not invent the a
 | `agent-template/.github/workflows/copilot-setup-steps.yml` | Install from an approved package source and pin `google-agents-cli` | security team |
 | `agent-template/.github/workflows/agent-checks.yml` | Wire `evals_no_regression` through WIF and `agents-cli eval run` | verify |
 | `.github/workflows/ci.yml`, template workflow | Enable GHAS for private repos and set `GHAS_ENABLED=true` | AI governance team |
-| `agent-template/evals/thresholds.yaml` | Agree the pass marks | The business owner of each agent |
 
 ## Unconfirmed items in these docs
 

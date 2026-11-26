@@ -19,7 +19,14 @@ GREEN = BuildResult(
     changed_files=["tests/t.py"],
     lines_changed=10,
     ci_green=True,
-    checks={"lint": True, "tests": True, "evals_no_regression": True, "secret_scan": True},
+    checks={
+        "lint": True,
+        "tests": True,
+        "evals_no_regression": True,
+        "secret_scan": True,
+        "coverage": True,
+        "quality": True,
+    },
 )
 RED = BuildResult(
     pr_number=7,

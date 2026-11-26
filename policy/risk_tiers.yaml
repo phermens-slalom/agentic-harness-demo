@@ -16,7 +16,7 @@ phases:
 base_approvers: [app_team, ai_governance]
 
 # Job names that must be required status checks on the agent repo.
-required_checks: [lint, tests, evals_no_regression, secret_scan]
+required_checks: [lint, tests, coverage, quality, evals_no_regression, secret_scan]
 
 rules:
   # These inputs can change future agent behaviour or remove the controls that judge it.

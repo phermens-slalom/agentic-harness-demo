@@ -25,10 +25,10 @@ GitHub's Copilot assignment API needs a kind of token that the "installation tok
 ## Decisions it makes
 
 **What does `auto_merge` need?**
-Tier 1 (tests and docs), phase 3 or 4, all four required checks green, the reviewer approving, no tampering, and no new capability found. The policy file ships at phase 1, where nothing auto-merges.
+Tier 1 (tests and docs), phase 3 or 4, all six required checks green, the reviewer approving, no tampering, and no new capability found. The policy file ships at phase 1, where nothing auto-merges.
 
-**What are the four required checks?**
-`lint`, `tests`, `evals_no_regression`, `secret_scan`.
+**What are the required checks?**
+`lint`, `tests`, `coverage`, `quality`, `evals_no_regression`, `secret_scan`.
 
 **What happens if checks are missing?**
 The gate escalates and names the missing checks. Missing is not treated as passing.

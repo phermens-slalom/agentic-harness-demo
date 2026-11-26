@@ -88,7 +88,7 @@
       <div class="stat" role="listitem"><b>8</b><span>stages in the golden workflow</span></div>
       <div class="stat" role="listitem"><b>0</b><span>LLM calls in the merge gate</span></div>
       <div class="stat" role="listitem"><b>3</b><span>risk tiers, set by changed file paths</span></div>
-      <div class="stat" role="listitem"><b>4</b><span>required checks on every agent PR</span></div>
+      <div class="stat" role="listitem"><b>6</b><span>required checks on every agent PR</span></div>
       <div class="stat" role="listitem"><b>400</b><span>changed lines, then “split the task”</span></div>
       <div class="stat" role="listitem"><b>2</b><span>allowed regions, both in Australia</span></div>
     </div>
@@ -383,7 +383,7 @@ agent repo
         <div class="grid" style="gap:14px">
           <div class="node"><b><code>tools.py</code>: read-only by design</b><small><code>get_service_history</code> and <code>estimate_repair</code> on sample data. No write tools exist: it can read, not book or pay.</small></div>
           <div class="node"><b><code>telemetry.py</code>: logs the shape, not the content</b><small>Tool name, outcome and timing. Never prompts or arguments.</small></div>
-          <div class="node"><b><code>agent-checks.yml</code>: seven jobs</b><small><code>lint</code>, <code>tests</code>, <code>evals_no_regression</code>, <code>secret_scan</code>, <code>codeql</code>, <code>dependency_review</code>, <code>zizmor</code>. Only <code>evals_no_regression</code> can get cloud identity. It is a <span class="chip s">stub</span> that fails until wired (E3).</small></div>
+          <div class="node"><b><code>agent-checks.yml</code>: ten jobs</b><small>Preflight scans ahead of <code>lint</code>, <code>tests</code>, <code>coverage</code>, <code>quality</code>, <code>evals_no_regression</code>, <code>secret_scan</code>, <code>codeql</code>, <code>dependency_review</code> and <code>zizmor</code>. Coverage enforces 80%. Only <code>evals_no_regression</code> can get cloud identity. It is a <span class="chip s">stub</span> that fails until wired (E3).</small></div>
         </div>
       </div>
     </div>
@@ -651,8 +651,8 @@ $ python scripts/e2e.py --keep   <span class="c"># leave the generated agent in 
       </div>
       <div>
         <h3>Decisions it makes</h3>
-        <details><summary>What does <code>auto_merge</code> need?</summary><div class="answer"><p>Tier 1 (tests and docs), phase 3 or 4, all four required checks green, the reviewer approving, no tampering and no new capability. The policy ships at phase 1, where nothing auto-merges.</p></div></details>
-        <details><summary>What are the four required checks?</summary><div class="answer"><p><code>lint</code>, <code>tests</code>, <code>evals_no_regression</code>, <code>secret_scan</code>. A missing check is not treated as passing: the gate escalates and names it.</p></div></details>
+        <details><summary>What does <code>auto_merge</code> need?</summary><div class="answer"><p>Tier 1 (tests and docs), phase 3 or 4, all six required checks green, the reviewer approving, no tampering and no new capability. The policy ships at phase 1, where nothing auto-merges.</p></div></details>
+        <details><summary>What are the required checks?</summary><div class="answer"><p><code>lint</code>, <code>tests</code>, <code>coverage</code>, <code>quality</code>, <code>evals_no_regression</code>, <code>secret_scan</code>. A missing check is not treated as passing: the gate escalates and names it.</p></div></details>
         <details><summary>Why did a tiny change need security review?</summary><div class="answer"><p>Probably it touched a control file, a sensitive path (<code>payments</code>, <code>auth</code>, <code>claims</code>, <code>pii</code>) or an IAM file, or it added something new such as a host, model, region, data store, dependency or tool link. The reason text says which.</p></div></details>
         <details><summary>Why was <code>reject_to_planning</code> returned?</summary><div class="answer"><p>The change is over 400 lines. Split the task.</p></div></details>
         <details><summary>Can the capability check approve a new host or dependency?</summary><div class="answer"><p>No. It only adds approvers. People approve.</p></div></details>

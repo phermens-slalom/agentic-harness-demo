@@ -17,7 +17,14 @@ from harness.nodes.merge_gate import decide
 from harness.policy import CapabilityPolicy, RiskPolicy
 
 POLICY = CapabilityPolicy.load()
-CHECKS = {"lint": True, "tests": True, "evals_no_regression": True, "secret_scan": True}
+CHECKS = {
+    "lint": True,
+    "tests": True,
+    "evals_no_regression": True,
+    "secret_scan": True,
+    "coverage": True,
+    "quality": True,
+}
 
 
 def added(path: str, *lines: str) -> str:

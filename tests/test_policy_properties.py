@@ -24,9 +24,9 @@ def test_case_and_separator_changes_do_not_change_tier(paths: list[str]) -> None
 
 @given(
     st.dictionaries(
-        st.sampled_from(["lint", "tests", "evals_no_regression", "secret_scan"]),
+        st.sampled_from(["lint", "tests", "coverage", "quality", "evals_no_regression", "secret_scan"]),
         st.booleans(),
-        max_size=4,
+        max_size=6,
     )
 )
 def test_missing_or_false_required_check_never_auto_merges(checks: dict[str, bool]) -> None:

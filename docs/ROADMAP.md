@@ -882,20 +882,28 @@ item status and the work log.
 - **Status:** doing · **Priority:** P1 · **Size:** M · **Depends on:** G6
 - **Model / effort:** Sonnet 5.5 · high (needs network and `agents-cli` installed)
 - **Why:** The template's `evals_no_regression` is hard-coded to `exit 1`, so every generated agent PR
-  fails today. prior requirements explicitly names **code coverage and code quality**, and neither is a
-  required check.
+  fails today. Prior requirements explicitly name **code coverage and code quality**.
 - **Done when:**
   - [x] A fresh generated repo includes a small `agents-cli` dataset with a normal case and a
         guardrail case, plus explicit instructions for offline checks and approved live evals.
   - [ ] `evals_no_regression` runs `agents-cli eval run` and then compares against `evals/baseline/` with
         `max_regression` from `thresholds.yaml`. The gate must fail on missing, incompatible, or
         regressed evidence. Verify flags with `--help`; `eval compare` alone is a report, not a gate.
-  - [ ] New required checks, `coverage` (pytest-cov with `fail_under` from `thresholds.yaml`, default
-        `TODO(owner)`) and `quality` (ruff, ty, and a complexity limit), are added to the template and to
+  - [x] New required checks, `coverage` (pytest-cov with `fail_under` from `thresholds.yaml`, default
+        80%) and `quality` (ruff, ty, and a complexity limit), are added to the template and to
         `policy/risk_tiers.yaml` `required_checks`.
   - [ ] The holdout eval job from G3 runs CI-only cases from a location the coding agent can't read
         (a separate repo or a GCS path via WIF).
   - [ ] The e2e script's live mode exercises all of it.
+
+The starter coverage and eval pass marks are 80%; AI Governance approves the baseline. The user accepts
+the risk that GitHub Actions PR code may access job credentials, with deterministic pre-execution
+scanning and minimised credentials. The live and holdout checks still need an accepted baseline,
+approved evaluation regions and identities, and a reviewed holdout isolation design (Q18): executing
+PR-authored code with holdout access exposes the cases. The preflight is a tripwire, not a sandbox,
+and must itself be protected from PR changes by independent workflow enforcement or required reviews.
+The installed `agents-cli` reports `eval run --dataset`, `--config`, `--region` and `--output`;
+`eval compare BASELINE CANDIDATE` only reports differences and does not enforce a regression threshold.
 
 ```text
 Read docs/ROADMAP.md item E3, agent-template/.github/workflows/agent-checks.yml,
@@ -1155,8 +1163,8 @@ Boundaries that hold for every item in M9:
 - It proposes capabilities and never grants them. New hosts, models, regions, data stores and
   dependencies are surfaced by S3's detectors and need the named approvers. Egress goes in the spec's
   `egress_hosts` and is approved there.
-- It does not set pass marks. `thresholds.yaml` values come from the business owner (Q8). It drafts
-  cases and leaves thresholds `TODO(<owner>)`.
+- It does not choose agent-specific pass marks. It drafts cases and proposes no reduction to the
+  agreed 80% starter marks; higher agent-specific thresholds need business-owner review.
 - Stop conditions: a request that needs something outside the connector library, a missing answer after
   the question limit, or a failed guard. Each ends with a clear comment and a human handoff, never a guess.
 
@@ -1350,7 +1358,6 @@ These block or shape items above. Ask them in the session with the agent teams n
 | Q4 | Who approves workflow runs on Copilot PRs, and should we enable "skip approval"? | R2 | security team |
 | Q5 | Harness hosting (Cloud Run + Cloud SQL in Melbourne?) and the webhook ingress route | R3, R4 | platform team |
 | Q7 | pinned skills repository skill names for planner and reviewer | R6 | AI governance team |
-| Q8 | Business-owned eval, coverage and quality thresholds per agent | E3 | Product Owner (to be named) |
 | Q9 | Do agent work items come from GitHub Issues, or from Jira / Jira Align? | R4 (may need an `IssueSource` port) | Unassigned |
 | Q10 | Phase promotion criteria (draft in O3) | O3 | Unassigned |
 | Q11 | Is GitHub Advanced Security licensed (secret scanning, push protection, CodeQL, dependency review)? | S1 | AI governance team |
@@ -1359,9 +1366,11 @@ These block or shape items above. Ask them in the session with the agent teams n
 | Q15 | Which second model family, if any, is approved for cross-model review under Australian residency? | I5 | security team |
 | Q16 | Should agents built only from approved connectors stay tier 3 under D-02, or may they use a lighter approval route? | M9 | security team, AI governance team |
 | Q17 | Who sponsors a request before the intake agent spends budget or creates a branch, and how is sponsorship verified? | I7 | Unassigned |
+| Q18 | Which approved evaluation project, regions and WIF identity should be used, and how can holdouts remain hidden from PR-authored code? | E3 | security team and platform team |
 
 Resolved: Q6's contact is the AI governance team; W2 still needs the actual template and bootstrap access.
 Q13's requester eligibility is any person with repository access; the separate sponsorship question is Q17.
+Q8's starter marks are 80% coverage and eval pass mark, with baseline approval by AI Governance.
 
 ---
 
@@ -1391,6 +1400,16 @@ Q13's requester eligibility is any person with repository access; the separate s
 
 Append-only, newest first. One entry per PR or working session: the date, the item IDs, what changed, and
 anything learned that should change this plan. Never rewrite old entries; correct them with a new one.
+
+### 2026-11-26 · E3 coverage, quality and preflight
+- Added required `coverage` and `quality` jobs and policy entries. The 80% starter coverage mark
+  is enforced; quality runs Ruff, its complexity rule and ty. Added adversarial evals for missing checks
+  and edits to the coverage helper, and starter tests exceeding the coverage mark.
+- Added base-revision static parsing, Gitleaks and an input tripwire ahead of dependent jobs. Added
+  a fail-closed regression comparator, not yet wired to live evals. AI Governance approves the baseline.
+  The user accepts GitHub Actions credential exposure risk; scans do not provide isolation.
+- Live eval regression, an accepted baseline, holdout isolation and live end-to-end verification remain
+  open; see Q18. E3 stays doing.
 
 ### 2026-11-26 · I1 request form and offline parsing
 - Added the GitHub request form, strict deterministic draft model, review-only spec and brief mapping,

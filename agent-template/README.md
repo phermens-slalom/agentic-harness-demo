@@ -27,6 +27,14 @@ agents-cli install && agents-cli lint && uv run pytest
 `agents-cli lint` runs ruff (check and format), codespell and ty; the `lint` extra in `pyproject.toml` must list all of them. Add `--mypy` to also run mypy (then add `mypy` to the extra).
 Python is pinned to 3.13 (`.python-version`, `requires-python <3.14`) so uv does not pick a newer interpreter.
 
+Before any dependent check executes candidate code, `preflight` uses the base revision's scanner
+to parse Python, JSON, YAML and TOML, run a local input tripwire over every checkout file, and
+check harness policy. It also runs Gitleaks with default rules over the checkout and PR history.
+Files must be UTF-8 text, at most 1 MiB, and not symbolic links; unsupported binary assets fail
+closed. The input tripwire can report false positives and cannot prove code or dependencies safe.
+The workflow itself must be protected by required reviews or an independently enforced trusted
+workflow; a PR that can change its own workflow can remove these steps.
+
 The `secret_scan` required check runs Gitleaks over the pull-request commit range, then
 `agentic-bootstrap check` for harness framework, residency and required-file rules. The policy check
 does not detect secrets. CodeQL and dependency review run on public repositories or when
@@ -50,7 +58,7 @@ The mechanic/vehicle content is a placeholder. Change these together so they sta
 | What | Where | Notes |
 |---|---|---|
 | Behaviour and business rules | `agent/prompts.py` | Keep instructions here, not inline, so changes are easy to review and eval. |
-| Tools | `agent/tools.py` | Plain functions with type hints and docstrings (ADK uses them as the tool schema). Return a `status` field and errors as data. Keep them deterministic where possible. |
+| Tools | `agent/tools.py` | Plain functions with type hints and docstrings (ADK uses them to define its tool interface). Return a `status` field and errors as data. Keep them deterministic where possible. |
 | Wiring | `agent/agent.py` | Update the `tools=[...]` list. Keep `root_agent`; the model comes from config. |
 | Model and region | `agent/config.py` | Set `AGENT_MODEL` in your environment. Only policy-approved regions; never a `global` endpoint. Do not change models or regions without approval. |
 | Sample data | `agent/data/` | Remove placeholder data; never commit real customer data. |
@@ -85,8 +93,8 @@ Evals test agent *behaviour* (tool use, answer quality, safety). Unit tests in `
 3. Replace the example cases in `tests/eval/datasets/basic-dataset.json` with your own normal
    flows, edge cases, and at least one case per guardrail. Adapt `tests/eval/eval_config.yaml`
    to match. Start small and iterate before adding more cases.
-4. Agree pass marks with your business owner and record them in `evals/thresholds.yaml`. These are set by the owner, not by the build team.
-5. Do not hand-edit `evals/baseline/`. It holds the last accepted results, and PRs may not regress against it. Update it only through the agreed accept process.
+4. The starter marks are 80% coverage and 80% eval quality. The business owner can propose a higher agent-specific mark for review.
+5. Do not hand-edit `evals/baseline/`. AI Governance must approve the actual baseline through a reviewed change.
 
 ### 6. Keep tests, docs and checks green
 Before every PR:
@@ -99,7 +107,8 @@ agents-cli lint && uv run pytest
 - Every bug fix gets a regression test; every behaviour change gets an eval case.
 - Update `docs/runbook.md` when behaviour or dependencies change. The AI governance team must approve it before go-live.
 - Replace the `# TODO: pin exact version` for `google-adk` in `pyproject.toml`, and say so in the PR when adding dependencies.
-- The `evals_no_regression` job in `.github/workflows/agent-checks.yml` is a stub that fails until you wire it to `agents-cli eval run` and `agents-cli eval compare` using Workload Identity Federation (check flags with `--help`). Workflow changes need CODEOWNERS review.
+- The required `coverage` check enforces the 80% starter mark in `evals/thresholds.yaml`; `quality` runs Ruff, its complexity check, and ty.
+- The `evals_no_regression` job in `.github/workflows/agent-checks.yml` is still a failing stub. The comparator is not wired to live evaluations; see the [eval guide](evals/README.md). Workflow changes need CODEOWNERS review.
 - Keep PRs under about 150 changed lines. `AGENTS.md` is the instruction file for your coding agent; keep it accurate.
 
 ### 7. Prepare for deployment
