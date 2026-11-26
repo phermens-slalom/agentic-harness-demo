@@ -45,6 +45,16 @@ class GitHubPort(Protocol):
         """Repo-relative file paths on the default branch (or `ref`)."""
 
 
+class RequesterAccess(Protocol):
+    """Trusted repository access lookup for an authenticated human issue author.
+
+    Implementations must verify both the author's human identity and current access to the exact
+    repository. They must raise an error if access cannot be determined, rather than guess.
+    """
+
+    def has_access(self, repo: str, requester: str) -> bool: ...
+
+
 class Builder(Protocol):
     """Runs the coding agent; ends with a PR whose checks have finished.
     `feedback` carries CI failures or review findings from the last loop."""

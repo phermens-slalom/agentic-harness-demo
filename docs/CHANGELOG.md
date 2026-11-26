@@ -8,6 +8,9 @@ attested releases are planned (S5).
 
 ## 2026-11-26
 
+- **I1, request drafts.** Added the issue form, strict offline parser, repository-access contract and
+  evals. Anyone with repository access may request an agent; hosted enforcement is I7. AI governance
+  is the contact for reference template access, which W2 still needs.
 - **Docs restructured.** Technical docs moved to `docs/tech/` (input guard, ADK port notes, project site), with an
   index; project-wide docs stay in `docs/`. The version-numbered alignment note was removed and its content moved
   here and into the open questions.
