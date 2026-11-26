@@ -8,6 +8,8 @@ attested releases are planned (S5).
 
 ## 2026-11-26
 
+- **I1 started.** Added the AgentRequest form and deterministic, untrusted draft parsing with offline
+  examples and property tests. Requester authorisation and sponsorship remain open (Q13); no build is started.
 - **Docs restructured.** Technical docs moved to `docs/tech/` (input guard, ADK port notes, project site), with an
   index; project-wide docs stay in `docs/`. The version-numbered alignment note was removed and its content moved
   here and into the open questions.
