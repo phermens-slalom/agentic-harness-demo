@@ -128,7 +128,7 @@
 <article class="msc st-mostly reveal" id="m3">
   <div class="top"><span class="code">M3</span><span class="sbadge st-mostly">MOSTLY DONE</span></div>
   <h3>Security: use what exists</h3>
-  <dl><div><dt>Value</dt><dd>Known security tools do the scanning, and the harness adds only what is specific to it. New models, hosts, regions, data stores and dependencies get extra approvers instead of slipping through.</dd></div><div><dt>Where it is</dt><dd>Secret and code scanning in CI, new-capability detection and the Model Armor input scanner are in. Model Armor has run on a fixture only.</dd></div><div><dt>Waiting on</dt><dd class="wait">Protecting the harness repo itself needs M1. The builder residency check needs real GitHub and an answer from GitHub about Australian processing (Q3).</dd></div></dl>
+  <dl><div><dt>Value</dt><dd>Known security tools do the scanning, and the harness adds only what is specific to it. New models, hosts, regions, data stores and dependencies get extra approvers instead of slipping through.</dd></div><div><dt>Where it is</dt><dd>Secret and code scanning in CI, new-capability detection and the Model Armor input scanner are in. Model Armor has run on a fixture only.</dd></div><div><dt>Waiting on</dt><dd class="wait">Protecting the harness repo itself needs M1. The builder residency check needs real GitHub. GitHub lists Copilot data residency in the US and EU only, so Australian use is a security team call (Q3).</dd></div></dl>
   <p class="refs">S1 to S3 done · S5, D1 waiting</p>
 </article>
 <article class="msc st-later reveal" id="m4">
@@ -182,7 +182,7 @@
       <thead><tr><th>What is needed</th><th>Suggested owner</th><th>It unlocks</th></tr></thead>
       <tbody>
         <tr><td>A ruling on how Copilot assignment fits the “no personal tokens” rule (R2)</td><td>Security team</td><td>M1, and through it M2, M4 and the hosted part of M9</td></tr>
-        <tr><td>GitHub’s answer on Copilot processing in Australia (Q3)</td><td>Security team</td><td>The builder residency check in M3</td></tr>
+        <tr><td>A ruling on whether Copilot is acceptable for each data classification, given it is listed for US and EU residency only (Q3)</td><td>Security team</td><td>The builder residency check in M3</td></tr>
         <tr><td>Baseline approval, and an approved evaluation project, region and identity (Q18)</td><td>AI governance team; security and platform teams</td><td>Live evals in M5</td></tr>
         <tr><td>Access to the existing reference agent template</td><td>AI governance team</td><td>The template work in M6</td></tr>
         <tr><td>Pilot repositories with history</td><td>Not yet assigned</td><td>Live eval replay in M5</td></tr>

@@ -462,7 +462,7 @@ agent repo
       <div class="limit"><b>No audit log or trace export yet.</b> Traces exist in memory per task (O1 planned).</div>
       <div class="limit"><b>Model Armor has not run against a live template.</b> CI plays back an authored fixture. Wiring and fail-closed behaviour are tested; real detection quality is not measured.</div>
       <div class="limit"><b>Live evals are not wired, and PR code can reach job credentials once they are.</b> The preflight is a tripwire, not a sandbox. Holdout isolation and the approved evaluation setup are still to be designed and approved (Q18).</div>
-      <div class="limit"><b>Copilot’s Australian residency is to be validated.</b> The GitHub documentation we read does not say where Copilot cloud agent processes data. It could block Copilot as the default builder for classified repos (D-10, Q3).</div>
+      <div class="limit"><b>Copilot is not available with Australian data residency.</b> GitHub’s <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/github-copilot-with-data-residency">data residency page</a> lists Copilot in the United States and European Union only, with more regions planned “in the near future” (read 26 November 2026). It could block Copilot as the default builder for classified repos (D-10, Q3).</div>
       <div class="limit"><b>Not yet reviewed by a security team.</b> Several <code>TODO(owner)</code> markers wait on sign-off.</div>
       <div class="limit"><b>No security contact is named yet.</b> To be validated; add one before this repo is shared more widely.</div>
     </div>
@@ -507,7 +507,7 @@ agent repo
     <p style="color:var(--muted);margin-top:8px">Each one needs a decision or access from a person. The owners shown are suggestions recorded in the open questions, not confirmed assignments.</p>
     <div class="blockers reveal">
       <div class="blk"><span class="id">R2</span><div><b>Real GitHub client. The main blocker.</b><span>GitHub’s documentation says assigning an issue to Copilot needs a user token (a personal access token or a GitHub App user-to-server token), and its agent-tasks API explicitly refuses GitHub App installation tokens. The harness rule allows installation tokens only and no personal tokens. No client code was added that would look finished but fail. <em>Needs: a security team decision.</em> Most of milestones M1, M2 and M4 wait on it (R1, R3, R4, R5, R7, O1, W5).</span></div></div>
-      <div class="blk"><span class="id">D1</span><div><b>Copilot residency in Australia</b><span>Not confirmed. The GitHub documentation we read does not say where Copilot cloud agent processes data. It could block Copilot as the default builder for classified repos. <em>Needs: GitHub’s answer and the security team (Q3).</em></span></div></div>
+      <div class="blk"><span class="id">D1</span><div><b>Copilot residency in Australia</b><span>GitHub’s <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/github-copilot-with-data-residency">data residency page</a> lists Copilot in the United States and European Union only. It could block Copilot as the default builder for classified repos. <em>Needs: a security team decision on whether Copilot is acceptable for each data classification, and GitHub’s plan for Australia (Q3).</em></span></div></div>
       <div class="blk"><span class="id">E3</span><div><b>Live and holdout evals</b><span>No accepted baseline, no approved evaluation project, region or identity, and no reviewed design to keep holdout cases hidden from PR code. <em>Needs: AI governance baseline approval, and security and platform teams for Q18.</em></span></div></div>
       <div class="blk"><span class="id">I7</span><div><b>Hosted agent intake</b><span>Waits on R2, the durable runtime (R3, R4), the hosting route (Q5) and a sponsorship rule for requests (Q17). The offline parts can go ahead. <em>Needs: platform team and an owner for Q17.</em></span></div></div>
       <div class="blk"><span class="id">W2</span><div><b>Template from the existing reference template</b><span>No access yet. <em>Needs: AI governance team.</em></span></div></div>
@@ -563,7 +563,7 @@ agent repo
         </tbody>
       </table>
     </div>
-    <p class="src">Descriptions and licences were checked on 26 November 2026 against each project’s README and licence file. This maps roles; it is <strong>not</strong> a feature benchmark, and we have not measured these tools against each other. Other works on policy-as-code for AI: <a href="https://www.cncf.io/blog/2025/08/12/pac-and-ai/">CNCF, “PaC and AI”</a> (found by search, not reviewed in full; to be validated).</p>
+    <p class="src">Descriptions and licences were checked on 26 November 2026 against each project’s README and licence file. This maps roles; it is <strong>not</strong> a feature benchmark, and we have not measured these tools against each other. Other works on policy-as-code for AI: <a href="https://www.cncf.io/blog/2025/08/12/pac-and-ai/">CNCF, “PaC and AI”</a> (read on 26 November 2026; see the <a href="#validation">validation log</a>).</p>
   </div>
 </section>
 
@@ -740,12 +740,42 @@ $ python scripts/e2e.py --keep   <span class="c"># leave the generated agent in 
           <li><a href="https://github.com/All-Hands-AI/OpenHands">OpenHands</a> · <a href="https://github.com/openai/codex">Codex CLI</a> · <a href="https://github.com/anthropics/claude-code-action">claude-code-action</a></li>
           <li><a href="https://github.com/open-policy-agent/opa">Open Policy Agent</a> · <a href="https://github.com/cedar-policy/cedar">Cedar</a></li>
           <li><a href="https://github.com/gitleaks/gitleaks">Gitleaks</a> · <a href="https://github.com/zizmorcore/zizmor">zizmor</a> · <a href="https://github.com/sunglasses-dev/sunglasses">Sunglasses</a></li>
-          <li><a href="https://www.cncf.io/blog/2025/08/12/pac-and-ai/">CNCF: PaC and AI</a> (search result, not reviewed in full)</li>
+          <li><a href="https://www.cncf.io/blog/2025/08/12/pac-and-ai/">CNCF: PaC and AI</a></li>
         </ul>
-        <p class="note info" style="margin-top:16px;font-size:14px">Checked on 26 November 2026 against vendor documentation: the <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-via-the-api">Copilot API guide</a> (the R2 blocker), the <a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment">cloud agent environment</a>, <a href="https://docs.cloud.google.com/model-armor/locations">Model Armor locations</a> and <a href="https://docs.cloud.google.com/model-armor/feature-availability-by-region">feature availability</a>, <a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/locations">Vertex AI locations</a>, <a href="https://docs.cloud.google.com/iam/docs/workload-identity-federation-with-deployment-pipelines">Workload Identity Federation</a> and the <a href="https://adk.dev/integrations/model-armor/">ADK Model Armor plugin</a>.</p>
-        <p class="note" style="margin-top:12px;font-size:14px"><strong>To be validated:</strong> Copilot’s data residency in Australia (the documentation we read is silent), the <code>AGENTS.md</code> convention, the C4 model, OWASP and the CNCF article. Those sites could not be reached from the build session.</p>
+        <p class="note info" style="margin-top:16px;font-size:14px">Vendor and standards statements were checked on 26 November 2026. The full list, with the exact page for each, is in the <a href="#validation">validation log</a> below.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<section id="validation">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Validation log</div>
+      <h2>What was checked, and where</h2>
+      <p class="lede">Each external statement on this site, the verdict on 26 November 2026, and the page it was checked against. If a page changes, this is where to start.</p>
+    </div>
+    <div class="tbl-wrap reveal"><table class="tbl">
+      <thead><tr><th>Statement</th><th>Result</th><th>Checked against</th></tr></thead>
+      <tbody>
+        <tr><td>Assigning an issue to Copilot needs a user token. The agent-tasks API refuses installation tokens (the R2 blocker)</td><td>Confirmed</td><td><a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-via-the-api">Copilot cloud agent API guide</a> · <a href="https://docs.github.com/en/rest/agent-tasks/agent-tasks">Agent tasks REST reference</a></td></tr>
+        <tr><td>Copilot data residency covers the United States and European Union only (D-10, D1)</td><td>Confirmed</td><td><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/github-copilot-with-data-residency">Copilot with data residency</a></td></tr>
+        <tr><td>Copilot reads <code>copilot-setup-steps.yml</code>, custom agents in <code>.github/agents</code>, and has a customisable firewall allowlist</td><td>Confirmed</td><td><a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment">Agent environment</a> · <a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/create-custom-agents">Custom agents</a> · <a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-the-firewall">Firewall</a></td></tr>
+        <tr><td>Workflows on Copilot PRs wait for a person to approve them, unless a repository setting is changed</td><td>Confirmed</td><td><a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/configuring-agent-settings">Configuring agent settings</a></td></tr>
+        <tr><td>Workload Identity Federation lets GitHub Actions reach Google Cloud without long-lived keys</td><td>Confirmed</td><td><a href="https://docs.cloud.google.com/iam/docs/workload-identity-federation-with-deployment-pipelines">Workload Identity Federation with deployment pipelines</a></td></tr>
+        <tr><td>Model Armor is available in Melbourne, not Sydney; three filters there with data residency enforced</td><td>Confirmed</td><td><a href="https://docs.cloud.google.com/model-armor/locations">Locations</a> · <a href="https://docs.cloud.google.com/model-armor/feature-availability-by-region">Feature availability by region</a></td></tr>
+        <tr><td>Gemini on Vertex AI is listed for Sydney; the page does not list Melbourne</td><td>Confirmed</td><td><a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/locations">Generative AI locations</a></td></tr>
+        <tr><td>ADK ships a <code>ModelArmorPlugin</code></td><td>Confirmed</td><td><a href="https://adk.dev/integrations/model-armor/">ADK Model Armor integration</a></td></tr>
+        <tr><td>Pinned versions exist: <code>google-cloud-modelarmor</code> 0.7.5, <code>sunglasses</code> 0.6.20 (newer 0.6.28 exists), <code>google-adk</code> 2.12 or later (2.15.1 current)</td><td>Confirmed</td><td><a href="https://pypi.org/project/google-cloud-modelarmor/">PyPI: modelarmor</a> · <a href="https://pypi.org/project/sunglasses/">PyPI: sunglasses</a> · <a href="https://pypi.org/project/google-adk/">PyPI: google-adk</a></td></tr>
+        <tr><td>Licences and descriptions of the compared projects</td><td>Confirmed</td><td>READMEs and licence files on <code>raw.githubusercontent.com</code>, for example <a href="https://raw.githubusercontent.com/google/adk-python/main/README.md">adk-python</a>, <a href="https://raw.githubusercontent.com/google/agents-cli/main/README.md">agents-cli</a>, <a href="https://raw.githubusercontent.com/sunglasses-dev/sunglasses/main/README.md">Sunglasses</a></td></tr>
+        <tr><td>AGENTS.md is an open format for guiding coding agents</td><td>Confirmed</td><td><a href="https://agents.md">agents.md</a></td></tr>
+        <tr><td>The C4 model has four levels: system context, container, component and code</td><td>Confirmed</td><td><a href="https://c4model.com/abstractions">C4 model: abstractions</a></td></tr>
+        <tr><td>CNCF article “PaC and AI” (12 August 2025) discusses policy as code for AI-written code, including tests being changed alongside code</td><td>Confirmed</td><td><a href="https://www.cncf.io/blog/2025/08/12/pac-and-ai/">CNCF: PaC and AI</a></td></tr>
+        <tr><td>Pages workflow pins exist: <code>actions/checkout</code> resolves to 7.0.1; the other two commits exist</td><td>Partly: tag names not checked</td><td><a href="https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/package.json">checkout package.json at the pinned commit</a></td></tr>
+        <tr><td>Gitleaks <code>v8.30.1</code></td><td>Tag exists; the release binary and its SHA-256 are not checked</td><td><a href="https://raw.githubusercontent.com/gitleaks/gitleaks/v8.30.1/README.md">README at tag v8.30.1</a></td></tr>
+        <tr><td>OWASP Top 10 for Agentic Applications (cited in the roadmap references)</td><td>Not checked: <code>genai.owasp.org</code> is not reachable from the build session</td><td><a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP resource</a></td></tr>
+      </tbody></table></div>
+    <p class="src">Not covered here: statements about this repository come from its own docs and code, and are linked at the foot of each section.</p>
   </div>
 </section>
 

@@ -112,30 +112,40 @@ Re-read on 26 November 2026 from each project's README and licence file (raw fil
 Pins used by `pages.yml` (tags resolved to commit SHAs with `git ls-remote` on 25 November 2026):
 `actions/checkout` v7, `actions/upload-pages-artifact` v5.0.0, `actions/deploy-pages` v5.0.1.
 
-### Checked against vendor documentation (26 November 2026)
+### Checked against external sources (26 November 2026)
 
-- GitHub: the [Copilot API guide](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-via-the-api)
-  says the issue-assignment APIs need a user token (a personal access token or a GitHub App user-to-server token) and
-  the agent-tasks API refuses installation tokens. This is the R2 blocker. Copilot's `copilot-setup-steps.yml`,
-  `.github/agents/*.agent.md`, firewall allowlist and workflow-approval setting are all in GitHub's docs. GitHub now
-  calls it the Copilot cloud agent.
-- Google Cloud: Model Armor is listed for Melbourne (`australia-southeast2`) and not Sydney. With data residency
-  enforced it offers three filters there. Gemini on Vertex AI is listed for Sydney (`australia-southeast1`), and
-  the generative AI locations page does not list Melbourne. Workload Identity Federation with GitHub Actions OIDC is
-  documented.
+The site carries the same list as a [validation log](../../site/index.html#validation), one row per statement with
+the page it was checked against. Summary:
+
+- GitHub: the [Copilot cloud agent API guide](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-via-the-api)
+  says the issue-assignment APIs need a user token (a personal access token or a GitHub App user-to-server token).
+  The [agent tasks REST reference](https://docs.github.com/en/rest/agent-tasks/agent-tasks) refuses installation
+  tokens. This is the R2 blocker. [Copilot with data residency](https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/github-copilot-with-data-residency) lists the United States and European Union
+  only, which supports D-10. The setup-steps, custom-agent, firewall and workflow-approval behaviour is documented.
+  GitHub now calls it the Copilot cloud agent.
+- Google Cloud: [Model Armor locations](https://docs.cloud.google.com/model-armor/locations) list Melbourne and not
+  Sydney; [feature availability](https://docs.cloud.google.com/model-armor/feature-availability-by-region) gives
+  three filters in Melbourne with data residency enforced. The
+  [generative AI locations](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/locations) list Gemini
+  for Sydney and do not list Melbourne. Workload Identity Federation with GitHub Actions OIDC is
+  [documented](https://docs.cloud.google.com/iam/docs/workload-identity-federation-with-deployment-pipelines).
 - ADK: `ModelArmorPlugin` ships with ADK ([adk.dev](https://adk.dev/integrations/model-armor/)). PyPI has
   `google-adk` 2.15.1, `google-cloud-modelarmor` 0.7.5 and `sunglasses` 0.6.20 (0.6.28 is newer, so 0.6.20 is a pin).
 - Upstream READMEs confirm the licences and descriptions in the comparison table. The `agents-cli` README uses
   `uvx google-agents-cli setup`; the `--python 3.13` form is this repo's own pin.
+- [agents.md](https://agents.md), the [C4 model](https://c4model.com/abstractions) and the
+  [CNCF article](https://www.cncf.io/blog/2025/08/12/pac-and-ai/) were read and match how the docs use them.
+- The `pages.yml` pins resolve to real commits (`actions/checkout` at the pinned commit is 7.0.1), and the Gitleaks
+  `v8.30.1` tag exists.
 
-### To be validated
+### Still to be validated
 
-- Copilot data residency in Australia. The GitHub documentation read does not say where the cloud agent processes
-  data. The roadmap's "US and EU only as of April 2026" (D-10, D1) is not confirmed or contradicted by it.
-- Hosts that the session could not reach (blocked by the network allowlist): `agents.md`, `c4model.com`, `owasp.org`,
-  `cncf.io`, `docs.astral.sh` and `github.com` pages (the Gitleaks `v8.30.1` release tag and the Actions pins in
-  `pages.yml` are therefore unchecked). The AGENTS.md convention, the C4 model and the CNCF article stay marked as
-  to be validated on the site.
+- `genai.owasp.org` (the OWASP agentic applications list in the roadmap references) is not reachable from the build
+  session.
+- The Gitleaks `v8.30.1` release binary and its SHA-256 (`github.com` release pages are blocked), and the tag
+  names behind the `pages.yml` action pins (the commits were checked).
+- `github.blog` (the changelog entry cited for Copilot residency in the roadmap references) is not reachable; the
+  docs page above covers the same point.
 
 ## Image prompts
 
