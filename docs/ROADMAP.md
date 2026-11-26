@@ -1161,20 +1161,20 @@ Boundaries that hold for every item in M9:
   the question limit, or a failed guard. Each ends with a clear comment and a human handoff, never a guess.
 
 ### I1 · `AgentRequest` form and the request model
-- **Status:** todo · **Priority:** P1 · **Size:** M · **Depends on:** none
+- **Status:** doing (requester authorisation awaits Q13) · **Priority:** P1 · **Size:** M · **Depends on:** none
 - **Model / effort:** Sonnet 5.5 · high
 - **Why:** Everything else needs a stable, validated shape for "what the requester wants". It must be
   plain enough for a non-technical owner and strict enough to become the Mission Brief and `spec.yaml`.
 - **Done when:**
-  - [ ] `.github/ISSUE_TEMPLATE/agent-request.yml` (GitHub issue form) asks for: the problem and who has
+  - [x] `.github/ISSUE_TEMPLATE/agent-request.yml` (GitHub issue form) asks for: the problem and who has
         it, the outcome that counts as success, systems it should read from or write to, the data
         involved (with a classification choice), who approves its actions, and the division. No jargon.
   - [ ] A Pydantic `AgentRequest` model (`strict=True`, `extra="forbid"`) parses the issue into a draft
         plus a list of **missing or unclear fields**, and maps to `AgentSpec` and a Mission Brief.
         A `spec` that cannot validate (`AgentSpec.validate`) is reported, not patched.
   - [ ] Only a request from a person allowed to raise one is accepted (Q13); others get a polite no.
-  - [ ] Property tests: unknown fields are rejected, and the mapping is lossless for required fields.
-  - [ ] Golden and adversarial eval tasks for the parse step, including an issue body that tries to
+  - [x] Property tests: unknown fields are rejected, and the mapping is lossless for required fields.
+  - [x] Golden and adversarial eval tasks for the parse step, including an issue body that tries to
         smuggle in a host, a model, or an instruction to skip approval.
 
 ```text
@@ -1377,6 +1377,14 @@ These block or shape items above. Ask them in the session with the agent teams n
 
 Append-only, newest first. One entry per PR or working session: the date, the item IDs, what changed, and
 anything learned that should change this plan. Never rewrite old entries; correct them with a new one.
+
+### 2026-11-26 · I1 request form and offline draft parsing
+- Added a GitHub issue form and strict deterministic draft parser, missing-field reporting, review-only
+  spec and Mission Brief mappings, property tests and offline parsing eval cases (run by pytest).
+- The draft is untrusted: it does not scan text, authenticate requesters, approve actions, grant egress or
+  start a build. Q13 must resolve requester eligibility and sponsorship before an intake path can accept
+  requests. The organisation's classification choices are also unconfirmed; the form asks for the name
+  rather than inventing a list. I1 remains doing.
 
 ### 2026-11-25 · Project site for GitHub Pages
 - Added `site/`: a static, no-build, no-third-party-requests project site (vision, golden workflow, a replay of

@@ -56,19 +56,19 @@ Language features the code relies on:
 
 Who and what the harness deals with.
 
-```
-                          ┌─────────────────────────┐
+```ascii
+                         ┌─────────────────────────┐
  Application team ─────► │                         │ ─────► GitHub (issues, PRs, checks,
    (raise issues,        │ AGENTIC HARNESS DEMO    │        Copilot coding agent)
     approve PRs)         │                         │ ─────► Google Cloud
  `ai_governance` ──────► │ Decides whether a       │        Vertex AI / Gemini models
- `security`,            │ change can merge and    │        (regions in policy)
+ `security`,             │ change can merge and    │        (regions in policy)
  `platform_team`,        │ who must approve        │ ─────► Generated agent repos
  `product_owner`,        │                         │        (from agent-template/)
  `architecture`          └─────────────────────────┘
                                   ▲       │
-             policy files (YAML) │       └────► Illustrative cloud-project plan
-             reviewed by people ─┘              (`workload-infrastructure`, `platform.tf`)
+             policy files (YAML)  │       └────► Illustrative cloud-project plan
+             reviewed by people ──┘              (`workload-infrastructure`, `platform.tf`)
 ```
 
 | Actor or system | What it does with the harness | State |
@@ -87,7 +87,7 @@ The harness has no database, no web server and no queue today. It is a library a
 
 ## C2: Containers (one per top-level folder)
 
-```
+```ascii
  ┌──────────────────────────────────────────────────────────────────────────┐
  │                                THE REPO                                  │
  │                                                                          │
@@ -102,7 +102,7 @@ The harness has no database, no web server and no queue today. It is a library a
  │   └───────┬───────────────┬──────────────┘   └──────────────┘            │
  │           │ renders       │ tested by                                    │
  │           ▼               ▼                                              │
- │   agent-template/       tests/          scripts/   .github/   sandbox/    │
+ │   agent-template/       tests/          scripts/   .github/   sandbox/   │
  │   (becomes each        unit and        e2e run    harness    optional    │
  │    agent repo)         property        script     CI         builder     │
  │                                                                          │
@@ -139,32 +139,32 @@ How they connect:
 
 ### Inside `app/harness/`
 
-```
- ┌───────────────────────────────── app/harness/ ─────────────────────────────────┐
- │                                                                                │
- │  models.py   plain data types          ports.py   the slots (Protocols)        │
- │                                                                                │
- │  workflow.py  IssueToMerge ───────────────────────────────────────┐            │
- │     │                                                              │            │
- │     ├─ nodes/          (no LLM, plain code)                        │            │
- │     │    input_guard.py      scan untrusted text                   │            │
- │     │    repo_context.py     read-only, capped repo context        │            │
- │     │    merge_gate.py ─┬─ tamper_check.py   (+ diff_parse.py)     │            │
- │     │                   └─ capability_check.py (+ diff_parse.py)   │            │
- │     │                                                              │            │
- │     └─ adapters/       (real parts that fit the ports)             │            │
- │          adk_agents.py        triage, plan, review (Gemini via ADK)│            │
- │          copilot_builder.py   builder over GitHubPort              │            │
- │          sunglasses_scanner.py, model_armor_scanner.py              │            │
- │          composite_scanner.py   scanners behind InputScanner       │            │
- │          sandbox_builder.py   optional builder (stub)              │            │
- │          fakes.py             scripted stand-ins for tests         │            │
- │                                                                    │            │
- │  policy.py  policy_validation.py  golden.py  residency.py  skills.py ◄──────────┘
- │     (load, validate and apply the YAML policy)                                  │
- │                                                                                │
- │  bootstrap/   cli.py  spec.py  template.py  terraform_plan.py  security_harness.py
- └────────────────────────────────────────────────────────────────────────────────┘
+```ascii
+ ┌───────────────────────────────── app/harness/ ─────────────────────────────────────┐
+ │                                                                                    │
+ │  models.py   plain data types          ports.py   the slots (Protocols)            │
+ │                                                                                    │
+ │  workflow.py  IssueToMerge ────────────────────────────────────────────┐           │
+ │     │                                                                  │           │
+ │     ├─ nodes/          (no LLM, plain code)                            │           │
+ │     │    input_guard.py      scan untrusted text                       │           │
+ │     │    repo_context.py     read-only, capped repo context            │           │
+ │     │    merge_gate.py ─┬─ tamper_check.py   (+ diff_parse.py)         │           │
+ │     │                   └─ capability_check.py (+ diff_parse.py)       │           │
+ │     │                                                                  │           │
+ │     └─ adapters/       (real parts that fit the ports)                 │           │
+ │          adk_agents.py        triage, plan, review (Gemini via ADK)    │           │
+ │          copilot_builder.py   builder over GitHubPort                  │           │
+ │          sunglasses_scanner.py, model_armor_scanner.py                 │           │
+ │          composite_scanner.py   scanners behind InputScanner           │           │
+ │          sandbox_builder.py   optional builder (stub)                  │           │
+ │          fakes.py             scripted stand-ins for tests             │           │
+ │                                                                        │           │
+ │  policy.py  policy_validation.py  golden.py  residency.py  skills.py ◄─┘           │
+ │     (load, validate and apply the YAML policy)                                     │
+ │                                                                                    │
+ │  bootstrap/   cli.py  spec.py  template.py  terraform_plan.py  security_harness.py |
+ └────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 #### Core
@@ -177,7 +177,7 @@ How they connect:
 
 #### The loop, step by step
 
-```
+```ascii
  issue ─► 1 route ─► 1b input guard ─► 1c config checks ─► 2 triage
         (no agent:* label = ignored)   (issue text)         (model, skill notes in the trace)
                                                                    │
@@ -190,9 +190,13 @@ How they connect:
  4 build loop (up to 4 rounds)
       builder ─► PR ─► checks
         ├─ checks failed ─► guard the feedback ─► build again
-        └─ checks passed ─► 5 review (repo context, review checklist)
-                               ├─ not approved and rounds left ─► build again
-                               └─► 6 MERGE GATE ─► decision ─► human notified if needed
+        └─ checks passed
+                    │
+   ┌────────────────┘
+   ▼ 
+ 5 review (repo context, review checklist)
+        ├─ not approved and rounds left ─► build again
+        └─► 6 MERGE GATE ─► decision ─► human notified if needed
 ```
 
 The loop stops at **4 build rounds** and **400,000 tokens** (from `policy/routing.yaml`). Hitting either escalates.
@@ -210,8 +214,8 @@ The loop stops at **4 build rounds** and **400,000 tokens** (from `policy/routin
 
 The merge gate applies these rules in this order:
 
-```
- 1. too many lines (over 400)            ─► reject_to_planning
+```text
+ 1. too many lines (over 400)             ─► reject_to_planning
  2. a required check failed or is missing ─► escalated
  3. CI not green                          ─► escalated
  4. tampering found in the diff           ─► escalated
@@ -247,7 +251,7 @@ New capabilities add approvers to the result and never turn a decision into a bl
 
 #### Bootstrap CLI (`bootstrap/`)
 
-```
+```ascii
  spec.yaml ─► spec.py (validate) ─┬─► new   ─► template.py ─► a new agent repo
                                   ├─► check ─► security_harness.py ─► findings (exit 1)
                                   └─► plan  ─► terraform_plan.py ─► three ordered PRs (JSON)
@@ -277,7 +281,7 @@ New capabilities add approvers to the result and never turn a decision into a bl
 
 ### Inside `evals/`
 
-```
+```ascii
  evals/golden_tasks/*.yaml ─► run_evals.py ─► builds the workflow with fakes
                                            ─► runs each task
                                            ─► scores it ─► JSON report + pass/fail
@@ -294,7 +298,7 @@ The run passes only if these hold: decision, tier and approver accuracy at least
 
 ### Inside `agent-template/` (becomes a generated agent)
 
-```
+```ascii
  agent repo
  ├─ agent/         agent.py (ADK root agent) · prompts.py · tools.py · config.py
  │                 telemetry.py (redacted tool diagnostics) · data/ · skills/ (one pinned skill)
@@ -332,7 +336,7 @@ The run passes only if these hold: decision, tier and approver accuracy at least
 
 ## Data and trust
 
-```
+```text
  untrusted:  issue text · CI output · repo files · model output (file names, plans)
  checked by: input guard · path checks · size caps · schema parsing · the gate
  trusted:    policy files (changed only by reviewed PRs) · the gate code
