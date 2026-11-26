@@ -48,7 +48,7 @@ much sign-off each one needs and checks that the paperwork is honest.
 **Metaphor:** a business area opens a new desk. Head office gives it the standard desk kit.
 **Real feature:** bootstrap, stages `plan`, `new` and `check`.
 
-```
+```ascii
  Team writes a short form (spec.yaml)
         │
         ├─► agentic-bootstrap plan  spec.yaml     "Which cloud-project PRs, in what order?"
@@ -99,7 +99,7 @@ and the reviewer approving, gives different results by phase (real output):
 | 1 | `human_approval` (App team, AI governance team) | `phase 1, tier 1: approvals needed from app_team, ai_governance` |
 | 3 | `auto_merge` | `phase 3, tier 1, checks green, reviewer approved` |
 
-```
+```ascii
  Phase 1   every file ───────────────────────────►  a person signs
  Phase 3   tier 1 (tests, docs) ─► auto_merge       everything else still needs people
 ```
@@ -124,7 +124,7 @@ The gate reads the changed file paths and adds the right signatures (real output
 | `AGENTS.md` (an agent steering file) | 3 | security team |
 | a file under `prod/` | 3 | Product Owner, Architecture |
 
-```
+```ascii
  changed files ─► match rules in policy/risk_tiers.yaml ─► highest tier wins ─► approvers = base + rule roles
 ```
 
@@ -142,7 +142,7 @@ shows a problem.
 An agent is asked to make a failing build pass. Instead of fixing the code it deletes the failing test. At
 phase 3 the gate answers (real output):
 
-```
+```ascii
  decision:  escalated
  reason:    test/eval tampering detected: deleted test file(s): tests/test_a.py
 ```
@@ -164,7 +164,7 @@ edited test config. A normal edit to a test (rename, extra case) does not trigge
 
 A change adds one line that calls `https://rates.vendor.io/v1`. At phase 3 the gate answers (real output):
 
-```
+```ascii
  decision:   human_approval
  tier:       2
  approvers:  app_team, ai_governance, security
@@ -203,9 +203,9 @@ clerk checks incoming notes before the assessor reads them.
 
 Text from outside is scanned before any AI reads it:
 
-```
- issue text ─────────┐
- CI feedback ────────┼─► input guard ─► clean ─► the AI reads it
+```ascii
+ issue text     ─────┐
+ CI feedback    ─────┼─► input guard ─► clean ─► the AI reads it
  AGENTS.md + files ──┘        │
                               └─► match ─► shadow: record it, carry on
                                            enforce: stop and escalate
@@ -233,7 +233,7 @@ Facts to be honest about:
 
 If no checks are reported, or a required check is missing, the gate escalates (real output):
 
-```
+```text
  decision:  escalated
  reason:    required checks not reported: lint, tests, evals_no_regression, secret_scan
 ```
@@ -296,7 +296,7 @@ The template's example agent is a mechanic assistant with two tools:
 
 How the template keeps it safe:
 
-```
+```text
  prompts.py      the rules in words (guidance only)
  tools.py        read-only tools, no booking tool exists
  telemetry.py    logs tool name, outcome and timing (never prompts or arguments)
@@ -319,7 +319,7 @@ project. The `evals_no_regression` check in the template is still a stub that fa
 **Metaphor:** the underwriting guideline book changes. The new edition must be signed off before anyone uses it.
 **Real feature:** skills and the skills lock.
 
-```
+```ascii
  a skill is named in routing.yaml
         AND pinned in skills.lock.yaml (full commit + file fingerprint)
         AND the file on disk matches the fingerprint
@@ -338,7 +338,7 @@ project. The `evals_no_regression` check in the template is still a stub that fa
 **Metaphor:** a claim goes from the desk, through assessment and the panel, to a decision.
 This is an illustration. The steps match the code; the details are made up.
 
-```
+```text
  Day 1  A team member raises an issue labelled agent:bugfix
           "The repair estimate rounds the wrong way."
 
@@ -350,8 +350,8 @@ This is an illustration. The steps match the code; the details are made up.
  6  plan approval phase 1: a person approves the plan
  7  build         Copilot opens a PR
  8  checks        lint, tests, evals_no_regression, secret_scan
-              ├─ tests fail ─► feedback guarded ─► Copilot tries again (up to 4 rounds)
-              └─ all green  ─► reviewer applies the checklist
+      ├─ tests fail ─► feedback guarded ─► Copilot tries again (up to 4 rounds)
+      └─ all green  ─► reviewer applies the checklist
  9  merge gate    tier 2 (default). The gate lists the approvers.
 10  decision      human_approval ─► the team and AI governance team are notified
                   a person merges

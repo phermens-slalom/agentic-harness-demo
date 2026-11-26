@@ -22,9 +22,9 @@ merge and who must approve it.
 
 ## The overall picture
 
-```
+```ascii
  teams using this harness                    THIS REPO (the harness)                        GitHub and Google Cloud
- ---------                    -----------------------                        -----------------------
+ ------------------------                    -----------------------                        -----------------------
 
  write a spec  ───────►  1. BOOTSTRAP  (agentic-bootstrap)
  (spec.yaml)                new   → makes an agent repo from agent-template/
@@ -53,9 +53,9 @@ merge and who must approve it.
 
 The eight stages of the golden workflow are:
 
-```
+```ascii
 frame ▸ register ▸ provision ▸ connect ▸ build ▸ verify ▸ release ▸ operate
-                                           └──────┬──────┘
+                                        └-──────┬──────┘
                                        the part the harness automates today
 ```
 
