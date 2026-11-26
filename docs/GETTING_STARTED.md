@@ -97,7 +97,7 @@ agents-cli install && agents-cli lint && uv run pytest
 | `GOOGLE_GENAI_USE_VERTEXAI=TRUE` | Use Vertex AI for the models |
 | `GOOGLE_CLOUD_LOCATION` | Must be an allowed Australian region. Never `global`. |
 | `HARNESS_MODEL_DEFAULT` | The model name. Override per role with `HARNESS_MODEL_TRIAGE`, `_PLANNER`, `_REVIEWER`. |
-| `HARNESS_MODEL_ARMOR_PROMPT_TEMPLATE` / `HARNESS_MODEL_ARMOR_RESPONSE_TEMPLATE` | Full Model Armor template names (`projects/.../locations/australia-southeast2/templates/...`). Required outside `HARNESS_ENV=local`. Needs `pip install -e ".[armor]"`. See [Input guard](INPUT_GUARD.md). |
+| `HARNESS_MODEL_ARMOR_PROMPT_TEMPLATE` / `HARNESS_MODEL_ARMOR_RESPONSE_TEMPLATE` | Full Model Armor template names (`projects/.../locations/australia-southeast2/templates/...`). Required outside `HARNESS_ENV=local`. Needs `pip install -e ".[armor]"`. See [Input guard](tech/INPUT_GUARD.md). |
 | `HARNESS_SKILLS_DIR` | Folder with a pinned pinned skills repository checkout. Only needed once skills are configured. |
 | `GHAS_ENABLED=true` | Turns on CodeQL and dependency review in CI for private repos. Set only once GitHub Code Security is enabled. |
 

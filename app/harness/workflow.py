@@ -10,7 +10,7 @@ event carries the stage id of the node that produced it.
 
 Written as a plain async orchestrator over ports so it is testable offline and
 auditable line by line. Each method below maps 1:1 onto an ADK 2.0 Workflow node;
-see docs/ADK_PORT.md for the port, which you do once you've verified the 2.x
+see docs/tech/ADK_PORT.md for the port, which you do once you've verified the 2.x
 Workflow API in `adk web` against the version you pin.
 """
 

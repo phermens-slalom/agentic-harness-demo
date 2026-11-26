@@ -1,4 +1,4 @@
-"""Guards for the static project site in site/ (see docs/SITE.md).
+"""Guards for the static project site in site/ (see docs/tech/SITE.md).
 
 The site makes claims about the repo, so these tests keep it honest: every local link and
 anchor resolves, every link into the repo points at a file that exists, and nothing is loaded
@@ -69,7 +69,9 @@ class SiteTests(unittest.TestCase):
         for h in _parse().hrefs:
             m = REPO_LINK.match(h)
             if m:
-                self.assertTrue((ROOT / m.group(1)).exists(), f"site links to a path that does not exist: {m.group(1)}")
+                self.assertTrue(
+                    (ROOT / m.group(1)).exists(), f"site links to a path that does not exist: {m.group(1)}"
+                )
 
     def test_no_third_party_loads(self) -> None:
         c = _parse()

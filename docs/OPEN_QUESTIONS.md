@@ -48,7 +48,7 @@ Each `TODO(owner)` means "ask the appropriate role or owner; do not invent the a
 | `policy/risk_tiers.yaml` | Confirm which files are "privileged YAML" | security team |
 | `policy/capabilities.yaml` | Agree the starting allowlists (hosts, regions, models, stores, dependencies) and the package mirror | security team |
 | `policy/input_guard.yaml` | Confirm Model Armor templates are required outside local use, and what they screen | security team |
-| `docs/INPUT_GUARD.md` | Confirm the Private Service Connect route for the Model Armor regional endpoint | platform team |
+| `docs/tech/INPUT_GUARD.md` | Confirm the Private Service Connect route for the Model Armor regional endpoint | platform team |
 | `evals/fixtures/model_armor.json` | Replace the authored fixture with responses recorded from an approved non-production template | AI governance team |
 | `policy/routing.yaml` | Confirm the repo-context caps and the deny list | AI governance team |
 | `policy/routing.yaml`, `policy/skills.lock.yaml` | Name the real skills, their source and the approved revision | AI governance team (Q7) |
@@ -78,3 +78,4 @@ These are things the repo does not say. They are marked **TODO: UNCONFIRMED** in
 | How to run the ADK adapters live | [Getting started](GETTING_STARTED.md) |
 | Whether the booking-refusal eval passes live | [Examples](EXAMPLES.md) |
 | Release and tagging practice (S5 is planned) | [Changelog](CHANGELOG.md) |
+| Regional availability of memory services, beyond the known gaps in `policy/residency.yaml` | [Security](SECURITY.md) |

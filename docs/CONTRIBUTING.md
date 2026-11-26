@@ -7,7 +7,7 @@ How to change this repo safely. These rules come from [`AGENTS.md`](../AGENTS.md
 
 1. Pick work from the [Roadmap](ROADMAP.md). Take the top `todo` item whose dependencies are `done`.
 2. One item is one branch and one pull request.
-3. Write the tests first. Run the four checks. Update the docs and the roadmap.
+3. Write the tests first. Run the four checks. Update the docs, and set the roadmap item to `done` in the same PR.
 4. Never weaken a gate, an approval, a threshold, a baseline or a golden task to make a test pass.
 
 ## The rules that must hold
@@ -40,6 +40,13 @@ uv run python evals/run_evals.py --out .m0-eval-report.json
 CI runs on Python 3.11, 3.12 and 3.13. The `ty` version is not pinned, so CI can be newer than your machine.
 If CI reports a type error you cannot see locally, run `uv sync --extra dev` and try again.
 
+Also keep the code formatted and the spelling clean. CI does not run these two yet, so run them yourself:
+
+```bash
+uv run ruff format --check .      # apply with: uv run ruff format .
+uv run codespell AGENTS.md README.md docs app evals tests policy site scripts agent-template
+```
+
 Do not commit the generated eval report (`.m0-eval-report.json`).
 
 ## Definition of done
@@ -50,7 +57,7 @@ A change is done when:
 - Behaviour changes have tests. Gate or policy changes also have a golden or adversarial task in `evals/golden_tasks/`.
 - The gate still never calls an LLM. No new agent framework. No personal tokens.
 - Related docs are updated (`README.md`, `docs/*.md`).
-- The roadmap item status is updated and a dated work-log entry is added.
+- The roadmap item is set to `done` (or left `doing` or `blocked`, saying what is left) and a dated work-log entry is added, in this same PR. Merging is the approval: do not open a follow-up PR just to mark the work done.
 - Anything that needs a stakeholder is marked `TODO(<owner>)` and listed in [Open questions](OPEN_QUESTIONS.md).
 
 ## Step by step
@@ -61,7 +68,7 @@ A change is done when:
 4. **Test first.** Write the tests and watch them fail. Then change the code.
 5. **Keep it small.** The generated-agent rule is about 150 changed lines per PR. Split larger work.
 6. **Add evals** for gate, policy and node changes. Put them in `evals/golden_tasks/`.
-7. **Update docs and the roadmap**, in the same PR.
+7. **Update docs and the roadmap**, in the same PR. Set the item to `done` here, not in a later PR.
 8. **Open a pull request.** Use a short, conventional commit message, for example `feat(gate): ...` or `fix(template): ...`.
 9. **Say what you could not verify.** Cite sources. Mark unknowns `TODO(verify)` or `TODO: UNCONFIRMED`.
 

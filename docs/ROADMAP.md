@@ -16,12 +16,17 @@ append-only work log at the bottom.
    marked **plan first**, start in plan mode and approve the plan before any edits.
 3. Paste the item's prompt. Each prompt is self-contained, but they all say "read the item in
    `docs/ROADMAP.md`" so the agent sees the acceptance criteria.
-4. One item = one branch (`roadmap/<id>-<slug>`) = one PR. The agent updates the item's status and adds
-   a work-log entry in the same PR.
+4. One item = one branch (`roadmap/<id>-<slug>`) = one PR. In that same PR, the agent sets the item's status
+   to `done`, ticks its "Done when" boxes and adds a work-log entry. Merging the PR is the approval, so a merged
+   PR means the item is done. There are no follow-up PRs to close out earlier work. If part of the work is
+   unfinished, leave the item `doing` or `blocked` and say what is left.
 5. If you change an item mid-way, edit it here first. This file is the spec, and the prompt is only a
    pointer to it.
 
-**Status:** `todo` · `doing` · `blocked (reason)` · `review` · `done (PR #)` · `dropped (reason)`
+**Status:** `todo` · `doing` · `blocked (reason)` · `review` · `done` · `dropped (reason)`
+`done` is set in the PR that does the work, so no PR number is needed (the merge commit links to the PR). `review`
+is only for work that is merged but still has a step outside the repository to finish, such as a live run. List
+that step in the item. Older entries may read `done (PR #n)` or `done (working tree)`; both mean done.
 **Priority:** P0 = before the agent discussion next week · P1 = before the pilot agent · P2 = after the pilot
 **Size:** S ≤ half a day · M ≤ 2 days · L > 2 days (split it if you can)
 
@@ -37,7 +42,7 @@ gate, lean towards more effort, not less.
   (`evals/golden_tasks/`).
 - The merge gate still never calls an LLM. No new agent framework (ADK only). No personal tokens.
 - Docs touched where behaviour changed (`README.md`, `docs/*.md`).
-- This file: item status updated, and a dated entry added to the work log.
+- This file: item status set to `done`, and a dated entry added to the work log, in the same PR.
 - Anything that needs a stakeholder decision is marked `TODO(<owner>)` in code and listed under
   [Open questions](#open-questions), not guessed silently.
 
@@ -181,12 +186,12 @@ evals. Update the item status and add a work-log entry in docs/ROADMAP.md.
         `README.md`, `CHANGELOG.md`. A bare `tests/**` no longer counts as tier 1.
   - [ ] One adversarial golden task per newly covered path family, each expecting `human_approval` at
         tier 3 at phase 3.
-  - [ ] `docs/INPUT_GUARD.md` and the policy comments are updated. `TODO(security)`
+  - [ ] `docs/tech/INPUT_GUARD.md` and the policy comments are updated. `TODO(security)`
         sign-off marker added.
 
 ```text
 Read docs/ROADMAP.md item G2 and decision D-02, then policy/risk_tiers.yaml, app/harness/policy.py,
-evals/golden_tasks/adversarial_tasks.yaml and docs/INPUT_GUARD.md.
+evals/golden_tasks/adversarial_tasks.yaml and docs/tech/INPUT_GUARD.md.
 
 Threat model: an agent (or a prompt injection steering it) that can edit the things that grade it can
 make any change pass. Today CI workflows, CODEOWNERS and eval thresholds/baselines are tier 2 with no
@@ -198,7 +203,7 @@ the item, placed so first-match-wins picks it before tests-and-docs. Narrow test
 specified. Before editing, write a short table in your plan of every path that changes tier and
 its old/new tier, and check that nothing which should stay tier 1 (plain test_*.py, docs/**) moves.
 Add one adversarial golden task per newly covered path family. Do not touch merge_gate.py logic.
-Run ruff, ty, pytest and evals. Update the policy comments, INPUT_GUARD.md, the item status
+Run ruff, ty, pytest and evals. Update the policy comments, docs/tech/INPUT_GUARD.md, the item status
 and the work log.
 ```
 
@@ -490,8 +495,8 @@ and the work log.
   `CopilotBuilder._pr` is lost if the process dies. ADK 2.0 (GA May 2026) has graph workflows that can
   pause durably for human input, but they're only durable if the session store is.
 - **Done when:**
-  - [ ] An exact `google-adk` pin. `docs/ADK_PORT.md` is updated with the verified API.
-  - [ ] Each step in `workflow.py` is an ADK node, per the mapping in `ADK_PORT.md`. Plan approval is an
+  - [ ] An exact `google-adk` pin. `docs/tech/ADK_PORT.md` is updated with the verified API.
+  - [ ] Each step in `workflow.py` is an ADK node, per the mapping in `docs/tech/ADK_PORT.md`. Plan approval is an
         ADK pause point. No broad `except` in nodes.
   - [ ] Database session service with SQLite locally and Cloud SQL Postgres (`australia-southeast2`) in
         cloud. A run resumes after a kill.
@@ -501,7 +506,7 @@ and the work log.
         (parametrised), and they produce identical outcomes on every golden task.
 
 ```text
-Read docs/ROADMAP.md item R3, decision D-05, docs/ADK_PORT.md, app/harness/workflow.py, ports.py,
+Read docs/ROADMAP.md item R3, decision D-05, docs/tech/ADK_PORT.md, app/harness/workflow.py, ports.py,
 models.py, adapters/ and tests/test_workflow.py.
 
 Port the issue_to_merge orchestrator to an ADK 2.0 Workflow. Start in plan mode. First, read the
@@ -513,7 +518,7 @@ Plan must show: the node graph, where the plan-approval pause sits and how it re
 choice (SQLite local, Postgres in cloud), the idempotency key and what happens on a duplicate start,
 and how you'll prove behavioural equivalence (the existing tests and evals parametrised over both
 implementations). Keep the merge gate a pure function node. Keep the old orchestrator until
-equivalence is proven; deleting it is a separate follow-up. Update ADK_PORT.md, README, the item status
+equivalence is proven; deleting it is a separate follow-up. Update docs/tech/ADK_PORT.md, README, the item status
 and the work log.
 ```
 
@@ -567,7 +572,7 @@ control. Run ruff, ty, pytest and evals. Update the item status and the work log
 ```
 
 ### R6 · Harden the ADK adapters, and give the planner repo context
-- **Status:** review · **Priority:** P1 · **Size:** M · **Depends on:** R3 (can start in parallel on the current adapters)
+- **Status:** done · **Priority:** P1 · **Size:** M · **Depends on:** R3 (can start in parallel on the current adapters)
 - **Model / effort:** Sonnet 5.5 · high
 - **Why:** The adapters pull JSON out of model text with a regex, don't retry, create a new runner per call,
   and only check residency when Vertex is used. The planner never sees the code, so it plans blind.
@@ -631,7 +636,7 @@ status and the work log.
 ```
 
 ### S2 · Model Armor as the primary scanner, and scan every untrusted input
-- **Status:** review · **Priority:** P1 · **Size:** M · **Depends on:** R6 · **Decision:** D-09
+- **Status:** done · **Priority:** P1 · **Size:** M · **Depends on:** R6 · **Decision:** D-09
 - **Model / effort:** Sonnet 5.5 · high
 - **Why:** Sunglasses misses novel phrasing (two known gaps). Reviewer findings and PR comments are fed
   back to the builder without being scanned.
@@ -650,7 +655,7 @@ status and the work log.
     `PR comments` are scanned on a new `pr_comment` surface, but nothing fills them until R2.
 
 ```text
-Read docs/ROADMAP.md item S2 and decision D-09, docs/INPUT_GUARD.md, app/harness/ports.py,
+Read docs/ROADMAP.md item S2 and decision D-09, docs/tech/INPUT_GUARD.md, app/harness/ports.py,
 nodes/input_guard.py, adapters/sunglasses_scanner.py, policy/input_guard.yaml and workflow.py.
 
 Read the current Model Armor docs (sanitizeUserPrompt/sanitizeModelResponse, regional endpoints)
@@ -658,7 +663,7 @@ and the ADK Model Armor plugin page; cite them. Implement a ModelArmorScanner be
 (lazy import, .[armor] extra), a CompositeScanner (block if any blocks; fail closed on any error),
 register ModelArmorPlugin on the harness ADK app, and extend the guarded inputs to review feedback,
 PR comments and repo context. CI uses a recorded fixture, never the live API. Update
-INPUT_GUARD.md (renamed from SUNGLASSES_EVALUATION.md), the item status and the
+docs/tech/INPUT_GUARD.md (renamed from SUNGLASSES_EVALUATION.md), the item status and the
 work log.
 ```
 
@@ -1013,8 +1018,8 @@ Update the item status and the work log.
   - [ ] CI runs `codespell` and `scripts/e2e.py` (offline stages) on Ubuntu and Windows.
   - [ ] `evals/run_evals.py` inserts its `sys.path` entry *before* the harness imports, or relies on
         the installed package.
-  - [ ] Stale doc lines are fixed (e.g. ALIGNMENT_V4's note on the legacy `[tool.agents-cli]` format, now
-        that `agents-cli-manifest.yaml` exists).
+  - [x] Stale doc lines are fixed. The alignment note (with its legacy `[tool.agents-cli]` line) was removed and
+        its content moved to the changelog and the open questions.
   - [ ] The bootstrap CLI has a preflight/doctor path with actionable checks for Python/uv,
         `agents-cli`, cloud auth, project/region, template and skills revision; machine-readable
         `--json` output and stable exit semantics are covered by tests.
@@ -1023,8 +1028,8 @@ Update the item status and the work log.
         state; generated output records its template/CLI provenance.
 
 ```text
-Read docs/ROADMAP.md item H1, .github/workflows/ci.yml, evals/run_evals.py, .gitignore,
-docs/ALIGNMENT_V4.md and scripts/e2e.py. Make the hygiene changes listed (matrix, ty, codespell,
+Read docs/ROADMAP.md item H1, .github/workflows/ci.yml, evals/run_evals.py, .gitignore
+and scripts/e2e.py. Make the hygiene changes listed (matrix, ty, codespell,
 offline e2e on ubuntu and windows, import-order fix, stale doc lines). No behaviour changes. Update
 the item status and the work log.
 ```
@@ -1060,7 +1065,7 @@ boundary first, then implement the agreed path and exercise it from a freshly ge
 ```
 
 ### A2 · Show useful, redacted workload telemetry
-- **Status:** review · **Priority:** P1 · **Size:** M · **Depends on:** none
+- **Status:** done · **Priority:** P1 · **Size:** M · **Depends on:** none
 - **Model / effort:** Sonnet 5.5 · high
 - **Done when:**
   - [x] A credential-free example correlates a request with tool name, outcome, latency and
@@ -1377,6 +1382,23 @@ anything learned that should change this plan. Never rewrite old entries; correc
   the reviewer is a different model family where residency allows.
 - Consequence to watch: under D-02 everything the intake agent writes is tier 3, so review load stays
   high until Q16 is answered.
+
+### 2026-11-26 · Docs restructure, and recording "done" in the PR that does the work
+- New rule (in `AGENTS.md`, `docs/CONTRIBUTING.md` and the "How to use this file" section above): the PR that does
+  the work sets the item to `done`, ticks its boxes and adds the work-log and changelog entries. Merging is the
+  approval, so no follow-up PR is needed to close out earlier work. `review` now means merged but still waiting on a
+  step outside the repository, such as a live run. Applied here: R6, S2 and A2 are `done`. A1 and A3 stay `review`
+  because each still has a live run to do.
+- Removed `docs/ALIGNMENT_V4.md`: a version-numbered note about an earlier skeleton does not fit a generic harness.
+  Its design choices moved to the changelog, its open assumptions were already in the open questions (one line
+  added), and its stale legacy-config line is gone (H1 stale-doc item ticked).
+- Moved the technical docs into `docs/tech/` (`ADK_PORT.md`, `INPUT_GUARD.md`, `SITE.md`) with an index; project-wide docs
+  stay in `docs/`. Updated every link and path. Older work-log entries are left as written: read `docs/ADK_PORT.md`,
+  `docs/INPUT_GUARD.md` and `docs/SITE.md` there as `docs/tech/...`.
+- Formatting: ran `ruff format` on three files that were not clean, and added the format and spelling commands to
+  `AGENTS.md` and the contributing guide. CI does not run them yet.
+- Comment-only path fixes in `app/harness/workflow.py`, `policy/risk_tiers.yaml`, `.github/workflows/pages.yml` and
+  `tests/test_site.py`. No behaviour changed, so no new eval was added.
 
 ### 2026-11-26 · S2 Model Armor as the primary scanner
 - Added `ModelArmorScanner` (`sanitizeUserPrompt` on the regional endpoint, template from config, residency-checked,

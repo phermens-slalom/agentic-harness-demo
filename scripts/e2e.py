@@ -154,7 +154,11 @@ def s2_install(st: Stage) -> None:
         run(st, ["uv", "pip", "install", "--python", str(VENV_PY), "-e", ".[dev]"], env=venv_env())
     else:
         run(st, [str(VENV_PY), "-m", "pip", "install", "-q", "-e", ".[dev]"], env=venv_env())
-    run(st, [str(VENV_BIN / ("agentic-bootstrap.exe" if IS_WIN else "agentic-bootstrap")), "--help"], env=venv_env())
+    run(
+        st,
+        [str(VENV_BIN / ("agentic-bootstrap.exe" if IS_WIN else "agentic-bootstrap")), "--help"],
+        env=venv_env(),
+    )
     st.detail = "harness installed with [dev]; agentic-bootstrap on venv PATH"
 
 

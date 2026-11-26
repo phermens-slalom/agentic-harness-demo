@@ -5,7 +5,9 @@
 - Install/sync: `uv sync --extra dev`
 - Lint: `uv run ruff check .`
 - Type-check: `uv run ty check`
+- Format check: `uv run ruff format --check .` (apply with `uv run ruff format .`)
 - Tests: `uv run pytest -q`
+- Spelling: `uv run codespell AGENTS.md README.md docs app evals tests policy site scripts agent-template`
 - Offline policy/evaluation scenarios: `uv run python evals/run_evals.py --out .m0-eval-report.json`
 - End-to-end bootstrap (Windows PowerShell): `$env:PYTHONIOENCODING = "utf-8"; uv run python scripts/e2e.py`
 
@@ -16,8 +18,9 @@
 - `evals/`: golden/adversarial tasks and the offline runner.
 - `agent-template/`: generated agent repository.
 - `deployment/terraform/`: cloud platform provisioning notes and platform contracts.
+- `docs/`: project docs (vision, architecture, decisions, roadmap). `docs/tech/`: how individual parts are built and operated.
 - `docs/ROADMAP.md`: backlog, decisions, acceptance criteria, and work log.
-- `site/`: static GitHub Pages project site; see `docs/SITE.md`. Keep it consistent with `docs/`, keep it free of third-party requests, and update the gate replay in `site/assets/js/main.js` if gate outputs change.
+- `site/`: static GitHub Pages project site; see `docs/tech/SITE.md`. Keep it consistent with `docs/`, keep it free of third-party requests, and update the gate replay in `site/assets/js/main.js` if gate outputs change.
 
 ## Invariants
 
@@ -29,4 +32,5 @@
 - Do not place secrets, credentials, full issue bodies, or sensitive tool payloads in source, traces, or audit records. Use the GitHub App and Workload Identity Federation, never personal tokens.
 - Every change is a reviewed PR; do not assume console-only changes. Keep residency and egress restrictions intact.
 - If a `TODO(<owner>)` blocks a decision, do not invent the owner's answer. Record the dependency and ask the appropriate role or owner.
+- Record completion in the PR that does the work. In that same PR set the roadmap item to `done`, tick its "Done when" boxes, and add the work-log and changelog entries. A merged PR is the approval, so the work is done at merge: do not open a follow-up PR just to mark earlier work done. If part of the work is unfinished, leave the item `doing` or `blocked` and say what is left.
 - Update directly related docs and run the commands above. Keep generated agents' instructions in `agent-template/AGENTS.md`, not here.

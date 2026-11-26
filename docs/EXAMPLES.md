@@ -78,7 +78,7 @@ What `plan` prints for this form (real output, shortened):
 | 3 | Project and cloud platform (pin the cloud platform module version) | `workload-infrastructure/platform.tf` (illustrative), `.../project.tf`, `.../egress.tfvars` | `ai_governance`, `platform_team` |
 
 - `plan` only **lists** the PRs. People still write the Terraform. The folder layout is an assumption (Q12).
-- `new` copies [`agent-template/`](../agent-template/) into the new folder and fills in the names.
+- `new` copies [`agent-template/`](../agent-template) into the new folder and fills in the names.
 - `check` fails (exit code 1) if the desk breaks a rule: another agent framework, a `global` location, or a
   missing `AGENTS.md` or `CODEOWNERS`.
 - A bad form is refused. A wildcard host such as `*.example.com`, or the location `global`, is rejected.
@@ -222,7 +222,7 @@ Facts to be honest about:
   slip past it and are listed as open gaps in the evals.
 - Even if text slips through, the merge gate is still the control. It never sees the scanner.
 - Model Armor now runs beside it, and the text is blocked if either scanner blocks. A scanner that errors also
-  blocks. Model Armor has not been run against the live service yet (see [Input guard](INPUT_GUARD.md)).
+  blocks. Model Armor has not been run against the live service yet (see [Input guard](tech/INPUT_GUARD.md)).
 
 ---
 
@@ -285,7 +285,7 @@ setting is the only thing that allows an AI Studio key.
 
 **Metaphor:** a motor-claims assistant that looks up a vehicle's service history and estimates a repair cost.
 It can read. It cannot book or pay.
-**Real feature:** the starter agent in [`agent-template/`](../agent-template/).
+**Real feature:** the starter agent in [`agent-template/`](../agent-template).
 
 The template's example agent is a mechanic assistant with two tools:
 

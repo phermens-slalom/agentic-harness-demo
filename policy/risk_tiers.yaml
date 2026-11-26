@@ -3,7 +3,7 @@
 # the PR's tier. Approver ids are the role columns in policy/raci.yaml.
 default_tier: 2
 
-# agent platform rollout phase (see docs/ALIGNMENT_V4.md). Phase 1 = manual AI governance review of every
+# agent platform rollout phase (see docs/DECISIONS.md, D-11). Phase 1 = manual AI governance review of every
 # agent PR. Raise this only after the evals show the gate is trustworthy.
 phase: 1
 phases:

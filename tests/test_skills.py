@@ -24,7 +24,9 @@ class SkillTests(unittest.TestCase):
         lock = {
             "source": "https://example.com/skills",
             "revision": REV,
-            "skills": {"style": {"sha256": DIGEST, "capabilities": ["instructions"], "owner": "ai_governance"}},
+            "skills": {
+                "style": {"sha256": DIGEST, "capabilities": ["instructions"], "owner": "ai_governance"}
+            },
         }
         lock.update(overrides)
         lock_path = d / "skills.lock.yaml"

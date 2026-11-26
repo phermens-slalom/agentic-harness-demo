@@ -1,7 +1,7 @@
 # Project site
 
-A static, no-build project site for first-time readers. It lives in [`site/`](../site/) and is published to
-GitHub Pages by [`.github/workflows/pages.yml`](../.github/workflows/pages.yml).
+A static, no-build project site for first-time readers. It lives in [`site/`](../../site) and is published to
+GitHub Pages by [`.github/workflows/pages.yml`](../../.github/workflows/pages.yml).
 
 The site summarises the docs. It does not replace them. Where the two disagree, the roadmap wins, then these
 docs, then the site. Fix the site.
@@ -22,7 +22,7 @@ without JavaScript except the gate replay, the tabs and the copy buttons.
 ### The gate replay is a replay
 
 The "merge gate" section does not reimplement the gate in the browser. Each scenario is a documented output
-of the real code, taken from [`EXAMPLES.md`](EXAMPLES.md) (examples 2 to 7) or from a task in
+of the real code, taken from [`EXAMPLES.md`](../EXAMPLES.md) (examples 2 to 7) or from a task in
 `evals/golden_tasks/` run through `evals/run_evals.py`. If the gate's rules or outputs change, update the
 scenarios in `site/assets/js/main.js` in the same PR.
 
@@ -107,8 +107,8 @@ Pins used by `pages.yml` (tags resolved to commit SHAs with `git ls-remote` on 2
 
 The build session could not reach `docs.github.com`, `adk.dev`, Google Cloud documentation, `agents.md`,
 `c4model.com` or OWASP. Statements about the Copilot coding agent, Vertex AI regions and Workload Identity
-Federation therefore come from this repo's own docs ([`VISION.md`](VISION.md), [`DECISIONS.md`](DECISIONS.md),
-[`SECURITY.md`](SECURITY.md)) and are not independently cited on the site. TODO(verify): once those hosts are
+Federation therefore come from this repo's own docs ([`VISION.md`](../VISION.md), [`DECISIONS.md`](../DECISIONS.md),
+[`SECURITY.md`](../SECURITY.md)) and are not independently cited on the site. TODO(verify): once those hosts are
 reachable, add citations for the Copilot coding agent, Vertex AI locations (Sydney and Melbourne),
 Workload Identity Federation with GitHub Actions, the AGENTS.md convention and the C4 model.
 
