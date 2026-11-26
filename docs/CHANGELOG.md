@@ -13,6 +13,8 @@ attested releases are planned (S5).
   here and into the open questions.
 - **Work is recorded as done in its own PR.** The PR that does the work sets the roadmap item to `done` and adds
   the log entries. Merging is the approval, so no follow-up PRs are needed. R6, S2 and A2 were closed out this way.
+- **H1 trimmed, H2 added.** The `run_evals.py` import-order fix is done. The preflight command and the
+  generated-project acceptance test moved to a new item, H2, because they are new behaviour.
 - **CI checks formatting, spelling and docs links.** `ruff format --check` and `codespell` now run in CI, and a new
   test fails on a broken docs link. Three files that were not clean were reformatted.
 - **S2, Model Armor as the main scanner.** A Model Armor scanner and a composite scanner (blocked if either scanner

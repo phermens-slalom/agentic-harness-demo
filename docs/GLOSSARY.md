@@ -228,7 +228,7 @@ The roadmap ([`ROADMAP.md`](ROADMAP.md)) numbers its work. Each code is stable.
 | **D-01 … D-12** | Decisions. Short design choices with a reason and an owner. See [`DECISIONS.md`](DECISIONS.md). |
 | **Q1 … Q16** | Open questions for this project. See [`OPEN_QUESTIONS.md`](OPEN_QUESTIONS.md). |
 | **M0 … M8** | Milestones (groups of work). M0 makes the gate trustworthy; M8 gets a generated agent ready for the pilot. |
-| **H0, H1** | Hygiene items (repo guide, CI tidy-up). |
+| **H0 to H2** | Hygiene items: the repo guide (H0), CI and repo tidy-up (H1), and the generated-project preflight and acceptance test (H2). |
 | **G1 … G7** | Gate items: fail closed, control files in tier 3, tamper detection, plan approval, path matching, least-privilege CI, policy validation. |
 | **R1 … R7** | Runtime items: GitHub checks and CODEOWNERS, real GitHub client, durable workflow, ingress queue, controls, hardened ADK adapters, reviewer sees the diff. |
 | **S1 … S5** | Security items: scanners, Model Armor, new-capability detectors, Copilot environment, supply chain. |

@@ -21,9 +21,11 @@ def _markdown_files() -> list[Path]:
 
 
 def _slug(heading: str) -> str:
-    """GitHub's heading anchor: lowercase, punctuation dropped, spaces become hyphens."""
-    text = re.sub(r"[^\w\s-]", "", heading.strip().lower())
-    return re.sub(r"\s+", "-", text)
+    """GitHub's heading anchor: lowercase, punctuation dropped, then every space becomes a hyphen.
+
+    Dropping a character between two spaces leaves two hyphens: "H2 · Name" becomes "h2--name".
+    """
+    return re.sub(r"[^\w\s-]", "", heading.strip().lower()).replace(" ", "-")
 
 
 def _anchors(path: Path) -> set[str]:
@@ -71,6 +73,7 @@ class DocLinkTests(unittest.TestCase):
         self.assertEqual(_slug(" Unconfirmed items in these docs"), "unconfirmed-items-in-these-docs")
         self.assertEqual(_slug(" TODOs in the code and policy"), "todos-in-the-code-and-policy")
         self.assertEqual(_slug(" Run it (fast)"), "run-it-fast")
+        self.assertEqual(_slug(" H2 · Generated-project checks"), "h2--generated-project-checks")
 
 
 if __name__ == "__main__":

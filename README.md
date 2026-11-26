@@ -86,7 +86,7 @@ The full backlog, decisions and per-task Claude Code prompts live in [`docs/ROAD
 The list below is the short version.
 
 1. Walk `policy/` with the security and platform teams; resolve the `TODO`s (privileged YAML paths, role-to-team mappings).
-2. Resolve the R2 auth blocker with security team: GitHub's Copilot issue-assignment API currently requires a GitHub App user-to-server token, not the installation token required by this harness. Then implement the `GitHubPort`; see [`docs/ROADMAP.md`](docs/ROADMAP.md#r2-real-githubport-on-the-github-app-copilot-aware).
+2. Resolve the R2 auth blocker with security team: GitHub's Copilot issue-assignment API currently requires a GitHub App user-to-server token, not the installation token required by this harness. Then implement the `GitHubPort`; see [`docs/ROADMAP.md`](docs/ROADMAP.md#r2--real-githubport-on-the-github-app-copilot-aware).
 3. Install `.[adk]`, set `GOOGLE_GENAI_USE_VERTEXAI=TRUE`, `GOOGLE_CLOUD_LOCATION=australia-southeast2`, `HARNESS_MODEL_DEFAULT`, `HARNESS_SKILLS_DIR` (pinned skills repository); exercise the adapters in `adk web`.
 4. Wire `agents-cli eval run` / `eval compare` into `agent-template/.github/workflows/agent-checks.yml`; replace golden tasks with closed PRs from representative repositories.
 5. Stage 3: generate HCL from designs against the cloud platform module. Port to an ADK 2.0 Workflow (`docs/tech/ADK_PORT.md`).

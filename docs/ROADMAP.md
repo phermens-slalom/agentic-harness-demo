@@ -91,7 +91,7 @@ rules on it.
 | **M5** | Evals that measure the agents | E1, E2, E3 | P1 / P2 |
 | **M6** | Golden-workflow coverage | W1–W5 | P2 |
 | **M7** | Hygiene | H1 | Any time |
-| **M8** | Generated agent ready for the pilot | E3, H1 (generated-project checks), A1–A3 | P1 |
+| **M8** | Generated agent ready for the pilot | E3, H2, A1–A3 | P1 |
 | **M9** | Agent intake and authoring | I1–I7 | P1 (offline prototype first; hosted trigger after R2–R4) |
 
 Recommended order: **H0 → G1 → G2 → G5 → G3 → G4 → G6 → G7**, then **R2 → R1 → D1**, then
@@ -1010,23 +1010,19 @@ Update the item status and the work log.
 ## M7 · Hygiene
 
 ### H1 · CI, packaging and repo tidy-up
-- **Status:** in progress · **Priority:** P2 · **Size:** S · **Depends on:** none
+- **Status:** doing · **Priority:** P2 · **Size:** S · **Depends on:** none
 - **Model / effort:** Haiku 5.5 · medium
 - **Done when:**
   - [x] Harness CI runs lint, `ty`, tests and dry-run evals on Python 3.11, 3.12 and 3.13 on Ubuntu
         (pinned 3.13 remains the local default).
   - [x] CI runs `ruff format --check` and `codespell`.
   - [ ] CI runs `scripts/e2e.py` (offline stages) on Ubuntu and Windows.
-  - [ ] `evals/run_evals.py` inserts its `sys.path` entry *before* the harness imports, or relies on
-        the installed package.
+  - [x] `evals/run_evals.py` relies on the installed package: the late `sys.path` insert was removed, and the
+        docstring says to install first (`uv sync --extra dev`).
   - [x] Stale doc lines are fixed. The alignment note (with its legacy `[tool.agents-cli]` line) was removed and
         its content moved to the changelog and the open questions.
-  - [ ] The bootstrap CLI has a preflight/doctor path with actionable checks for Python/uv,
-        `agents-cli`, cloud auth, project/region, template and skills revision; machine-readable
-        `--json` output and stable exit semantics are covered by tests.
-  - [ ] An offline generated-project acceptance test exercises `new`, `check`, evals and Terraform
-        plan output from a clean checkout. Dry-run commands are repeatable and do not mutate cloud
-        state; generated output records its template/CLI provenance.
+  - The generated-project items that used to be here (the preflight command and the acceptance test) moved to
+    [H2](#h2--generated-project-preflight-and-acceptance-test): they are new behaviour, not tidy-up.
 
 ```text
 Read docs/ROADMAP.md item H1, .github/workflows/ci.yml, evals/run_evals.py, .gitignore
@@ -1040,12 +1036,37 @@ the item status and the work log.
 ## M8 · Generated agent ready for the pilot
 
 The generated agent is a standalone ADK example, not a second copy of the harness. Start with
-E3 and the generated-project portion of H1, then add the runtime patterns below. The offline
+E3 and H2 (the generated-project checks), then add the runtime patterns below. The offline
 acceptance bar is a fresh repo where a developer can run checks without cloud credentials, see an
 allowed and a denied operation, inspect a redacted diagnostic, and identify what requires approval
-before live evaluation or deployment. Exercise that path in H1's generated-project acceptance test.
+before live evaluation or deployment. Exercise that path in H2's generated-project acceptance test.
 The installed GitHub ruleset and policy-derived CODEOWNERS stay in R1; W2 can later carry these
 patterns as an overlay without blocking work on the embedded template.
+
+### H2 · Generated-project preflight and acceptance test
+- **Status:** todo · **Priority:** P2 · **Size:** M · **Depends on:** none
+- **Model / effort:** Sonnet 5.5 · high · **plan first**
+- **Why:** Split out of H1. A preflight command and generated-output provenance are new behaviour, not tidy-up, so
+  they get their own plan and review. Together with the acceptance test they are the offline acceptance bar
+  described above.
+- **Done when:**
+  - [ ] The bootstrap CLI has a preflight/doctor path with actionable checks for Python/uv,
+        `agents-cli`, cloud auth, project/region, template and skills revision; machine-readable
+        `--json` output and stable exit semantics are covered by tests.
+  - [ ] An offline generated-project acceptance test exercises `new`, `check`, evals and Terraform
+        plan output from a clean checkout. Dry-run commands are repeatable and do not mutate cloud
+        state; generated output records its template/CLI provenance.
+
+```text
+Read docs/ROADMAP.md item H2 and the M8 introduction, then app/harness/bootstrap/ (cli.py, spec.py,
+template.py, security_harness.py, terraform_plan.py), scripts/e2e.py, tests/test_bootstrap.py and
+agent-template/.
+
+Start in plan mode. Propose: the preflight checks and what each reports, the stable exit codes and the
+`--json` shape, where generated-output provenance is recorded (decide the file name in the plan), and how the
+acceptance test stays offline and repeatable. No cloud calls, and nothing that mutates cloud state. Then
+implement with tests. Update the item status, the docs (README, getting started) and the work log.
+```
 
 ### A1 · Demonstrate a runtime authorisation boundary
 - **Status:** review · **Priority:** P1 · **Size:** M · **Depends on:** none
@@ -1230,7 +1251,7 @@ eval tasks.
         guardrail). It uses the template's guardrail pattern for every write connector.
   - [ ] PRs stay under the size limit; larger agents split into reviewable PRs.
   - [ ] Generated output passes `agents-cli lint`, `uv run pytest` and `agentic-bootstrap check` in a
-        fresh-repo acceptance test, in line with H1's generated-project check.
+        fresh-repo acceptance test, in line with H2's generated-project check.
   - [ ] The PR body states, in plain language, what the agent does, what it can touch, what needs
         approval and why, and what is still `TODO`.
 
@@ -1396,6 +1417,11 @@ anything learned that should change this plan. Never rewrite old entries; correc
 - Moved the technical docs into `docs/tech/` (`ADK_PORT.md`, `INPUT_GUARD.md`, `SITE.md`) with an index; project-wide docs
   stay in `docs/`. Updated every link and path. Older work-log entries are left as written: read `docs/ADK_PORT.md`,
   `docs/INPUT_GUARD.md` and `docs/SITE.md` there as `docs/tech/...`.
+- H1 trimmed and split. The `run_evals.py` import-order item is done (it now relies on the installed package, so the
+  late `sys.path` insert is gone). The preflight command and the generated-project acceptance test moved to a new
+  item, H2 (M8, plan first), because they are new behaviour and not tidy-up. H1 is `doing`: only the e2e job in CI
+  (Ubuntu and Windows) is left.
+- The site's milestone strip was out of date (it said H1 was done and S2 was open); it now matches the roadmap.
 - Formatting and spelling: ran `ruff format` on three files that were not clean. CI now runs `ruff format --check`
   and `codespell` (settings in `pyproject.toml`), so neither can drift again. Added `tests/test_docs.py`, which fails
   CI on a broken docs link or heading anchor. The commands are in `AGENTS.md` and the contributing guide.
