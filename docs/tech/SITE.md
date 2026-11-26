@@ -133,6 +133,11 @@ the page it was checked against. Summary:
   `google-adk` 2.15.1, `google-cloud-modelarmor` 0.7.5 and `sunglasses` 0.6.20 (0.6.28 is newer, so 0.6.20 is a pin).
 - Upstream READMEs confirm the licences and descriptions in the comparison table. The `agents-cli` README uses
   `uvx google-agents-cli setup`; the `--python 3.13` form is this repo's own pin.
+- [OWASP Top 10 for Agentic Applications for 2026](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/)
+  (the roadmap reference) exists with that title and date (9 December 2025).
+- ADK was cross-checked by installing `google-adk` 2.15.1 (latest) and 2.14.0 (`uv.lock`) in clean environments with
+  `google-cloud-modelarmor` 0.7.5: the symbols the adapters use exist on both, `block_on_screening_failure` defaults to
+  `True`, and 82 adapter, scanner and workflow tests pass on both.
 - [agents.md](https://agents.md), the [C4 model](https://c4model.com/abstractions) and the
   [CNCF article](https://www.cncf.io/blog/2025/08/12/pac-and-ai/) were read and match how the docs use them.
 - The `pages.yml` pins resolve to real commits (`actions/checkout` at the pinned commit is 7.0.1), and the Gitleaks
@@ -140,8 +145,6 @@ the page it was checked against. Summary:
 
 ### Still to be validated
 
-- `genai.owasp.org` (the OWASP agentic applications list in the roadmap references) is not reachable from the build
-  session.
 - The Gitleaks `v8.30.1` release binary and its SHA-256 (`github.com` release pages are blocked), and the tag
   names behind the `pages.yml` action pins (the commits were checked).
 - `github.blog` (the changelog entry cited for Copilot residency in the roadmap references) is not reachable; the

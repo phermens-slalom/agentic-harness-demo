@@ -17,7 +17,8 @@ attested releases are planned (S5).
   `(PR #n)` tags on three older entries were dropped: they came from earlier history and clashed with this repo's PRs.
   A docs scan also fixed stale text in the README, VISION, FAQ, SECURITY, GETTING_STARTED, EXAMPLES, ADK port notes,
   skills note and the template README (commands, the I1 intake files, the unwired `evals_no_regression` job, a
-  placeholder and a duplicated word). The architecture doc and glossary codes were brought up to date, and the stale I1 blocker row was
+  placeholder and a duplicated word). The ADK version note was cross-checked on 2.14.0 (locked) and 2.15.1, and the
+  OWASP reference was read. The architecture doc and glossary codes were brought up to date, and the stale I1 blocker row was
   replaced by I7.
 - **E3 in progress.** Added required coverage and quality checks, 80% starter coverage and eval marks,
   pre-execution static scans, and an unwired regression comparator. AI Governance will approve the

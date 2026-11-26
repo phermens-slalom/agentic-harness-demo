@@ -24,7 +24,9 @@ Before porting:
 ## The LLM adapters today (R6)
 
 `adapters/adk_agents.py` is the only place that touches ADK for triage, planning and review. Checked
-against google-adk 2.15.1 (pyproject allows `>=2.12,<3`; R3 pins it exactly):
+on 26 November 2026 against google-adk 2.15.1 and 2.14.0 (the version in `uv.lock`); both expose `LlmAgent.output_schema`,
+`InMemoryRunner`, `Runner.run_async` and `Event.is_final_response`, and the adapter tests pass on both (pyproject allows
+`>=2.12,<3`; R3 pins it exactly):
 
 - **Structured output.** Each role is an `LlmAgent(output_schema=<Pydantic model>)`
   ([LLM agents](https://adk.dev/agents/llm-agents/): in Python the final reply must be a JSON string

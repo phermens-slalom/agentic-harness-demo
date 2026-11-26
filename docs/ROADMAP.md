@@ -1419,8 +1419,11 @@ anything learned that should change this plan. Never rewrite old entries; correc
   eval comparator, CI steps, `armor` extra), glossary roadmap codes (D-15, Q18, M9, I1 to I7) and a stale blocker row
   (I1 became I7). A scan of the other docs fixed the README run commands and Layout table, template README paths,
   VISION, FAQ, SECURITY, GETTING_STARTED, EXAMPLES (the real `plan` output), the ADK port note and the skills note.
-  Not changed: `INPUT_GUARD.md` and `ADK_PORT.md` say "checked against google-adk 2.15.1" while `uv.lock` pins 2.14.0;
-  the PyPI release exists but which version the checks used is unrecorded. No policy, gate or node behaviour changed,
+  The ADK version note was cross-checked: google-adk 2.14.0 (the `uv.lock` pin) and 2.15.1 were installed in clean
+  environments; the symbols the adapters use exist on both, `ModelArmorPlugin` blocks on screening failure by default,
+  and 82 adapter, scanner and workflow tests pass on both. `INPUT_GUARD.md` and `ADK_PORT.md` now say so. The OWASP
+  agentic applications page was read and matches. `github.com` release pages are still blocked, so the Gitleaks
+  `v8.30.1` binary and the tag names behind the Pages pins stay unchecked. No policy, gate or node behaviour changed,
   so no new eval.
 
 ### 2026-11-26 · E3 coverage, quality and preflight
