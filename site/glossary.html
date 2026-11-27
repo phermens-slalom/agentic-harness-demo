@@ -28,6 +28,7 @@
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
     <nav class="nav-links" id="nav-links" aria-label="Primary">
       <a href="index.html#vision">Vision</a>
+      <a href="index.html#delivery">Delivery</a>
       <a href="index.html#how">Workflow</a>
       <a href="index.html#gate">Gate</a>
       <a href="index.html#architecture">Architecture</a>
@@ -132,6 +133,13 @@
 <tr><td><strong>Lint</strong></td><td>An automatic style and error check on code.</td></tr>
 <tr><td><strong>Evals</strong></td><td>Tests of how an AI behaves (not just whether code runs).</td></tr>
 <tr><td><strong>Golden task</strong></td><td>A saved example case used to test the harness. It says what the right outcome is.</td></tr>
+<tr><td><strong>Delivery process</strong></td><td>The path a person follows from idea to production, in lanes, with exit requirements. It sits on top of the harness. Proposed; see <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DELIVERY.md"><code>DELIVERY.md</code></a>.</td></tr>
+<tr><td><strong>Lane</strong></td><td>A phase of the delivery process: prototype, verify, harden or operate. Each has exit requirements. A lane never switches off a deterministic control.</td></tr>
+<tr><td><strong>Exit requirement</strong></td><td>What must be true before work leaves a lane. Each one is enforced by an existing control, or marked Not built with its roadmap ID.</td></tr>
+<tr><td><strong>Golden data set</strong></td><td>In a generated agent: the cases that verification judges the agent against (the same idea as the golden set, used as a lane exit). Not the harness&#x27;s own golden tasks.</td></tr>
+<tr><td><strong>Demo-ready</strong></td><td>The Prototype exit: the agent runs in the sandbox against synthetic data, works through the main cases of the drafted golden data set, and the hypotheses are visible. A recorded demo is the evidence. Not secure, reviewed or connected to real systems.</td></tr>
+<tr><td><strong>MVP</strong></td><td>A minimum viable product. In the delivery process, <strong>MVP-ready</strong> is the Verify exit: golden data set and evals pass with no regression, coverage and quality are met, the review checklist is clean, and the agents meet their success criteria in the intended non-production environment. MVP-ready is what starts Harden, where formal security work happens (proposed).</td></tr>
+<tr><td><strong>Persona</strong></td><td>A kind of person who works with the harness and delivery process, described by role: product manager, application engineer, AI governance, security or platform. See <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/PERSONAS.md"><code>PERSONAS.md</code></a>.</td></tr>
 <tr><td><strong>Golden set</strong></td><td>In a generated agent: example cases for the agent&#x27;s own behaviour.</td></tr>
 <tr><td><strong>Baseline</strong></td><td>The last accepted eval results. A new PR may not do worse than it.</td></tr>
 <tr><td><strong>Threshold</strong></td><td>A pass mark for an eval. The business owner sets it, not the builders.</td></tr>
@@ -234,16 +242,16 @@
 <tr><td><strong>Firewall allowlist (Copilot)</strong></td><td>A list of hosts Copilot may reach. Set in GitHub settings, not in a repo file.</td></tr>
 <tr><td><strong>Ruleset / branch protection</strong></td><td>GitHub rules that block merges until checks pass. Planned (R1).</td></tr>
 <tr><td><strong>Check run</strong></td><td>A single status line on a PR.</td></tr>
-<tr><td><strong>External workflow engine</strong></td><td>A possible future integration represented by a port in W5; no product or adoption decision is recorded.</td></tr>
+<tr><td><strong>External process orchestrator</strong></td><td>A proposed category of tool (D-17) that would run the delivery process as long-lived cases mixing agents, APIs and people, with human tasks, SLAs and an audit trail. The harness supplies evidence and decisions and GitHub enforces merges. W5 keeps a port ready. No product or adoption decision is recorded. See Q21.</td></tr>
 <tr><td><strong>Antigravity / Gemini CLI</strong></td><td>Google coding-agent tools named as options for the optional sandbox.</td></tr>
 </tbody></table></div>
 </section>
 <section class="gl-sec" id="roadmap-codes"><h2>Roadmap codes</h2>
 <p>The roadmap (<a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ROADMAP.md"><code>ROADMAP.md</code></a>) numbers its work. Each code is stable.</p>
 <div class="table-scroll"><table class="gl" data-cols="2"><thead><tr><th>Code</th><th>Plain English</th></tr></thead><tbody>
-<tr><td><strong>D-01 … D-15</strong></td><td>Decisions. Short design choices with a reason and an owner. See <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md"><code>DECISIONS.md</code></a>.</td></tr>
-<tr><td><strong>Q1 … Q18</strong></td><td>Open questions for this project. See <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/OPEN_QUESTIONS.md"><code>OPEN_QUESTIONS.md</code></a>.</td></tr>
-<tr><td><strong>M0 … M9</strong></td><td>Milestones (groups of work). M0 makes the gate trustworthy; M8 gets a generated agent ready for the pilot; M9 lets a person request an agent and get a governed PR.</td></tr>
+<tr><td><strong>D-01 … D-17</strong></td><td>Decisions. Short design choices with a reason and an owner. See <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md"><code>DECISIONS.md</code></a>.</td></tr>
+<tr><td><strong>Q1 … Q23</strong></td><td>Open questions for this project. See <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/OPEN_QUESTIONS.md"><code>OPEN_QUESTIONS.md</code></a>.</td></tr>
+<tr><td><strong>M0 … M12</strong></td><td>Milestones (groups of work). M0 makes the gate trustworthy; M8 gets a generated agent ready for the pilot; M9 lets a person request an agent and get a governed PR; M10 builds the delivery process, M11 the platform scope, and M12 pilots them on real work.</td></tr>
 <tr><td><strong>H0 to H2</strong></td><td>Hygiene items: the repo guide (H0), CI and repo tidy-up (H1), and the generated-project preflight and acceptance test (H2).</td></tr>
 <tr><td><strong>G1 … G7</strong></td><td>Gate items: fail closed, control files in tier 3, tamper detection, plan approval, path matching, least-privilege CI, policy validation.</td></tr>
 <tr><td><strong>R1 … R7</strong></td><td>Runtime items: GitHub checks and CODEOWNERS, real GitHub client, durable workflow, ingress queue, controls, hardened ADK adapters, reviewer sees the diff.</td></tr>
@@ -253,6 +261,7 @@
 <tr><td><strong>E1 … E3</strong></td><td>Evals: live replay, reviewer defects, real template evals.</td></tr>
 <tr><td><strong>W1 … W5</strong></td><td>Workflow coverage: workload PR checks, template from existing reference agent template, release pack, registration, GitHub-native human gate.</td></tr>
 <tr><td><strong>A1 … A3</strong></td><td>Generated-agent items: authorisation boundary, telemetry, governed skill.</td></tr>
+<tr><td><strong>DP1 … DP11</strong></td><td>Delivery-process items in M10 to M12: this documentation (DP1), lane and standards policy files, the <code>lane</code> CLI, a spec-gap skill, the E2 priority change, the D-16 policy change, the lane-exit contract, a multi-agent template variant, identity integration, the runtime invocation contract, and the pilot. Not the same as the <code>P0 / P1 / P2</code> priorities.</td></tr>
 <tr><td><strong>I1 … I7</strong></td><td>Agent intake items: request form and parser, connector library, intake agent, authoring, cross-model review, tailoring through comments, hosted trigger.</td></tr>
 <tr><td><strong>Status words</strong></td><td><code>todo</code>, <code>doing</code>, <code>blocked</code>, <code>review</code>, <code>done</code>, <code>dropped</code>.</td></tr>
 <tr><td><strong>P0 / P1 / P2</strong></td><td>Priority: before the agent discussion, before the pilot agent, after the pilot.</td></tr>
