@@ -1447,14 +1447,13 @@ lane-exit contract, with tests. Never report an exit as met when its control is 
 ```
 
 ### DP6 · Spec-gap skill
-- **Status:** todo · **Priority:** P1 · **Size:** M · **Depends on:** DP1, and agreement on the skills source and provenance
+- **Status:** todo · **Priority:** P1 · **Size:** M · **Depends on:** DP1, Q7 (skills source and provenance)
 - **Model / effort:** Opus 5.5 · high
 - **Why:** The builder should flag missing data or acceptance criteria and ask, instead of guessing. One skill
   has two users: the intake agent (I3) uses it to ask the requester, and the builder uses it to stop and
   comment on the issue.
-- **Depends on, in detail:** Q7 covers only the planner and reviewer skill names, so DP6 does not wait on it.
-  DP6 waits on the skills source and provenance being agreed (`policy/skills.lock.yaml` records none today).
-  No open question tracks that yet.
+- **Depends on, in detail:** DP6 waits on the skills source and provenance being agreed, which Q7 now covers
+  (`policy/skills.lock.yaml` records none today).
 - **Done when:**
   - [ ] A guidance-only skill, pinned by version and fingerprint (`policy/skills.lock.yaml`), with its provenance
         and revision reviewed.
@@ -1498,7 +1497,7 @@ note only. Update the work log.
         valid source (the triage node can apply labels), and nothing an LLM node can set is. Changing the lane
         is a human-approved, tier-3-equivalent action. Tier 3 rules and new-capability approvers do not relax
         in any lane.
-  - [ ] The compensating controls in `docs/DELIVERY.md` are in place: synthetic data only in early lanes,
+  - [ ] The compensating controls in `docs/DELIVERY.md` are in place: synthetic data by default in early lanes (approved non-production data only in Verify),
         new-capability approvers in every lane, security informed on entry, and escalations still reach security.
   - [ ] Interaction with the rollout phase (D-11, O3) is recorded.
 
@@ -1594,7 +1593,7 @@ count.** Thresholds are `TODO(owner)`.
       by a non-engineer persona such as a product manager.
 - [ ] The work reaches MVP-ready: golden data set and live evals pass with no regression, coverage and quality are
       met, the review checklist is clean, and the agents meet their success criteria in the intended
-      non-production environment, not only locally (needs E3, Q18 and the hosting items).
+      non-production environment, not only locally (needs E3, Q18 and the provision stage: W1, Q12).
 - [ ] The security reviewers are named and the escalation process is used end to end at least once (Q19).
 - [ ] Every false block, escalation and manual workaround is recorded and turned into a golden or adversarial task.
 - [ ] The effort and elapsed time per lane are measured against `TODO(owner)` targets.
@@ -1628,7 +1627,7 @@ These block or shape items above. Ask them in the session with the agent teams n
 | Q3 | Is the Copilot coding agent acceptable for each data classification, given residency? | D1 | security team |
 | Q4 | Who approves workflow runs on Copilot PRs, and should we enable "skip approval"? | R2 | security team |
 | Q5 | Harness hosting (Cloud Run + Cloud SQL in Melbourne?) and the webhook ingress route | R3, R4 | platform team |
-| Q7 | pinned skills repository skill names for planner and reviewer | R6 | AI governance team |
+| Q7 | What are the pinned skill names for the planner and reviewer, and what is the approved source and provenance for new skills such as DP6? | R6, DP6 | AI governance team |
 | Q9 | Do agent work items come from GitHub Issues, or from Jira / Jira Align? | R4 (may need an `IssueSource` port) | Unassigned |
 | Q10 | Phase promotion criteria (draft in O3) | O3 | Unassigned |
 | Q11 | Is GitHub Advanced Security licensed (secret scanning, push protection, CodeQL, dependency review)? | S1 | AI governance team |

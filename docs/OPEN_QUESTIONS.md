@@ -16,7 +16,7 @@ From the [Roadmap](ROADMAP.md). "Suggested owner" shows a generic role where one
 | Q3 | Is the Copilot coding agent acceptable for each data classification, given residency? | D1 | security team |
 | Q4 | Who approves workflow runs on Copilot PRs, and should "skip approval" be switched on? | R2 | security team |
 | Q5 | Where is the harness hosted (Cloud Run and Cloud SQL in Melbourne?), and what is the webhook route? | R3, R4 | platform team |
-| Q7 | What are the pinned skills repository skill names for the planner and reviewer? | R6 | AI governance team |
+| Q7 | What are the pinned skill names for the planner and reviewer, and what is the approved source and provenance for new skills such as DP6? | R6, DP6 | AI governance team |
 | Q9 | Do work items come from GitHub Issues, or from Jira or Jira Align? | R4 (may need an `IssueSource` port) | Unassigned |
 | Q10 | What are the criteria for moving to a later phase? (Draft in O3.) | O3 | Unassigned |
 | Q11 | Is GitHub Advanced Security licensed (secret scanning, push protection, CodeQL, dependency review)? | S1 | AI governance team |

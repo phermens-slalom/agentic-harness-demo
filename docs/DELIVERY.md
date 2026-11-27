@@ -63,7 +63,7 @@ These are two different bars. Formal security work belongs at MVP, so **MVP-read
 | | Demo-ready (the Prototype exit) | MVP-ready (the Verify exit) |
 |---|---|---|
 | Runs where | In the sandbox | In the intended non-production environment, not only locally |
-| Data | Synthetic only | Synthetic or approved non-production data. Real or classified data needs security approval first. |
+| Data | Synthetic only | Synthetic or approved non-production data. Real or classified data, or a real system, needs security approval first. |
 | Evidence | A recorded demo. The agent works through the main cases of the drafted golden data set, and the hypotheses are visible. | Golden data set and evals pass with no regression; coverage and quality met; review checklist clean; agents meet their success criteria |
 | It is not | Secure, reviewed or connected to real systems | Production-ready. Security sign-off, runbooks, egress and production approval are still ahead in Harden. |
 
@@ -139,7 +139,7 @@ would finish it.
 | Coverage and quality met | `coverage` (80% starter mark) and `quality` are required checks in the template and in `policy/risk_tiers.yaml` (E3, first slice). AI governance approves the baseline. | **Built** (see the status rule) |
 | Review checklist clean | `policy/review_checklist.yaml`, applied by the reviewer role. The gate does not auto-merge when the reviewer does not approve. An AI governance reviewer approves against the checklist. The reviewer sees file names only, not the diff. | **Partly built**: R7 |
 | Adversarial review done | One reviewer role exists. A second, different model family (D-15) and a measure of how well the reviewer catches seeded defects (E2) do not. | **Not built**: I5, E2 |
-| Agents meet their success criteria running in the intended non-production environment, not only locally | None. No environment is chosen or provisioned for agents, and live evals do not exist. | **Not built**: E3, R3, Q5 (hosting) |
+| Agents meet their success criteria running in the intended non-production environment, not only locally | None. No environment is chosen or provisioned for agents, and live evals do not exist. | **Not built**: E3, W1 (provision), Q12 |
 
 ### Harden
 
@@ -166,8 +166,8 @@ today's policy stands.
 Tier 3 rules, the input guard, residency and secret handling in every lane are good but not enough on their own.
 The proposal therefore comes with these **compensating controls**:
 
-1. **Synthetic data only in Prototype and Verify.** Touching real or classified data, or a real system, needs
-   security approval first, whatever the lane.
+1. **Synthetic data by default in Prototype and Verify.** Approved non-production data is allowed in Verify.
+   Real or classified data, or a real system, needs security approval first, whatever the lane.
 2. **New-capability findings keep their approvers in every lane.** New hosts, models, data stores,
    dependencies and tool protocols (S3) still add their approvers.
 3. **Security is informed when work enters Prototype**, so it can flag classification or residency concerns
@@ -221,7 +221,7 @@ Reliability is built into the system in three places. This table says what exist
 | Part | Built | Planned |
 |---|---|---|
 | **Checks in CI/CD** | Harness CI: `ruff`, `ty`, `codespell`, tests (with docs and site checks), dry-run evals, secret scan, `zizmor`. Template: `preflight`, `lint`, `tests`, `coverage` (80% starter), `quality`, `secret_scan`. The gate fails closed when a required check is missing. | Wire `evals_no_regression` to real evals and the baseline comparator; a holdout job the coding agent cannot read; live eval replay (E3, E1). Q18 blocks the evaluation setup. |
-| **Developer-agent skills** | Skills load only from a pinned, fingerprinted version (`policy/skills.lock.yaml`), and skill files are tier 3. The template has an `AGENTS.md` steering file. The skills lock is empty until skill names and provenance are agreed (Q7 covers the planner and reviewer names). | A **spec-gap skill** (DP6): one skill with two users. The intake agent (I3) uses it to ask the requester. The builder uses it to stop and comment on the issue instead of guessing. It produces a structured "missing information" comment and a stop that the workflow routes to a person. It never writes guessed values into the spec, evals or thresholds. |
+| **Developer-agent skills** | Skills load only from a pinned, fingerprinted version (`policy/skills.lock.yaml`), and skill files are tier 3. The template has an `AGENTS.md` steering file. The skills lock is empty until skill names, source and provenance are agreed (Q7). | A **spec-gap skill** (DP6): one skill with two users. The intake agent (I3) uses it to ask the requester. The builder uses it to stop and comment on the issue instead of guessing. It produces a structured "missing information" comment and a stop that the workflow routes to a person. It never writes guessed values into the spec, evals or thresholds. |
 | **Adversarial reviewer** | A reviewer role applies the review checklist, and reviewer lockout stops a builder approving its own work. It is advisory. The gate decides. | The reviewer sees the diff (R7). A different model family reviews generated agents (D-15, I5). Measure it with seeded defects (E2, DP7 asks to raise its priority). |
 
 Prompts and skills are not authorisation. Permissions and side-effect checks stay in code and platform IAM.
