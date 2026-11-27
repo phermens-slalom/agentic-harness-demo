@@ -5,10 +5,17 @@ New words are explained in the [Glossary](GLOSSARY.md).
 
 ## The idea in one paragraph
 
-Teams use this harness to build AI agents for deployment on a cloud platform.
-This repo is the **harness**: the rules, checks and approvals that let an AI coding agent do the build
-work safely. Humans stay accountable. The harness decides, with plain code and no AI, whether a change can
-merge and who must approve it.
+This repo is the **harness** and the **delivery process** for a **multi-agent system**: a full software system
+with a complex multi-agent core, built and run on a cloud platform, not a place for small experimental agents.
+The **harness** is the software controls: the rules, checks and approvals that let an AI coding agent do the build
+work safely. The **delivery process** guides different people, including product managers, from idea to
+production in lanes (prototype, verify, then harden), each with exit requirements the harness enforces.
+Humans stay accountable. The harness decides, with plain code and no AI, whether a change can merge and who must
+approve it. See [Delivery process](DELIVERY.md) and [Personas](PERSONAS.md).
+
+**Maturity.** This design comes from theory, documentation and experience. It has **not** yet been tested on
+real work or deployed. Today the code runs against fakes. The security team members and the escalation process
+are unknown (Q19). The lanes are a proposal that still needs an owner (Q20).
 
 ## The problem it solves
 
@@ -22,9 +29,24 @@ merge and who must approve it.
 
 ## The overall picture
 
+Two layers. The delivery process is what a person moves through. The harness is what checks each step. The
+delivery process is a proposal; the harness is built, with fakes.
+
 ```ascii
- teams using this harness                    THIS REPO (the harness)                        GitHub and Google Cloud
- ------------------------                    -----------------------                        -----------------------
+ DELIVERY PROCESS (proposed, see DELIVERY.md), run by an external process orchestrator (proposed, D-17)
+
+   idea ─► PROTOTYPE ─► VERIFY ─► HARDEN ─► OPERATE
+           demo-ready   MVP-ready
+
+   people come in by orchestrator, issue form or CLI:
+   product manager, application engineer, AI governance, security, platform, architecture
+                  │
+                  │  asks the harness: "does this lane's exit pass?"  "what tier, who approves?"
+                  ▼
+ HARNESS (this repo: the controls, which stay as they are)
+ ---------------------------------------------------------------------------------------------------
+ teams using this harness                    THIS REPO                                  GitHub and Google Cloud
+ ------------------------                    ---------                                  -----------------------
 
  write a spec  ───────►  1. BOOTSTRAP  (agentic-bootstrap)
  (spec.yaml)                new   → makes an agent repo from agent-template/
@@ -51,16 +73,39 @@ merge and who must approve it.
  and tested by            evals/   (golden tasks the harness must get right)
 ```
 
-The eight stages of the golden workflow are:
+The target is a system of several agents that work together, not one small agent. Today `agent-template/`
+generates a single starter agent. A multi-agent template variant is planned (DP4 in the [Roadmap](ROADMAP.md)).
 
-```ascii
-frame ▸ register ▸ provision ▸ connect ▸ build ▸ verify ▸ release ▸ operate
-                                        └-──────┬──────┘
-                                       the part the harness automates today
-```
+The eight stages of the golden workflow, the lane each belongs to, and what the harness automates today:
+
+| Stage | Lane | What the harness automates today |
+|---|---|---|
+| frame | Prototype | Request form and offline draft parser (I1). No intake agent yet. |
+| register | Harden | Nothing. Identity and support records are manual. |
+| provision | Harden | `plan` lists the ordered cloud-project PRs. It writes no Terraform. |
+| connect | Harden | The spec holds exact egress hosts. The tfvars PR is not built. |
+| build | Prototype (sandbox) and Verify | Template and builder, against fakes. |
+| verify | Verify | Required checks, review checklist and merge gate, against fakes. |
+| release | Harden | Nothing. The review pack is planned (W3). |
+| operate | Operate | Nothing. Monitoring is planned. |
 
 The harness covers **build** and **verify** in code. The bootstrap helps with the early stages
 (it makes the repo and lists the cloud PRs). The other stages are still manual.
+
+## Platform scope
+
+This is a full software system, so the offering is wider than one agent's code. It has to account for:
+
+| Area | What it covers | Where it stands |
+|---|---|---|
+| Google services | Agent Development Kit (ADK), Vertex AI models and Model Armor in allowed Australian regions, Cloud Run, Cloud SQL, Cloud Tasks, Cloud Trace and BigQuery as the planned runtime, trace and audit services | ADK adapters and Model Armor are built (Model Armor against a fixture only). The hosted runtime is proposed (D-05 to D-07) |
+| Integrations | A curated connector library so agents reach other systems only through reviewed connectors (D-14, I2), and an optional agent-to-agent protocol for a multi-agent core. How agents are invoked at runtime is open (Q22). | Not built (I2, DP4, DP11) |
+| Orchestration | An external process orchestrator that holds each idea-to-production journey as a long-running case, routes human tasks and is the UI for non-engineers. The harness supplies deterministic evidence and decisions; GitHub enforces merges. | Proposed (D-17). Not built. Q21 is open. |
+| Identity | A GitHub App and Workload Identity Federation for the harness, plus an identity and registry entry for each agent | Harness identity: R2 is blocked. Agent identity integration: not built (DP5, W4) |
+| Adjacent technologies | The configuration database and support records, infrastructure as code, observability, secret and dependency scanning | Partly planned (W1, W4, O1). Scanning is built (S1) |
+
+Product names stay generic in this repo. Whether other adjacent technologies are in scope is for the owner to say
+(Q20).
 
 ## What each top-level folder holds
 
@@ -124,6 +169,7 @@ The roadmap ([`ROADMAP.md`](ROADMAP.md)) is the source of truth. In short:
 ## Where to go next
 
 - Words you do not know: [Glossary](GLOSSARY.md)
+- How a person takes an idea to production: [Delivery process](DELIVERY.md) and [Personas](PERSONAS.md)
 - How it is built: [Architecture](ARCHITECTURE.md)
 - How it could be used: [Examples](EXAMPLES.md)
 - Why choices were made: [Decisions](DECISIONS.md)

@@ -377,3 +377,7 @@ These appear in the roadmap and in comments, but not as working code.
 | Generated-project preflight command and acceptance test | H2 |
 | Template based on existing reference agent template | W2 (blocked) |
 | Where the harness runs (Cloud Run, Cloud SQL) | D-05, still a proposal |
+| Delivery lanes and standards as policy data, with the `lane` CLI | DP2, DP3 (proposal; see [Delivery process](DELIVERY.md)) |
+| Multi-agent template variant and a detector for new sub-agents or remote agent cards | DP4 |
+| Agent identity integration | DP5 |
+| External process orchestrator, lane-exit contract and runtime invocation contract | D-17, DP10, DP11 |

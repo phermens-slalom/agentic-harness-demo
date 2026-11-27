@@ -102,6 +102,13 @@ Other team words you will see:
 | **Lint** | An automatic style and error check on code. |
 | **Evals** | Tests of how an AI behaves (not just whether code runs). |
 | **Golden task** | A saved example case used to test the harness. It says what the right outcome is. |
+| **Delivery process** | The path a person follows from idea to production, in lanes, with exit requirements. It sits on top of the harness. Proposed; see [`DELIVERY.md`](DELIVERY.md). |
+| **Lane** | A phase of the delivery process: prototype, verify, harden or operate. Each has exit requirements. A lane never switches off a deterministic control. |
+| **Exit requirement** | What must be true before work leaves a lane. Each one is enforced by an existing control, or marked Not built with its roadmap ID. |
+| **Golden data set** | In a generated agent: the cases that verification judges the agent against (the same idea as the golden set, used as a lane exit). Not the harness's own golden tasks. |
+| **Demo-ready** | The Prototype exit: the agent runs in the sandbox against synthetic data, works through the main cases of the drafted golden data set, and the hypotheses are visible. A recorded demo is the evidence. Not secure, reviewed or connected to real systems. |
+| **MVP** | A minimum viable product. In the delivery process, **MVP-ready** is the Verify exit: golden data set and evals pass with no regression, coverage and quality are met, the review checklist is clean, and the agents meet their success criteria in the intended non-production environment. MVP-ready is what starts Harden, where formal security work happens (proposed). |
+| **Persona** | A kind of person who works with the harness and delivery process, described by role: product manager, application engineer, AI governance, security or platform. See [`PERSONAS.md`](PERSONAS.md). |
 | **Golden set** | In a generated agent: example cases for the agent's own behaviour. |
 | **Baseline** | The last accepted eval results. A new PR may not do worse than it. |
 | **Threshold** | A pass mark for an eval. The business owner sets it, not the builders. |
@@ -219,7 +226,7 @@ The **merge gate** ([`merge_gate.py`](../app/harness/nodes/merge_gate.py)) is pl
 | **Firewall allowlist (Copilot)** | A list of hosts Copilot may reach. Set in GitHub settings, not in a repo file. |
 | **Ruleset / branch protection** | GitHub rules that block merges until checks pass. Planned (R1). |
 | **Check run** | A single status line on a PR. |
-| **External workflow engine** | A possible future integration represented by a port in W5; no product or adoption decision is recorded. |
+| **External process orchestrator** | A proposed category of tool (D-17) that would run the delivery process as long-lived cases mixing agents, APIs and people, with human tasks, SLAs and an audit trail. The harness supplies evidence and decisions and GitHub enforces merges. W5 keeps a port ready. No product or adoption decision is recorded. See Q21. |
 | **Antigravity / Gemini CLI** | Google coding-agent tools named as options for the optional sandbox. |
 
 ---
@@ -230,9 +237,9 @@ The roadmap ([`ROADMAP.md`](ROADMAP.md)) numbers its work. Each code is stable.
 
 | Code | Plain English |
 |---|---|
-| **D-01 … D-15** | Decisions. Short design choices with a reason and an owner. See [`DECISIONS.md`](DECISIONS.md). |
-| **Q1 … Q18** | Open questions for this project. See [`OPEN_QUESTIONS.md`](OPEN_QUESTIONS.md). |
-| **M0 … M9** | Milestones (groups of work). M0 makes the gate trustworthy; M8 gets a generated agent ready for the pilot; M9 lets a person request an agent and get a governed PR. |
+| **D-01 … D-17** | Decisions. Short design choices with a reason and an owner. See [`DECISIONS.md`](DECISIONS.md). |
+| **Q1 … Q23** | Open questions for this project. See [`OPEN_QUESTIONS.md`](OPEN_QUESTIONS.md). |
+| **M0 … M12** | Milestones (groups of work). M0 makes the gate trustworthy; M8 gets a generated agent ready for the pilot; M9 lets a person request an agent and get a governed PR; M10 builds the delivery process, M11 the platform scope, and M12 pilots them on real work. |
 | **H0 to H2** | Hygiene items: the repo guide (H0), CI and repo tidy-up (H1), and the generated-project preflight and acceptance test (H2). |
 | **G1 … G7** | Gate items: fail closed, control files in tier 3, tamper detection, plan approval, path matching, least-privilege CI, policy validation. |
 | **R1 … R7** | Runtime items: GitHub checks and CODEOWNERS, real GitHub client, durable workflow, ingress queue, controls, hardened ADK adapters, reviewer sees the diff. |
@@ -242,6 +249,7 @@ The roadmap ([`ROADMAP.md`](ROADMAP.md)) numbers its work. Each code is stable.
 | **E1 … E3** | Evals: live replay, reviewer defects, real template evals. |
 | **W1 … W5** | Workflow coverage: workload PR checks, template from existing reference agent template, release pack, registration, GitHub-native human gate. |
 | **A1 … A3** | Generated-agent items: authorisation boundary, telemetry, governed skill. |
+| **DP1 … DP11** | Delivery-process items in M10 to M12: this documentation (DP1), lane and standards policy files, the `lane` CLI, a spec-gap skill, the E2 priority change, the D-16 policy change, the lane-exit contract, a multi-agent template variant, identity integration, the runtime invocation contract, and the pilot. Not the same as the `P0 / P1 / P2` priorities. |
 | **I1 … I7** | Agent intake items: request form and parser, connector library, intake agent, authoring, cross-model review, tailoring through comments, hosted trigger. |
 | **Status words** | `todo`, `doing`, `blocked`, `review`, `done`, `dropped`. |
 | **P0 / P1 / P2** | Priority: before the agent discussion, before the pilot agent, after the pilot. |
