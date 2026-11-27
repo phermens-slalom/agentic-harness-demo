@@ -1,6 +1,6 @@
 # Decisions
 
-The fifteen design decisions from the [Roadmap](ROADMAP.md), in plain English.
+The seventeen design decisions from the [Roadmap](ROADMAP.md), in plain English.
 A decision marked **Proposed** is built behind a setting or a port so it is cheap to reverse when the appropriate owner rules.
 **Built** means the behaviour is in the code. It does not mean the owner has signed off.
 
@@ -21,6 +21,8 @@ A decision marked **Proposed** is built behind a setting or a port so it is chea
 | D-13 | **An `AgentRequest` issue starts an intake agent that builds the agent.** It asks the requester plain-language questions on the issue, adds the agent to the division's agent repo, writes its code and evals, and opens a PR. It only raises PRs. It never approves or merges, and every PR goes through the merge gate. | People who own a business problem should not need to write Python and evals to get an agent. | Proposed | `ai_governance` | No (I1 to I7) |
 | D-14 | **Generated agents reach other systems only through a curated connector library.** Anything the library cannot do is handed to a person. | The AI must not invent integrations. A fixed library keeps review bounded. | Proposed | `ai_governance`, `security` | No (I2) |
 | D-15 | **A different model family reviews the generated agent**, where residency allows. Its opinion is advisory. The gate and `agentic-bootstrap check` decide. | One model grading its own work shares its blind spots. | Proposed | `security` | No (I5) |
+| D-16 | **A lane-aware RACI for the delivery process.** Prototype and Verify have the application team responsible and accountable, with central teams consulted. Harden, release and any tier-3 change keep central-team approval. See [Delivery process](DELIVERY.md). | Gives application teams autonomy early, and keeps central review where the risk is. It would relax `base_approvers` in early lanes, so it needs owner sign-off, an eval and compensating controls before any policy change. The lane must come from a record held outside the agent repo, which no LLM node can set (a label is not valid), and changing it is a human-approved, tier-3-equivalent action. | Proposed | Unassigned | No (DP8, blocked on Q20) |
+| D-17 | **An external process orchestrator runs the delivery process and its human steps.** The harness supplies evidence and deterministic decisions (lane exits, tier and approvers), and GitHub enforces merges. An orchestrator approval never replaces the merge gate or a GitHub review. | Long-running human work (SLAs, waits, a UI for non-engineers) is a different job from the short, deterministic issue-to-merge loop. | Proposed | Unassigned | No (DP10, DP11; blocked on Q21, Q22) |
 
 ## How decisions are made
 

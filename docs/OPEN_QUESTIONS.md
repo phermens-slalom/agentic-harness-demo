@@ -16,7 +16,7 @@ From the [Roadmap](ROADMAP.md). "Suggested owner" shows a generic role where one
 | Q3 | Is the Copilot coding agent acceptable for each data classification, given residency? | D1 | security team |
 | Q4 | Who approves workflow runs on Copilot PRs, and should "skip approval" be switched on? | R2 | security team |
 | Q5 | Where is the harness hosted (Cloud Run and Cloud SQL in Melbourne?), and what is the webhook route? | R3, R4 | platform team |
-| Q7 | What are the pinned skills repository skill names for the planner and reviewer? | R6 | AI governance team |
+| Q7 | What are the pinned skill names for the planner and reviewer, and what is the approved source and provenance for new skills such as DP6? | R6, DP6 | AI governance team |
 | Q9 | Do work items come from GitHub Issues, or from Jira or Jira Align? | R4 (may need an `IssueSource` port) | Unassigned |
 | Q10 | What are the criteria for moving to a later phase? (Draft in O3.) | O3 | Unassigned |
 | Q11 | Is GitHub Advanced Security licensed (secret scanning, push protection, CodeQL, dependency review)? | S1 | AI governance team |
@@ -26,6 +26,11 @@ From the [Roadmap](ROADMAP.md). "Suggested owner" shows a generic role where one
 | Q16 | Should agents built only from approved connectors stay tier 3, or may they use a lighter approval route? | M9 | security team, AI governance team |
 | Q17 | Who sponsors an `AgentRequest` before spending budget or creating a branch, and how is sponsorship verified? | I7 | Unassigned |
 | Q18 | Which approved evaluation project, regions and WIF identity should be used, and how can holdouts remain hidden from PR-authored code? | E3 | security team and platform team |
+| Q19 | Who are the security-team reviewers, and what is the escalation process? | Tier-3 approvals and the D-02 sign-off | Unassigned |
+| Q20 | Do the delivery lanes and the D-16 RACI proposal stand, and who owns the delivery process? | DP2, DP3, DP8, DP9, DP10, D-16 | Unassigned |
+| Q21 | For long human waits, does the harness keep its own durable runtime (D-05, R3, W5), or hand them to the external process orchestrator and keep only the short issue-to-merge loop? | R3, W5, DP10 | Unassigned |
+| Q22 | How are generated agents invoked at runtime (API, A2A, or as steps in orchestrated business processes), and what invocation contract must the template expose? | DP4, DP11 | Unassigned |
+| Q23 | Who owns the standards register, and which security, control, engineering-excellence and AI-engineering standards apply? AI governance and security are the likely contributors. | DP2 | Unassigned |
 
 Resolved: Q6's access contact is the AI governance team, though access is still needed. Q13's requester
 eligibility is any person with repository access; the separate sponsorship decision is tracked as Q17.
@@ -80,7 +85,7 @@ These are things the repo does not say. They are marked **TODO: UNCONFIRMED** in
 | What the Opportunity Canvas contains | [Glossary](GLOSSARY.md) |
 | The list of classification values | [Glossary](GLOSSARY.md) |
 | Whether an existing reference template is available | [Glossary](GLOSSARY.md) |
-| Any plan for a workflow-engine integration beyond keeping a port ready | [Glossary](GLOSSARY.md) |
+| Whether the external process orchestrator proposal (D-17) is adopted, and where long human waits live (Q21) | [Glossary](GLOSSARY.md), [Decisions](DECISIONS.md) |
 | The repo licence, code of conduct and a security contact | [Index](README.md), [Contributing](CONTRIBUTING.md), [Security](SECURITY.md) |
 | How to run the ADK adapters live | [Getting started](GETTING_STARTED.md) |
 | Whether the booking-refusal eval passes live | [Examples](EXAMPLES.md) |

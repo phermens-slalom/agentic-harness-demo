@@ -6,9 +6,9 @@ Start here. Pick the path that matches why you are reading.
 
 | You are... | Read in this order |
 |---|---|
-| New and want the big picture | [Vision](VISION.md) → [Examples](EXAMPLES.md) → [Glossary](GLOSSARY.md) |
+| New and want the big picture | [Vision](VISION.md) → [Delivery process](DELIVERY.md) → [Examples](EXAMPLES.md) → [Glossary](GLOSSARY.md) |
 | A developer who wants to run it | [Getting started](GETTING_STARTED.md) → [Architecture](ARCHITECTURE.md) → [Contributing](CONTRIBUTING.md) |
-| A reviewer or approver | [Vision](VISION.md) → [Security](SECURITY.md) → [Decisions](DECISIONS.md) → [Open questions](OPEN_QUESTIONS.md) |
+| A reviewer or approver | [Vision](VISION.md) → [Personas](PERSONAS.md) → [Security](SECURITY.md) → [Decisions](DECISIONS.md) → [Open questions](OPEN_QUESTIONS.md) |
 | Looking for what is done and what is next | [Roadmap](ROADMAP.md) → [Changelog](CHANGELOG.md) → [Open questions](OPEN_QUESTIONS.md) |
 | Stuck | [FAQ](FAQ.md) |
 | Publishing or updating the project site, or changing the adapters or the input guard | [Technical docs](tech/README.md) |
@@ -20,6 +20,8 @@ Broad documents about the project as a whole. They live in this folder.
 | Document | What it is |
 |---|---|
 | [Vision](VISION.md) | The short summary: what the repo is for and what each folder holds |
+| [Delivery process](DELIVERY.md) | The proposed lanes from idea to production, their exit requirements and what enforces them, a proposed lane-aware RACI, reliability and standards |
+| [Personas](PERSONAS.md) | Who works in which lane, how they come in, and what they raise or approve |
 | [Architecture](ARCHITECTURE.md) | A technical breakdown in three levels (context, containers, components) |
 | [Examples](EXAMPLES.md) | Worked examples using insurance metaphors |
 | [Glossary](GLOSSARY.md) | Acronyms, roles, terms and roadmap codes in plain English |

@@ -76,6 +76,8 @@ rules on it.
 | D-13 | **An `AgentRequest` issue starts an intake agent that authors the agent.** Any person with access to the repository may raise an `AgentRequest` GitHub issue. An ADK intake agent interviews them in plain language on the issue, runs `agentic-bootstrap` to add the agent to the division's existing agent repo, writes the agent's Python (prompts, tools, evals) from their answers, and opens a PR. It only ever *raises* PRs. It never approves, merges, edits gate-controlling files outside the normal PR path, or sets business-owned thresholds. Every PR goes through the merge gate and the named approvers. The first build is a local/CLI prototype against fakes; the hosted trigger follows R2, R3 and R4. | People who own a business problem should not need to write Python, evals and CI config to get an agent. The harness already governs what an AI builder may change, so the intake agent is one more governed builder. | Proposed (AI governance team) |
 | D-14 | **Generated agents reach outside systems only through a curated connector library.** The library contains tool templates reviewed by the designated teams (read and write patterns, declared egress hosts, IAM notes, approvers). The intake agent composes and configures them. A need the library cannot meet is flagged for a human build, never improvised. A connector that writes needs the trusted-approval boundary from A1. | The LLM must not invent integrations, hosts or credentials. A fixed library keeps the security team's review load bounded and keeps S3's new-capability detectors meaningful. | Proposed (AI governance team, security team) |
 | D-15 | **A different model family reviews what the intake agent generates.** Generator and reviewer are different model families, subject to residency (D-10, `policy/residency.yaml`). Until a second family is approved for use in Australia, use two roles with separate prompts and context and record the gap. The reviewer scores the agent against its Mission Brief and proposes adversarial eval cases. Its opinion is advisory: the merge gate and `agentic-bootstrap check` still decide. | One model grading its own output shares its blind spots. | Proposed (security team) |
+| D-16 | **A lane-aware RACI for the delivery process (proposed).** Prototype and Verify have the application team responsible and accountable, with central teams consulted. Harden, release and any tier-3 change keep central-team approval. The accountable role for each Harden activity stays as in `policy/raci.yaml`. See `docs/DELIVERY.md`. | Application teams get autonomy early, and central review stays where the risk is. It would relax `base_approvers` and the `verify` stage approvers in early lanes, so it needs owner sign-off, an eval and compensating controls before any change to `policy/`. The lane must come from a record held outside the agent repo that no LLM node can set (a label is not valid), and changing it is a human-approved, tier-3-equivalent action. `policy/raci.yaml` and `policy/risk_tiers.yaml` are unchanged. | Proposed (Unassigned). Built: No (DP8, blocked on Q20) |
+| D-17 | **An external process orchestrator runs the delivery process and its human steps (proposed).** It holds each idea-to-production journey as a long-running case (the delivery-process record), routes human tasks with SLAs and is the UI for non-engineers. The harness is the deterministic evidence-and-decision engine it calls and never calls an LLM. GitHub enforces merges (D-03). An orchestrator approval never replaces the merge gate or a GitHub review, must map to the same team identities, and reviewer lockout (R7) still applies. It coordinates agents and does not author them: agents built through the harness stay ADK only. | Long-running human work is a different job from the short, deterministic issue-to-merge loop. Keeping them apart keeps the gate simple and testable. | Proposed (Unassigned). Built: No (DP10, DP11; blocked on Q21, Q22) |
 
 ---
 
@@ -93,11 +95,16 @@ rules on it.
 | **M7** | Hygiene | H1 | Any time |
 | **M8** | Generated agent ready for the pilot | E3, H2, A1–A3 | P1 |
 | **M9** | Agent intake and authoring | I1–I7 | P1 (offline prototype first; hosted trigger after R2–R4) |
+| **M10** | Delivery process | DP1, DP2, DP3, DP6, DP7, DP8, DP10 | P1 (DP1 done; the rest wait on owner answers Q19 to Q23) |
+| **M11** | Platform scope | DP4, DP5, DP11 | P1 / P2 |
+| **M12** | Pilot on real work | DP9 | P1 (needs M10, M11 and E3) |
 
 Recommended order: **H0 → G1 → G2 → G5 → G3 → G4 → G6 → G7**, then **R2 → R1 → D1**, then
 **R3 → R4 → R5**, then **O1** and the rest. **S4** can run in parallel after G6.
 Start the offline M9 work (**I1 → I2 → I3 → I4 → I5 → I6**) in parallel with M8. It runs against fakes and
 does not wait on R2; only **I7**, the hosted trigger, does.
+M10 (the delivery process) is documentation first (DP1). Its policy and CLI items wait on Q20, because nobody owns
+the delivery process yet. M12, the pilot, comes after M10, M11 and E3.
 Start the offline M8 work on the embedded template in parallel; it does not depend on W2 or on
 standing up the parent harness runtime.
 
@@ -998,20 +1005,22 @@ the CMDB 'AI Agent' CI and support-group payloads from the spec. Mark the real a
 TODO(owner). Tests. Update the item status and the work log.
 ```
 
-### W5 · A GitHub-native `HumanGate` now, ready for Maestro later
-- **Status:** todo · **Priority:** P1 · **Size:** M · **Depends on:** R3, R4
+### W5 · A GitHub-native `HumanGate` now, ready for an external process orchestrator later
+- **Status:** todo · **Priority:** P1 · **Size:** M · **Depends on:** R3, R4 · **Decision:** Q21, D-17
 - **Model / effort:** Sonnet 5.5 · high
 - **Done when:**
   - [ ] Plan approval is a comment on the issue with the plan. A code owner replies `/approve` or `/reject
         <reason>`, the reply resumes the ADK pause, and only users in the required team count.
   - [ ] `notify` posts to the issue or PR, and optionally to a Teams or Slack webhook (config).
-  - [ ] The port is documented with a pause/resume token so a future workflow-engine adapter can drop in.
+  - [ ] The port is documented with a pause/resume token so a future external process orchestrator adapter can drop in (D-17). Whether long human waits stay in the
+        harness or move to the orchestrator is Q21.
 
 ```text
 Read docs/ROADMAP.md item W5, app/harness/ports.py (HumanGate), the R3 workflow and the R4 ingress.
 Implement a GitHub-native HumanGate: plan posted as an issue comment, /approve or /reject from an
 authorised team member resumes the paused workflow, everything else is ignored (and audited).
-Document the pause/resume contract for a future Maestro adapter in docs/HITL.md. Tests with fakes.
+Document the pause/resume contract for a future external process orchestrator adapter in docs/HITL.md
+(see Q21 and D-17). Tests with fakes.
 Update the item status and the work log.
 ```
 
@@ -1348,6 +1357,265 @@ behind the existing ports. Do not change the prototype's behaviour or its evals.
 
 ---
 
+## M10 · Delivery process
+
+The harness (M0 to M9) is the software controls. The **delivery process** is the path a person follows from
+idea to production, in lanes (Prototype, Verify, Harden, then Operate), each with exit requirements the harness
+enforces. See `docs/DELIVERY.md` and `docs/PERSONAS.md`. The design comes from theory, documentation and
+experience. It has **not** been tested on real work or deployed. M10 to M12 close that gap: M10 is the
+delivery process itself, M11 is the platform scope it needs, and M12 is a pilot on real work.
+
+IDs here start with `DP` (delivery process) so they are not confused with the `P0 / P1 / P2` priorities.
+
+Boundaries that hold for every item in M10 to M12:
+
+- The lanes are a **proposal**. Do not change a tier, approver, threshold or `policy/raci.yaml` until Q20 and
+  Q19 are answered (see DP8).
+- Deterministic controls (input guard, merge gate, residency, secret handling) apply in every lane.
+- The lane comes from a record held outside the agent repo (the delivery-process record). It is never a label,
+  a file in the agent repo, or anything an LLM node can set. Changing it is a human-approved,
+  tier-3-equivalent action.
+- An orchestrator approval never replaces the merge gate or a GitHub review (D-17).
+- Do not invent an owner, a security team member, an escalation path or the content of a standard. Leave
+  `TODO(owner)` and record the dependency.
+
+### DP1 · Delivery lanes, personas and platform scope
+- **Status:** done · **Priority:** P1 · **Size:** M · **Depends on:** none
+- **Model / effort:** Sonnet 5.5 · high
+- **Why:** Stakeholder feedback on 27 November 2026 called the harness small in thinking. It treated the controls
+  as the whole picture and not as one layer under a delivery process for several kinds of person.
+- **Done when:**
+  - [x] `docs/DELIVERY.md` explains the two layers and who runs the process, defines the lanes (with demo-ready
+        and MVP-ready as separate exits) and maps them to the golden stages, and cites what enforces each exit
+        requirement or marks it **Not built** or **Partly built** with its roadmap ID.
+  - [x] `docs/PERSONAS.md` covers one section per policy role, the requester, how people come in, and what
+        they raise or approve, from `policy/raci.yaml` and `policy/risk_tiers.yaml` as they are.
+  - [x] `docs/VISION.md` reads as the harness and delivery process for a multi-agent system, has a "Platform
+        scope" section and a maturity statement.
+  - [x] Reliability and Standards sections exist in `docs/DELIVERY.md`. Standards content is `TODO(owner)`.
+  - [x] The lane-aware RACI is described as proposed and recorded as D-16, and the external process
+        orchestrator as D-17 (both Proposed, owner unassigned, Built: No). `policy/raci.yaml` and
+        `policy/risk_tiers.yaml` are unchanged.
+  - [x] Q19 to Q23 are in the open questions. M10 to M12 and DP1 to DP11 are in this file.
+  - [x] The site reflects the new framing and keeps the gate replay unchanged.
+  - [x] Glossary entries added. Docs index updated. Changelog and work log entries added.
+
+```text
+Documentation and site only. Nothing under policy/, app/, evals/, agent-template/ or .github/ changes.
+```
+
+### DP2 · `policy/delivery_lanes.yaml` and `policy/standards.yaml`
+- **Status:** todo · **Priority:** P1 · **Size:** L · **Depends on:** DP1, Q20, Q23 · **plan first**
+- **Model / effort:** Opus 5.5 · high
+- **Why:** The lanes and the standards traceability table exist only as prose. Data in `policy/` can be
+  validated, tested and read by a CLI.
+- **Done when:**
+  - [ ] `policy/delivery_lanes.yaml` lists each lane, its golden stages and exit requirements. Each exit names the
+        control that enforces it (a required check, gate rule, checklist item or eval), or `not_built` with a
+        roadmap ID.
+  - [ ] `policy/standards.yaml` holds the traceability rows (standard, enforcing control, status). Standard
+        content stays `TODO(owner)` until Q23 is answered. No standard is invented.
+  - [ ] Both files are schema-validated (extends G7), with tests that every cited control exists.
+  - [ ] The lane is read from the delivery-process record held outside the agent repo. It is never a label (the
+        triage node can apply labels), a file in the agent repo or anything an LLM node can set. Changing it is
+        a human-approved, tier-3-equivalent action.
+  - [ ] Golden and adversarial evals prove that a PR, a label or an LLM node cannot lower its own approvals by
+        declaring a lane.
+  - [ ] No tier, approver or threshold changes. D-16 stays DP8.
+
+```text
+Read docs/ROADMAP.md item DP2, docs/DELIVERY.md, policy_validation.py and policy/golden_workflow.yaml.
+Plan the schema first. Add the two policy files, validation, tests and evals. Do not edit risk_tiers.yaml
+or raci.yaml. Update the item status and the work log.
+```
+
+### DP3 · The `lane` CLI
+- **Status:** todo · **Priority:** P2 · **Size:** M · **Depends on:** DP2, DP10
+- **Model / effort:** Sonnet 5.5 · high
+- **Why:** An engineer convenience. The orchestrator is the proposed entry point for non-engineers (D-17), so the
+  CLI reads the same lane-exit contract (DP10) rather than its own copy. Ownership of the delivery process stays
+  open (Q20).
+- **Done when:**
+  - [ ] `agentic-bootstrap lane status` reports the lane and unmet exit requirements for an agent repo.
+  - [ ] `agentic-bootstrap lane next` checks the exits and reports whether work may move on.
+  - [ ] Both are advisory and read-only. Only the gate and approvers decide. A `not_built` exit is reported as
+        such, never as met.
+
+```text
+Read docs/ROADMAP.md item DP3, DP2, DP10 and app/harness/bootstrap/cli.py. Add the lane subcommands over the
+lane-exit contract, with tests. Never report an exit as met when its control is not built.
+```
+
+### DP6 · Spec-gap skill
+- **Status:** todo · **Priority:** P1 · **Size:** M · **Depends on:** DP1, Q7 (skills source and provenance)
+- **Model / effort:** Opus 5.5 · high
+- **Why:** The builder should flag missing data or acceptance criteria and ask, instead of guessing. One skill
+  has two users: the intake agent (I3) uses it to ask the requester, and the builder uses it to stop and
+  comment on the issue.
+- **Depends on, in detail:** DP6 waits on the skills source and provenance being agreed, which Q7 now covers
+  (`policy/skills.lock.yaml` records none today).
+- **Done when:**
+  - [ ] A guidance-only skill, pinned by version and fingerprint (`policy/skills.lock.yaml`), with its provenance
+        and revision reviewed.
+  - [ ] It produces a structured "missing information" comment and a stop, which the workflow routes to a
+        person. It never writes guessed values into the spec, evals or thresholds.
+  - [ ] Behaviour evals: a spec with a missing acceptance criterion, a missing data source and an unclear owner
+        each produce the structured comment and a stop. An adversarial case pressures it to guess.
+  - [ ] Both users are covered: the intake agent asks the requester, and the builder comments on the issue.
+  - [ ] Tool permissions and side effects stay enforced in code. The skill is not authorisation.
+
+```text
+Read docs/ROADMAP.md item DP6, I3, policy/skills.lock.yaml, app/harness/skills.py and agent-template/AGENTS.md.
+Write the skill, pin it and add behaviour evals. Skill files are tier 3.
+```
+
+### DP7 · Raise E2's priority
+- **Status:** todo · **Priority:** P1 · **Size:** S · **Depends on:** DP1
+- **Model / effort:** Sonnet 5.5 · medium
+- **Why:** The adversarial reviewer is one of three reliability parts, and the Verify exit depends on it. Today
+  the reviewer sees file names only (R7), and nothing measures whether it catches defects (E2). E2 is P2 and
+  waits on R7, which waits on R2.
+- **Done when:**
+  - [ ] The owner agrees. E2's priority changes from P2 to P1 in this file.
+  - [ ] E2's dry-run slice (a scripted reviewer over seeded diffs, already in E2's prompt) is allowed to run before
+        R7, with live runs after R7.
+
+```text
+Read docs/ROADMAP.md items E2, R7 and DP7. After the owner agrees, edit E2's priority and dependency
+note only. Update the work log.
+```
+
+### DP8 · Lane-aware RACI policy change (D-16)
+- **Status:** blocked (Q20, Q19) · **Priority:** P2 · **Size:** M · **Depends on:** DP2, Q19, Q20 · **Decision:** D-16
+- **Model / effort:** Opus 5.5 · extra-high
+- **Why:** D-16 would relax `base_approvers` in Prototype and Verify. That changes a control, so it needs sign-off.
+- **Done when:**
+  - [ ] The owner signs off D-16. Q19 and Q20 are answered.
+  - [ ] `policy/raci.yaml`, `policy/risk_tiers.yaml` and `policy/golden_workflow.yaml` change in one reviewed PR, with
+        a new or updated adversarial or golden eval.
+  - [ ] The gate takes the lane from the delivery-process record held outside the agent repo. A label is not a
+        valid source (the triage node can apply labels), and nothing an LLM node can set is. Changing the lane
+        is a human-approved, tier-3-equivalent action. Tier 3 rules and new-capability approvers do not relax
+        in any lane.
+  - [ ] The compensating controls in `docs/DELIVERY.md` are in place: synthetic data by default in early lanes (approved non-production data only in Verify),
+        new-capability approvers in every lane, security informed on entry, and escalations still reach security.
+  - [ ] Interaction with the rollout phase (D-11, O3) is recorded.
+
+```text
+Read docs/ROADMAP.md item DP8, D-16, D-11, docs/DELIVERY.md, policy/raci.yaml, policy/risk_tiers.yaml and
+nodes/merge_gate.py. Do not start until the owner has signed off. Never weaken the gate.
+```
+
+### DP10 · Lane-exit contract
+- **Status:** blocked (DP2, Q20, Q21) · **Priority:** P2 · **Size:** M · **Depends on:** DP2, Q20, Q21
+- **Model / effort:** Opus 5.5 · high
+- **Why:** An external process orchestrator (D-17) and the `lane` CLI (DP3) both need to ask "does this lane's
+  exit pass?" and "what tier is this PR, and who approves?" from one place.
+- **Done when:**
+  - [ ] A read-only, deterministic function (and a documented request and response shape) answers those
+        questions from `policy/delivery_lanes.yaml`, the check results and the gate. It never calls an LLM.
+  - [ ] It reports each exit as met, unmet or `not_built`. It never reports a `not_built` exit as met.
+  - [ ] It is callable by an orchestrator without write access to the agent repo or to policy.
+  - [ ] An orchestrator approval maps to the same team identities, never replaces the merge gate or a GitHub
+        review, and reviewer lockout (R7) still applies. Tests and evals prove it.
+  - [ ] Whether long human waits live in the orchestrator or in the harness's own runtime is decided (Q21).
+
+```text
+Read docs/ROADMAP.md item DP10, D-17, DP2, nodes/merge_gate.py and policy.py. After Q21 is answered, add the
+read-only lane-exit contract with tests and evals. Do not name any orchestration product.
+```
+
+---
+
+## M11 · Platform scope
+
+The target is a full software system with a complex multi-agent core, not small experimental agents. M11 covers
+the platform pieces the delivery process needs: a multi-agent template, agent identity, and how agents are
+invoked at runtime. Google services and the connector library are covered by M2, M3 and M9.
+
+### DP4 · Multi-agent template variant
+- **Status:** todo · **Priority:** P1 · **Size:** L · **Depends on:** DP1, S3, Q22 · **plan first**
+- **Model / effort:** Opus 5.5 · high
+- **Why:** The target is a multi-agent system. `agent-template/` generates one starter agent.
+- **Done when:**
+  - [ ] A template variant with ADK sub-agents, and optionally A2A for remote agents. Verify the current ADK
+        support from its documentation first and cite it. ADK only, no other framework.
+  - [ ] A new-capability detector (extends S3) flags a new sub-agent or a remote agent card. A remote agent card
+        is a new egress host and a new trust boundary, so it adds approvers and withdraws auto-merge.
+  - [ ] Residency holds for every agent in the system.
+  - [ ] Evals cover handoffs between agents, and adversarial cases for a poisoned handoff or card.
+
+```text
+Read docs/ROADMAP.md item DP4, S3, policy/capabilities.yaml, app/harness/nodes/capability_check.py and
+agent-template/. Plan the variant and the detector, then implement. Add golden and adversarial evals.
+```
+
+### DP5 · Identity integration
+- **Status:** todo · **Priority:** P2 · **Size:** L · **Depends on:** DP1, Q2, Q19 · **plan first**
+- **Model / effort:** Opus 5.5 · high
+- **Why:** The platform scope includes identity: the harness's own identity and an identity and registry entry
+  for each agent. Which identity system applies is not recorded.
+- **Done when:**
+  - [ ] The identity system and its owner are recorded. `TODO(owner)` until then.
+  - [ ] The register stage pre-fills the identity request from the Mission Brief (relates to W4).
+  - [ ] No personal tokens. The GitHub App and Workload Identity Federation only.
+
+```text
+Read docs/ROADMAP.md item DP5, W4, docs/DELIVERY.md and deployment/terraform/README.md. Record the open
+identity questions first. Do not choose an identity system for the owner.
+```
+
+### DP11 · Runtime invocation contract in the template
+- **Status:** blocked (Q22) · **Priority:** P2 · **Size:** M · **Depends on:** Q22, DP4
+- **Model / effort:** Opus 5.5 · high
+- **Why:** How generated agents are invoked at runtime (API, A2A, or as steps in orchestrated business processes)
+  is open. The template must expose a stable invocation contract once it is answered.
+- **Done when:**
+  - [ ] Q22 is answered and the contract is documented.
+  - [ ] The template exposes it, with tests. Any new egress host or protocol is surfaced by S3 and needs its
+        approvers.
+  - [ ] An evaluation covers a caller that sends untrusted input. The input guard applies.
+
+```text
+Read docs/ROADMAP.md item DP11, Q22, D-17 and agent-template/. Do not start until Q22 is answered.
+```
+
+---
+
+## M12 · Pilot on real work
+
+The design has not been tested on real work or deployed. M12 runs it on one real piece of work.
+
+**Draft success criteria for the pilot.** These are a draft. **They need owner agreement (Q20) before they
+count.** Thresholds are `TODO(owner)`.
+
+- [ ] One real piece of work (not a demo agent) goes from idea to a demo-ready prototype using the lanes, started
+      by a non-engineer persona such as a product manager.
+- [ ] The work reaches MVP-ready: golden data set and live evals pass with no regression, coverage and quality are
+      met, the review checklist is clean, and the agents meet their success criteria in the intended
+      non-production environment, not only locally (needs E3, Q18 and the provision stage: W1, Q12).
+- [ ] The security reviewers are named and the escalation process is used end to end at least once (Q19).
+- [ ] Every false block, escalation and manual workaround is recorded and turned into a golden or adversarial task.
+- [ ] The effort and elapsed time per lane are measured against `TODO(owner)` targets.
+- [ ] The delivery-process owner (Q20) agrees the lane exits worked, or records why not.
+- [ ] The pilot team reports what did not work, to the same stakeholder group that gave the feedback.
+
+### DP9 · Pilot on real work
+- **Status:** blocked (Q19, Q20, M10, M11, E3) · **Priority:** P1 · **Size:** L · **Depends on:** M10, M11, E3, Q19, Q20
+- **Model / effort:** Opus 5.5 · high
+- **Why:** The design has not been tested on real work or deployed.
+- **Done when:**
+  - [ ] The owner agrees the draft success criteria above, including the thresholds.
+  - [ ] One real piece of work runs through the lanes. The results, including failures, are reported.
+  - [ ] Findings become golden or adversarial tasks and roadmap items.
+
+```text
+Read docs/ROADMAP.md item DP9, the M12 success criteria and docs/DELIVERY.md. Plan the pilot with the owner.
+Do not start until the criteria are agreed.
+```
+
+---
+
 ## Open questions
 
 These block or shape items above. Ask them in the session with the agent teams next week.
@@ -1359,7 +1627,7 @@ These block or shape items above. Ask them in the session with the agent teams n
 | Q3 | Is the Copilot coding agent acceptable for each data classification, given residency? | D1 | security team |
 | Q4 | Who approves workflow runs on Copilot PRs, and should we enable "skip approval"? | R2 | security team |
 | Q5 | Harness hosting (Cloud Run + Cloud SQL in Melbourne?) and the webhook ingress route | R3, R4 | platform team |
-| Q7 | pinned skills repository skill names for planner and reviewer | R6 | AI governance team |
+| Q7 | What are the pinned skill names for the planner and reviewer, and what is the approved source and provenance for new skills such as DP6? | R6, DP6 | AI governance team |
 | Q9 | Do agent work items come from GitHub Issues, or from Jira / Jira Align? | R4 (may need an `IssueSource` port) | Unassigned |
 | Q10 | Phase promotion criteria (draft in O3) | O3 | Unassigned |
 | Q11 | Is GitHub Advanced Security licensed (secret scanning, push protection, CodeQL, dependency review)? | S1 | AI governance team |
@@ -1369,6 +1637,11 @@ These block or shape items above. Ask them in the session with the agent teams n
 | Q16 | Should agents built only from approved connectors stay tier 3 under D-02, or may they use a lighter approval route? | M9 | security team, AI governance team |
 | Q17 | Who sponsors a request before the intake agent spends budget or creates a branch, and how is sponsorship verified? | I7 | Unassigned |
 | Q18 | Which approved evaluation project, regions and WIF identity should be used, and how can holdouts remain hidden from PR-authored code? | E3 | security team and platform team |
+| Q19 | Who are the security-team reviewers, and what is the escalation process? | Tier-3 approvals and the D-02 sign-off | Unassigned |
+| Q20 | Do the delivery lanes and the D-16 RACI proposal stand, and who owns the delivery process? | DP2, DP3, DP8, DP9, DP10 | Unassigned |
+| Q21 | For long human waits, does the harness keep its own durable runtime (D-05, R3, W5), or hand them to the external process orchestrator and keep only the short issue-to-merge loop? | R3, W5, DP10 | Unassigned |
+| Q22 | How are generated agents invoked at runtime (API, A2A, or as steps in orchestrated business processes), and what invocation contract must the template expose? | DP4, DP11 | Unassigned |
+| Q23 | Who owns the standards register, and which security, control, engineering-excellence and AI-engineering standards apply? AI governance and security are the likely contributors. | DP2 | Unassigned |
 
 Resolved: Q6's contact is the AI governance team; W2 still needs the actual template and bootstrap access.
 Q13's requester eligibility is any person with repository access; the separate sponsorship question is Q17.
@@ -1402,6 +1675,36 @@ Q8's starter marks are 80% coverage and eval pass mark, with baseline approval b
 
 Append-only, newest first. One entry per PR or working session: the date, the item IDs, what changed, and
 anything learned that should change this plan. Never rewrite old entries; correct them with a new one.
+
+### 2026-11-27 · DP1 delivery lanes, personas and platform scope
+- **Session:** a stakeholder feedback session on the harness demo. It was well received but called "small in
+  thinking". The sponsor wants the bigger picture before more controls are built. People are recorded by role
+  only, and nothing about a client, team or programme is recorded here.
+- **Feedback themes:** (1) the harness is not the delivery process: separate the controls from a lane-based path
+  (prototype and verify, then hardening) that guides different personas, possibly through a UI or CLI, with
+  verification against a golden data set and evals, and formal security once an MVP is ready; (2) map the eight
+  golden stages onto how agents combine to reach a demo-ready state; (3) incorporate security, control and
+  software-practice standards, including engineering-excellence and AI-engineering standards; (4) readiness: the
+  design is from theory, documentation and experience, untested on real work, with the security team members and
+  escalation process unknown; (5) platform scope: a full multi-agent system that accounts for Google services,
+  integrations, identity and adjacent technologies, not small experimental agents; (6) reliability built in:
+  CI/CD checks, developer-agent skills that flag missing data, and an adversarial reviewer; (7) review the RACI
+  to give application teams autonomy and keep central review where necessary.
+- **Changed (docs and site only):** added `docs/DELIVERY.md` (layers, who runs the process, lanes, demo-ready and
+  MVP-ready, exit requirements with what enforces each, a proposed lane-aware RACI, reliability, standards) and
+  `docs/PERSONAS.md` (one section per policy role). Rewrote the VISION idea and overall picture, and added
+  platform scope and a maturity statement. Added D-16 and D-17 (Proposed, owner unassigned, Built: No), Q19 to
+  Q23, milestones M10 (delivery process), M11 (platform scope) and M12 (pilot on real work), and items DP1 to
+  DP11. Updated the glossary, docs index and the site. W5 now says "external process orchestrator".
+- **Not changed:** `policy/`, `app/`, `evals/`, `agent-template/` and `.github/`. D-16 would relax
+  `base_approvers` in early lanes, so it needs owner sign-off, an eval and a trusted lane source first (DP8). No
+  tier, approver, threshold or gate rule changed, so no new eval.
+- **Learned:** most exit requirements in the lanes have no enforcing control yet, and "Built" only means the
+  check exists and is tested: nothing is enforced on real PRs until R1, which is blocked by R2. The egress exit is
+  only partly built (`capability_check.py` adds approvers, the spec's declared hosts are not read at run time,
+  and the network-level step is W1).
+- The test that counts milestones on `roadmap.html` is now an exact count of thirteen. It still checks that every
+  milestone has a card.
 
 ### 2026-11-26 · Site refresh: roadmap and glossary pages, accuracy pass
 - Rebuilt the site's status, blockers, golden-path stage states, architecture views and headline figures from the

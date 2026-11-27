@@ -28,6 +28,7 @@
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
     <nav class="nav-links" id="nav-links" aria-label="Primary">
       <a href="index.html#vision">Vision</a>
+      <a href="index.html#delivery">Delivery</a>
       <a href="index.html#how">Workflow</a>
       <a href="index.html#gate">Gate</a>
       <a href="index.html#architecture">Architecture</a>
@@ -48,8 +49,8 @@
     <div class="crumbs"><a href="index.html">Home</a> / <a href="index.html#status">Status</a> / Roadmap</div>
     <div class="eyebrow">Roadmap</div>
     <h1>Where we are going, and what each step is worth</h1>
-    <p class="lede">Ten milestones, in plain language. Each says what it is for, where it stands on 26 November 2026, and what it is waiting on. No dates are committed: the roadmap orders work by priority and by what depends on what. The full backlog is in <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ROADMAP.md">docs/ROADMAP.md</a>.</p>
-    <div class="track" role="list" aria-label="Milestones in order"><a class="tk st-done" href="#m0"><span class="c">M0</span><small>Trusted gate</small><span class="tag">DONE</span></a><a class="tk st-blocked" href="#m1"><span class="c">M1</span><small>Real GitHub</small><span class="tag">BLOCKED</span></a><a class="tk st-blocked" href="#m2"><span class="c">M2</span><small>Durable runtime</small><span class="tag">BLOCKED</span></a><a class="tk st-mostly" href="#m3"><span class="c">M3</span><small>Security</small><span class="tag">MOSTLY</span></a><a class="tk st-later" href="#m4"><span class="c">M4</span><small>Audit</small><span class="tag">LATER</span></a><a class="tk st-now" href="#m5"><span class="c">M5</span><small>Real evals</small><span class="tag">NOW</span></a><a class="tk st-later" href="#m6"><span class="c">M6</span><small>More stages</small><span class="tag">LATER</span></a><a class="tk st-now" href="#m7"><span class="c">M7</span><small>Hygiene</small><span class="tag">NOW</span></a><a class="tk st-now" href="#m8"><span class="c">M8</span><small>Pilot-ready agent</small><span class="tag">NOW</span></a><a class="tk st-next" href="#m9"><span class="c">M9</span><small>Agent intake</small><span class="tag">NEXT</span></a></div>
+    <p class="lede">Thirteen milestones, in plain language. Each says what it is for, where it stands on 26 November 2026, and what it is waiting on. No dates are committed: the roadmap orders work by priority and by what depends on what. The full backlog is in <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ROADMAP.md">docs/ROADMAP.md</a>.</p>
+    <div class="track" role="list" aria-label="Milestones in order"><a class="tk st-done" href="#m0"><span class="c">M0</span><small>Trusted gate</small><span class="tag">DONE</span></a><a class="tk st-blocked" href="#m1"><span class="c">M1</span><small>Real GitHub</small><span class="tag">BLOCKED</span></a><a class="tk st-blocked" href="#m2"><span class="c">M2</span><small>Durable runtime</small><span class="tag">BLOCKED</span></a><a class="tk st-mostly" href="#m3"><span class="c">M3</span><small>Security</small><span class="tag">MOSTLY</span></a><a class="tk st-later" href="#m4"><span class="c">M4</span><small>Audit</small><span class="tag">LATER</span></a><a class="tk st-now" href="#m5"><span class="c">M5</span><small>Real evals</small><span class="tag">NOW</span></a><a class="tk st-later" href="#m6"><span class="c">M6</span><small>More stages</small><span class="tag">LATER</span></a><a class="tk st-now" href="#m7"><span class="c">M7</span><small>Hygiene</small><span class="tag">NOW</span></a><a class="tk st-now" href="#m8"><span class="c">M8</span><small>Pilot-ready agent</small><span class="tag">NOW</span></a><a class="tk st-next" href="#m9"><span class="c">M9</span><small>Agent intake</small><span class="tag">NEXT</span></a><a class="tk st-blocked" href="#m10"><span class="c">M10</span><small>Delivery process</small><span class="tag">WAITING</span></a><a class="tk st-later" href="#m11"><span class="c">M11</span><small>Platform scope</small><span class="tag">LATER</span></a><a class="tk st-later" href="#m12"><span class="c">M12</span><small>Real-work pilot</small><span class="tag">LATER</span></a></div>
     <div class="tk-legend">
       <span class="st-done"><i></i>Done</span><span class="st-now"><i></i>In progress now</span><span class="st-next"><i></i>Next</span>
       <span class="st-blocked"><i class="hollow"></i>Waiting on a decision</span><span class="st-later"><i class="hollow"></i>Later</span>
@@ -167,6 +168,24 @@
   <dl><div><dt>Value</dt><dd>A person who owns a business problem can ask for an agent with a form, answer plain-language questions, and get a tested, governed pull request without writing Python. People still approve everything.</dd></div><div><dt>Where it is</dt><dd>The request form and an offline parser that turns it into an untrusted draft are done. Next: a fixed library of approved connectors, then a prototype that asks the questions, then agent authoring. All offline, against fakes.</dd></div><div><dt>Waiting on</dt><dd class="wait">The hosted version needs real GitHub and the runtime (M1, M2), a hosting route and an owner for who sponsors a request (Q17).</dd></div></dl>
   <p class="refs">I1 done · I2 next · I3 to I6 · I7 blocked</p>
 </article>
+<article class="msc st-blocked reveal" id="m10">
+  <div class="top"><span class="code">M10</span><span class="sbadge st-blocked">WAITING</span></div>
+  <h3>Delivery process</h3>
+  <dl><div><dt>Value</dt><dd>A clear path from idea to production in lanes, with exit requirements the controls enforce, so different kinds of people know what to do next and what must be true before work moves on.</dd></div><div><dt>Where it is</dt><dd>The documentation is done: the two layers, who runs the process, the lanes, demo-ready and MVP-ready, the roles and what enforces each exit today. Next, as follow-up work: the lanes and standards as policy data, a lane command, a spec-gap skill, a lane-exit contract an orchestrator can call, and the RACI change.</dd></div><div><dt>Waiting on</dt><dd class="wait">Who the security reviewers are and the escalation process (Q19), whether the lanes and the lane-aware RACI proposal stand and who owns the process (Q20), where long human waits live (Q21), and who owns the standards register (Q23).</dd></div></dl>
+  <p class="refs">DP1 done · DP2, DP3, DP6, DP7 todo · DP8, DP10 blocked</p>
+</article>
+<article class="msc st-later reveal" id="m11">
+  <div class="top"><span class="code">M11</span><span class="sbadge st-later">LATER</span></div>
+  <h3>Platform scope</h3>
+  <dl><div><dt>Value</dt><dd>The system is a full multi-agent platform, not small experimental agents. This covers the pieces beyond one agent’s code: a multi-agent template, agent identity, and how agents are invoked at runtime.</dd></div><div><dt>Where it is</dt><dd>Planned only. Google services and the connector library are covered elsewhere (M2, M3, M9).</dd></div><div><dt>Waiting on</dt><dd class="wait">How agents are invoked at runtime (Q22), which identity system applies and who owns it, and the security reviewers (Q19).</dd></div></dl>
+  <p class="refs">DP4, DP5 todo · DP11 blocked</p>
+</article>
+<article class="msc st-later reveal" id="m12">
+  <div class="top"><span class="code">M12</span><span class="sbadge st-later">LATER</span></div>
+  <h3>Pilot on real work</h3>
+  <dl><div><dt>Value</dt><dd>We learn whether the lanes and controls work on a real piece of work, not only on paper. The draft success criteria still need an owner to agree them.</dd></div><div><dt>Where it is</dt><dd>Not started. It comes after the delivery process, the platform scope and live evals.</dd></div><div><dt>Waiting on</dt><dd class="wait">M10, M11, live evals (E3), and owner agreement on the success criteria (Q19, Q20).</dd></div></dl>
+  <p class="refs">DP9 blocked</p>
+</article>
     </div>
   </div>
 </section>
@@ -188,7 +207,12 @@
         <tr><td>Pilot repositories with history</td><td>Not yet assigned</td><td>Live eval replay in M5</td></tr>
         <tr><td>Where the harness is hosted, and the webhook route (Q5)</td><td>Platform team</td><td>The durable runtime in M2</td></tr>
         <tr><td>Who sponsors a request before budget is spent (Q17)</td><td>Not yet assigned</td><td>The hosted trigger in M9</td></tr>
-        <tr><td>The names of the approved planner and reviewer skills (Q7)</td><td>AI governance team</td><td>Pinned skills for the harness’s own agents</td></tr>
+        <tr><td>Who the security-team reviewers are, and the escalation process (Q19)</td><td>Not yet assigned</td><td>Tier-3 approvals, and the pilot in M12</td></tr>
+        <tr><td>Whether the delivery lanes and the lane-aware RACI proposal stand, and who owns the delivery process (Q20)</td><td>Not yet assigned</td><td>Lane policy files in M10 and the pilot in M12</td></tr>
+        <tr><td>Whether long human waits live in the harness or in an external process orchestrator (Q21)</td><td>Not yet assigned</td><td>The lane-exit contract in M10</td></tr>
+        <tr><td>How generated agents are invoked at runtime (Q22)</td><td>Not yet assigned</td><td>The platform scope in M11</td></tr>
+        <tr><td>Who owns the standards register, and which standards apply (Q23)</td><td>Not yet assigned</td><td>The standards policy file in M10</td></tr>
+        <tr><td>The names of the approved planner and reviewer skills, and the source and provenance for new skills (Q7)</td><td>AI governance team</td><td>Pinned skills, and the spec-gap skill in M10</td></tr>
       </tbody></table></div>
   </div>
 </section>
@@ -200,6 +224,7 @@
       <h2>The last two days</h2>
     </div>
     <ul class="recent">
+      <li><time>27 November 2026</time><b>Harness and delivery process separated</b> in the docs and on this site: proposed lanes, demo-ready and MVP-ready, roles, an external process orchestrator, what enforces each exit today, platform scope and an explicit maturity statement. No policy changed.</li>
       <li><time>26 November 2026</time><b>Required coverage and quality checks</b> for generated agents, a safe first-pass scan, and a baseline comparison that is written but not yet switched on.</li>
       <li><time>26 November 2026</time><b>Agent request form</b> and an offline parser that turns a request into an untrusted draft. Anyone with repository access may ask; a draft grants nothing.</li>
       <li><time>26 November 2026</time><b>Model Armor</b> added beside Sunglasses as the input scanner. It also scans review findings and pull request comments. Tested on a fixture, not yet live.</li>

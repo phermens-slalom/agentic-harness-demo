@@ -3,18 +3,19 @@
 A static, no-build project site for first-time readers. It lives in [`site/`](../../site) and is published to
 GitHub Pages by [`.github/workflows/pages.yml`](../../.github/workflows/pages.yml).
 
-The site summarises the docs. It does not replace them. Where the two disagree, the roadmap wins, then these
+The site summarises the docs. It does not replace them. The delivery lanes and the persona section summarise
+[`DELIVERY.md`](../DELIVERY.md) and [`PERSONAS.md`](../PERSONAS.md): the lanes are a proposal and the site says so. Where the two disagree, the roadmap wins, then these
 docs, then the site. Fix the site.
 
 ## What is in `site/`
 
 | Path | What it is |
 |---|---|
-| `index.html` | The main page: vision, how it works, a merge-gate replay, architecture, safety, status and blockers, comparison, getting started, FAQ and sources |
+| `index.html` | The main page: vision, the two layers (harness and delivery lanes), a persona switcher, how it works, a merge-gate replay, architecture, safety, status and blockers, comparison, getting started, FAQ and sources |
 | `roadmap.html` | The roadmap in plain language: what each milestone is worth, the next few steps, what is waiting on people |
 | `glossary.html` | The glossary, mirroring [`GLOSSARY.md`](../GLOSSARY.md) with a filter box |
 | `assets/css/styles.css` | All styling. Light theme, system fonts, no external requests |
-| `assets/js/main.js` | Small, dependency-free: scroll reveal, tabs, copy buttons, the gate replay |
+| `assets/js/main.js` | Small, dependency-free: scroll reveal, tabs (architecture views and the persona switcher), copy buttons, the gate replay |
 | `assets/img/` | Hand-drawn SVG art: hero scene, four characters, backgrounds, favicon |
 | `.nojekyll` | Tells GitHub Pages to serve the folder as it is |
 

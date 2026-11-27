@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Agentic Harness Demo</title>
-<meta name="description" content="The golden workflow for taking an AI agent live on a cloud platform, as code: reviewable policy, a deterministic merge gate with no LLM, an issue-to-merge loop, a bootstrap CLI and evals that gate the harness itself.">
+<meta name="description" content="The harness and delivery process for a multi-agent system on a cloud platform: software controls (reviewable policy, a deterministic merge gate with no LLM, evals) under proposed lanes that take an idea to production. Designed, not yet tested on real work.">
 <meta property="og:title" content="Agentic Harness Demo">
-<meta property="og:description" content="Let AI write the code. Let plain code decide what merges. Policy, a deterministic merge gate, bootstrap CLI and evals for building agents safely.">
+<meta property="og:description" content="Let AI write the code. Let plain code decide what merges. A harness of software controls and a proposed delivery process for multi-agent systems.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#f8faff">
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
@@ -48,6 +48,7 @@
     <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
     <nav class="nav-links" id="nav-links" aria-label="Primary">
       <a href="#vision">Vision</a>
+      <a href="#delivery">Delivery</a>
       <a href="#how">Workflow</a>
       <a href="#gate">Gate</a>
       <a href="#architecture">Architecture</a>
@@ -72,11 +73,13 @@
         <span class="pill"><i></i>Early stage · not yet security reviewed</span>
         <span class="pill ok"><i></i>265 tests · 65 scored golden tasks passing</span>
         <span class="pill"><i></i>2 known gaps open · 1 main blocker (R2)</span>
+        <span class="pill"><i></i>Designed from theory · not yet tested on real work or deployed</span>
       </div>
       <h1>Let AI write the code. <span class="grad">Let plain code decide what merges.</span></h1>
-      <p class="lede">The golden workflow for taking an agent live on a cloud platform, as code: policy as reviewable data, a deterministic merge gate, an issue-to-merge loop, a staged bootstrap CLI, and evals that gate changes to the harness itself. Humans stay accountable.</p>
+      <p class="lede">The harness and delivery process for a <strong>multi-agent system</strong> on a cloud platform. The <strong>harness</strong> is the software controls: policy as reviewable data, a deterministic merge gate, evals. The <strong>delivery process</strong> is a proposed set of lanes that guides product managers, engineers, governance, security and platform from idea to production. Humans stay accountable.</p>
       <div class="cta">
         <a class="btn btn-primary" href="#start">Get started <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-ghost" href="#delivery">See the two layers</a>
         <a class="btn btn-ghost" href="#gate">Try the merge gate</a>
         <a class="btn btn-ghost" href="#architecture">See the architecture</a>
       </div>
@@ -102,8 +105,8 @@
   <div class="wrap">
     <div class="section-head reveal">
       <div class="eyebrow">Vision and purpose</div>
-      <h2>Safe speed for teams building AI agents</h2>
-      <p class="lede">Teams use this harness to build AI agents for deployment on a cloud platform. This repo is the <strong>harness</strong>: the rules, checks and approvals that let an AI coding agent do the build work safely. New to the words? Read the <a href="glossary.html">glossary</a>.</p>
+      <h2>Safe speed for teams building a multi-agent system</h2>
+      <p class="lede">This is the harness and delivery process for a full software system with a complex multi-agent core, not a place for small experimental agents. The <strong>harness</strong> is the rules, checks and approvals that let an AI coding agent do the build work safely. The <strong>delivery process</strong> is how a person gets from idea to production. New to the words? Read the <a href="glossary.html">glossary</a>.</p>
     </div>
 
     <div class="vision reveal">
@@ -136,6 +139,127 @@
       <div class="card reveal"><div class="icon mi"><svg aria-hidden="true"><use href="#i-code"/></svg></div><h3>Not a second framework</h3><p>Google ADK only. A check rejects imports of other agent frameworks.</p></div>
       <div class="card reveal"><div class="icon am"><svg aria-hidden="true"><use href="#i-send"/></svg></div><h3>Not a deployment tool</h3><p>Deployment is gated and needs explicit human approval.</p></div>
     </div>
+
+    <h3 style="margin:48px 0 0">Platform scope</h3>
+    <p style="color:var(--muted);margin-top:8px">A full system, so the offering is wider than one agent’s code. Product names stay generic.</p>
+    <div class="grid" style="margin-top:20px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))">
+      <div class="card reveal"><div class="icon cy"><svg aria-hidden="true"><use href="#i-cloud"/></svg></div><h3>Google services</h3><p>The agent framework (ADK), models and Model Armor in allowed Australian regions, and the proposed runtime, trace and audit services.</p></div>
+      <div class="card reveal"><div class="icon mi"><svg aria-hidden="true"><use href="#i-plug"/></svg></div><h3>Integrations</h3><p>A curated connector library, so agents reach other systems only through reviewed connectors (I2, not built). How agents are invoked at runtime is open (Q22).</p></div>
+      <div class="card reveal"><div class="icon mi"><svg aria-hidden="true"><use href="#i-layers"/></svg></div><h3>Orchestration</h3><p>An external process orchestrator proposed to run the journey from idea to production and its human steps. Proposed (D-17), not built.</p></div>
+      <div class="card reveal"><div class="icon"><svg aria-hidden="true"><use href="#i-users"/></svg></div><h3>Identity</h3><p>A GitHub App and workload identity for the harness, and an identity and registry entry for each agent (not built).</p></div>
+      <div class="card reveal"><div class="icon am"><svg aria-hidden="true"><use href="#i-layers"/></svg></div><h3>Adjacent technologies</h3><p>Support records, infrastructure as code, observability and scanning. Partly planned.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DELIVERY ================= -->
+<section id="delivery" class="alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Two layers</div>
+      <h2>Two layers: harness and delivery</h2>
+      <p class="lede">The <strong>harness</strong> is the software controls: the gate, tiers, guards, evals and detectors. The <strong>delivery process</strong> is the lanes a person moves through, proposed to run in an external process orchestrator. Its exit requirements are what the harness enforces, where an enforcing control exists. The lanes are a <strong>proposal</strong>: nothing in the code knows what a lane is yet.</p>
+    </div>
+
+    <div class="layers reveal" role="group" aria-label="An external process orchestrator runs the delivery process on top of the harness. Four lanes, left to right: Prototype, Verify, Harden, Operate. The harness controls apply in every lane, and GitHub enforces merges.">
+      <div class="layer-label">Orchestration <span class="chip s">Proposed (D-17)</span></div>
+      <div class="orch-bar"><b>External process orchestrator</b><span>Holds each journey as a case, routes human tasks with SLAs, and is the UI for non-engineers. It asks the harness “does this lane’s exit pass?” and “what tier, and who approves?”. It never replaces the merge gate.</span></div>
+      <div class="layer-label">Delivery process <span class="chip s">Proposed</span></div>
+      <ol class="lanes">
+        <li class="lane l-proto"><b>Prototype</b><small>frame · build in the sandbox</small><span class="exit">Exit: demo-ready</span></li>
+        <li class="lane l-verify"><b>Verify</b><small>build · verify</small><span class="exit">Exit: MVP-ready (evals pass, intended environment)</span></li>
+        <li class="lane l-harden"><b>Harden</b><small>register · provision · connect · release</small><span class="exit">Exit: security sign-off, runbooks, egress, production approval</span></li>
+        <li class="lane l-operate"><b>Operate</b><small>operate</small><span class="exit">Monitoring and the learning loop</span></li>
+      </ol>
+      <div class="layer-label">Harness <span class="chip w">Built, with fakes</span></div>
+      <div class="harness-bar"><b>Input guard</b><b>Merge gate</b><b>Risk tiers</b><b>Residency</b><b>Secret handling</b><span>These apply in every lane. A lane never switches a control off. GitHub enforces merges (D-03, R1 not built).</span></div>
+    </div>
+
+    <div class="grid g2 reveal" style="margin-top:28px">
+      <div class="note info"><strong>Demo-ready</strong> is the Prototype exit: the agent runs in the sandbox against synthetic data, works through the main cases of the drafted golden data set, and the hypotheses are visible. A recorded demo is the evidence. It is not secure, reviewed or connected to real systems.</div>
+      <div class="note info"><strong>MVP-ready</strong> is the Verify exit: golden data set and evals pass with no regression, coverage and quality are met, the review checklist is clean, and the agents meet their success criteria in the intended non-production environment, not only locally. It starts Harden, where formal security work happens (proposed).</div>
+    </div>
+
+    <h3 style="margin:44px 0 0">What enforces each exit today</h3>
+    <p style="color:var(--muted);margin-top:8px"><strong>Built</strong> means the check or rule exists and is tested. It is not yet enforced on real pull requests until the gate’s decision is published as a required check (D-03, R1, blocked by R2). Where nothing enforces an exit, it says <strong>Not built</strong> and names the roadmap item. Nothing here claims more than the code does.</p>
+    <div class="table-scroll reveal"><table class="mini">
+      <thead><tr><th>Lane</th><th>Exit requirement</th><th>Enforced today by</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Prototype</td><td>Mission Brief done</td><td>Nothing checks a finished brief. The template brief starts as a placeholder. The request parser lists missing fields offline (I1).</td><td><span class="chip p">Not built</span> I3, W3</td></tr>
+        <tr><td>Prototype</td><td>Hypotheses written as eval criteria, and visible in the demo</td><td>A guidance field in the brief only</td><td><span class="chip p">Not built</span> I3, I5</td></tr>
+        <tr><td>Prototype</td><td>Golden data set drafted</td><td>The template ships a starter dataset. Nothing checks it was extended.</td><td><span class="chip s">Partly</span> DP2</td></tr>
+        <tr><td>Prototype</td><td>Demo runs in the sandbox on synthetic data. A recorded demo is the evidence.</td><td>None. The sandbox builder is a stub, there is no connector library, and nothing records a demo.</td><td><span class="chip p">Not built</span> D1, I2, DP2</td></tr>
+        <tr><td>Verify</td><td>Golden data set and evals pass, no regression</td><td><code>evals_no_regression</code> is a required check and the gate fails closed. The job is hard-coded to fail, so <strong>today the check always fails and no agent can meet this exit until E3 wires it</strong>. That is fail-closed by design, not a gap in the gate. The baseline comparator is complete but no job calls it.</td><td><span class="chip s">Partly</span> E3, E1</td></tr>
+        <tr><td>Verify</td><td>Coverage and quality met</td><td><code>coverage</code> (80% starter) and <code>quality</code> required checks</td><td><span class="chip w">Built</span></td></tr>
+        <tr><td>Verify</td><td>Review checklist clean</td><td>The review checklist and the reviewer role. The reviewer sees file names, not the diff.</td><td><span class="chip s">Partly</span> R7</td></tr>
+        <tr><td>Verify</td><td>Adversarial review</td><td>One reviewer role. No second model family and no measure of what it catches.</td><td><span class="chip p">Not built</span> I5, E2</td></tr>
+        <tr><td>Verify</td><td>Agents meet their success criteria in the intended non-production environment</td><td>None. No environment is chosen for agents and live evals do not exist.</td><td><span class="chip p">Not built</span> E3, W1, Q12</td></tr>
+        <tr><td>Harden</td><td>Security sign-off</td><td>Tier 3 rules need the security role for control files, IAM config, sensitive domains and steering files. A lane-level sign-off is not a gate rule.</td><td><span class="chip s">Partly</span> DP2, Q19</td></tr>
+        <tr><td>Harden</td><td>Runbooks</td><td>A review checklist item. The template runbook is a placeholder.</td><td><span class="chip s">Partly</span> W3</td></tr>
+        <tr><td>Harden</td><td>Egress approved</td><td>New hosts found in diffs add approvers (regex-based, approvers only). The spec’s declared hosts are not read at run time yet, so every non-allowlisted host counts as undeclared. Network-level egress is not built.</td><td><span class="chip s">Partly</span> R2, R6, W1</td></tr>
+        <tr><td>Harden</td><td>Production approval</td><td>Production-deploy paths are tier 3 and need the product owner and architecture roles</td><td><span class="chip w">Built</span></td></tr>
+      </tbody></table></div>
+
+    <div class="grid g2 reveal" style="margin-top:32px">
+      <div class="card"><h3>A proposal: formal security review moves to Harden</h3><p>The feedback is that formal security work should happen once an MVP is ready. That would change policy, so it is a proposal with no change to any tier or approver. It comes with compensating controls: synthetic data by default in early lanes (approved non-production data in Verify), new-capability approvers in every lane, security informed when work enters Prototype, and escalations still going to security. It needs owner sign-off and an eval (DP8, D-16).</p></div>
+      <div class="card"><h3>A proposed lane-aware RACI (D-16)</h3><p>Prototype and Verify: the application team is responsible and accountable, with central teams consulted. Harden, release and any tier-3 change keep central approval. The lane would come from a record held outside the agent repo that no AI step can set. Proposed, owner unassigned, not built.</p></div>
+    </div>
+    <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DELIVERY.md">docs/DELIVERY.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md">docs/DECISIONS.md</a> (D-16, D-17).</p>
+  </div>
+</section>
+
+<!-- ================= YOUR PATH ================= -->
+<section id="path">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Your path</div>
+      <h2>Pick your role</h2>
+      <p class="lede">One section per policy role: which lanes you work in, how you come in, and what you raise or approve. Approvals are taken from the policy files as they are today. People are described by role only. Anyone with repository access may raise an agent request; the requester may or may not be the product manager, and a request grants nothing.</p>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Personas">
+      <button class="tab" role="tab" id="t-pm" aria-controls="p-pm" aria-selected="true">Product manager</button>
+      <button class="tab" role="tab" id="t-eng" aria-controls="p-eng" aria-selected="false" tabindex="-1">Application engineer</button>
+      <button class="tab" role="tab" id="t-gov" aria-controls="p-gov" aria-selected="false" tabindex="-1">AI governance</button>
+      <button class="tab" role="tab" id="t-sec" aria-controls="p-sec" aria-selected="false" tabindex="-1">Security</button>
+      <button class="tab" role="tab" id="t-plat" aria-controls="p-plat" aria-selected="false" tabindex="-1">Platform</button>
+      <button class="tab" role="tab" id="t-arch" aria-controls="p-arch" aria-selected="false" tabindex="-1">Architecture</button>
+    </div>
+
+    <div class="panel persona" role="tabpanel" id="p-pm" aria-labelledby="t-pm">
+      <div><h4>Lanes</h4><p>Prototype (leads), Verify (consulted), Harden (production approval).</p></div>
+      <div><h4>Comes in through</h4><p>The orchestrator (proposed), or the agent request form today. A planned intake agent would ask the questions (I3, not built).</p></div>
+      <div><h4>Raises and approves</h4><p>Raises the request, the Mission Brief and the hypotheses to test. The product owner role approves the frame and release stages and, with architecture, production-deploy changes.</p></div>
+    </div>
+    <div class="panel persona" role="tabpanel" id="p-eng" aria-labelledby="t-eng" hidden>
+      <div><h4>Lanes</h4><p>Prototype, Verify, and Harden as the one who raises the work.</p></div>
+      <div><h4>Comes in through</h4><p>The <code>agentic-bootstrap</code> CLI, the template and agent-repo pull requests.</p></div>
+      <div><h4>Raises and approves</h4><p>Raises agent code, evals, the golden data set, runbooks and the cloud PRs. The application team is a base approver on every agent PR and approves the build and verify stages.</p></div>
+    </div>
+    <div class="panel persona" role="tabpanel" id="p-gov" aria-labelledby="t-gov" hidden>
+      <div><h4>Lanes</h4><p>Verify (review), Harden (review and sign-off), Operate (support and the learning loop).</p></div>
+      <div><h4>Comes in through</h4><p>Agent-repo pull requests and the review checklist.</p></div>
+      <div><h4>Raises and approves</h4><p>Raises changes to the template, checklist and golden workflow. A base approver on every agent PR. With security, approves changes to the files that control the gate (tier 3).</p></div>
+    </div>
+    <div class="panel persona" role="tabpanel" id="p-sec" aria-labelledby="t-sec" hidden>
+      <div><h4>Lanes</h4><p>Harden, if the lane proposal is agreed. Informed when work enters Prototype. The destination of anything the gate escalates. Today also the frame, register, provision and connect stages.</p></div>
+      <div><h4>Comes in through</h4><p>Pull requests that touch tier 3 paths, and exceptions that escalate to it.</p></div>
+      <div><h4>Raises and approves</h4><p>Approves control files, privileged IAM config, sensitive domains and agent steering files. The security reviewers and the escalation process are not yet known (Q19).</p></div>
+    </div>
+    <div class="panel persona" role="tabpanel" id="p-plat" aria-labelledby="t-plat" hidden>
+      <div><h4>Lanes</h4><p>Harden (provision and connect).</p></div>
+      <div><h4>Comes in through</h4><p>The cloud-project PRs that <code>plan</code> lists, and Terraform changes.</p></div>
+      <div><h4>Raises and approves</h4><p>Raises hosting, ingress and landing-zone decisions. Approves the provision stage and Terraform changes (tier 3).</p></div>
+    </div>
+
+    <div class="panel persona" role="tabpanel" id="p-arch" aria-labelledby="t-arch" hidden>
+      <div><h4>Lanes</h4><p>Prototype and Verify (consulted, in the proposal), Harden (architecture review before production).</p></div>
+      <div><h4>Comes in through</h4><p>Agent-repo pull requests and the release review.</p></div>
+      <div><h4>Raises and approves</h4><p>Raises design concerns on the brief and the multi-agent shape. Approves the frame and release stages and, with the product owner, production-deploy changes (tier 3).</p></div>
+    </div>
+
+    <div class="note reveal" style="margin-top:28px"><strong>How you come in.</strong> The orchestrator is the proposed primary entry point for non-engineers (D-17, not built). The request form and the bootstrap CLI remain. A <code>lane status</code> and <code>lane next</code> command is proposed as an engineer convenience (DP3, not built) and would read the same lane-exit contract. An orchestrator approval never replaces the merge gate or a GitHub review. <strong>Ownership of the delivery process is open (Q20).</strong></div>
+    <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/PERSONAS.md">docs/PERSONAS.md</a>. The mapping of product manager and application engineer to policy roles is to be validated.</p>
   </div>
 </section>
 
@@ -478,6 +602,7 @@ agent repo
       <h2>What is built, what is a stub, what is blocked</h2>
       <p class="lede">The <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/ROADMAP.md">roadmap</a> is the source of truth. This snapshot is from 26 November 2026: 265 tests and 65 scored golden tasks pass, with two documented gaps in the input guard still open.</p>
     </div>
+    <div class="note info reveal" style="margin-bottom:28px"><strong>Maturity.</strong> This design comes from theory, documentation and experience. It has not yet been tested on real work or deployed. The code runs against fakes. The security team members and the escalation process are not yet known (Q19), and the delivery lanes are a proposal that still needs an owner (Q20).</div>
     <div class="status">
       <div class="card w reveal"><h3><span class="chip w">Working</span> built and tested</h3><ul>
         <li><b>Policy files</b> and their strict validation</li>
@@ -500,7 +625,8 @@ agent repo
         <li><b>Durable ADK 2.0 workflow</b>, webhook ingress and queue (R3, R4)</li>
         <li><b>Traces and audit log</b>, live evals (O1, E1)</li>
         <li><b>Generated-project preflight</b> command and acceptance test (H2)</li>
-        <li><b>Agent intake</b>: connector library, intake agent, authoring and hosted trigger (I2 to I7)</li></ul></div>
+        <li><b>Agent intake</b>: connector library, intake agent, authoring and hosted trigger (I2 to I7)</li>
+        <li><b>Delivery lanes</b> as policy data, a lane CLI and a lane-exit contract, a multi-agent template, agent identity and a runtime invocation contract (DP2 to DP5, DP10, DP11)</li></ul></div>
     </div>
 
     <h3 style="margin:48px 0 0">Blockers</h3>
@@ -510,12 +636,14 @@ agent repo
       <div class="blk"><span class="id">D1</span><div><b>Copilot residency in Australia</b><span>GitHub’s <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/github-copilot-with-data-residency">data residency page</a> lists Copilot in the United States and European Union only. It could block Copilot as the default builder for classified repos. <em>Needs: a security team decision on whether Copilot is acceptable for each data classification, and GitHub’s plan for Australia (Q3).</em></span></div></div>
       <div class="blk"><span class="id">E3</span><div><b>Live and holdout evals</b><span>No accepted baseline, no approved evaluation project, region or identity, and no reviewed design to keep holdout cases hidden from PR code. <em>Needs: AI governance baseline approval, and security and platform teams for Q18.</em></span></div></div>
       <div class="blk"><span class="id">I7</span><div><b>Hosted agent intake</b><span>Waits on R2, the durable runtime (R3, R4), the hosting route (Q5) and a sponsorship rule for requests (Q17). The offline parts can go ahead. <em>Needs: platform team and an owner for Q17.</em></span></div></div>
+      <div class="blk"><span class="id">Q19</span><div><b>Security reviewers and escalation</b><span>Who the security-team reviewers are, and the escalation process, are not known. This blocks tier-3 approvals and the D-02 sign-off. <em>Needs: an owner. Unassigned.</em></span></div></div>
+      <div class="blk"><span class="id">Q20</span><div><b>Delivery lanes and ownership</b><span>Whether the lanes and the lane-aware RACI proposal (D-16) stand, and who owns the delivery process. Q21 (where long human waits live), Q22 (how agents are invoked at runtime) and Q23 (who owns the standards register) are open too. <em>Needs: an owner. Unassigned.</em></span></div></div>
       <div class="blk"><span class="id">W2</span><div><b>Template from the existing reference template</b><span>No access yet. <em>Needs: AI governance team.</em></span></div></div>
       <div class="blk"><span class="id">E1</span><div><b>Live eval replay</b><span>No pilot repositories or history yet. <em>Needs: pilot repos.</em></span></div></div>
     </div>
 
     <h3 style="margin:48px 0 0">Milestones</h3>
-    <p style="color:var(--muted);margin-top:8px">Ten milestones. The coloured edge shows the state: green done, blue in progress, cyan next, red waiting on a decision, grey later.</p>
+    <p style="color:var(--muted);margin-top:8px">Thirteen milestones. The coloured edge shows the state: green done, blue in progress, cyan next, red waiting on a decision, grey later.</p>
     <div class="roadmap">
       <div class="ms st-done"><b>M0</b><span>Make the gate trustworthy</span><small>Complete</small></div>
       <div class="ms st-blocked"><b>M1</b><span>Real GitHub, enforced</span><small>S4 done · R2 blocked</small></div>
@@ -527,9 +655,12 @@ agent repo
       <div class="ms st-now"><b>M7</b><span>Hygiene</span><small>H1 in progress</small></div>
       <div class="ms st-now"><b>M8</b><span>Agent ready for pilot</span><small>A2 done · H2 next · E3 open</small></div>
       <div class="ms st-next"><b>M9</b><span>Agent intake and authoring</span><small>I1 done · I2 next · I7 blocked</small></div>
+      <div class="ms st-blocked"><b>M10</b><span>Delivery process</span><small>DP1 done · rest wait on Q19–Q23</small></div>
+      <div class="ms st-later"><b>M11</b><span>Platform scope</span><small>Planned · DP11 waits on Q22</small></div>
+      <div class="ms st-later"><b>M12</b><span>Pilot on real work</span><small>Needs M10, M11 and E3</small></div>
     </div>
     <div class="btn-row"><a class="btn btn-primary" href="roadmap.html">See the roadmap: what each milestone is worth <svg aria-hidden="true"><use href="#i-arrow"/></svg></a><a class="btn btn-ghost" href="glossary.html">Glossary</a></div>
-    <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CHANGELOG.md">docs/CHANGELOG.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/OPEN_QUESTIONS.md">docs/OPEN_QUESTIONS.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md">docs/DECISIONS.md</a> (fifteen decisions, D-01 to D-15). GitHub’s statements were read on <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-via-the-api">docs.github.com</a> on 26 November 2026.</p>
+    <p class="src">Source: <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/CHANGELOG.md">docs/CHANGELOG.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/OPEN_QUESTIONS.md">docs/OPEN_QUESTIONS.md</a>, <a href="https://github.com/phermens-slalom/agentic-harness-demo/blob/main/docs/DECISIONS.md">docs/DECISIONS.md</a> (seventeen decisions, D-01 to D-17). GitHub’s statements were read on <a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-via-the-api">docs.github.com</a> on 26 November 2026.</p>
   </div>
 </section>
 

@@ -148,7 +148,8 @@ class SiteTests(unittest.TestCase):
         page = (SITE / "roadmap.html").read_text(encoding="utf-8")
         roadmap = (ROOT / "docs/ROADMAP.md").read_text(encoding="utf-8")
         codes = re.findall(r"^\| \*\*(M\d+)\*\* \|", roadmap, re.MULTILINE)
-        self.assertEqual(len(codes), 10)
+        # An exact count: it must match the rows in "Milestones at a glance" in docs/ROADMAP.md.
+        self.assertEqual(len(codes), 13)
         for code in codes:
             self.assertIn(f'id="{code.lower()}"', page, f"roadmap page has no card for {code}")
 

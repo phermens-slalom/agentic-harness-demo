@@ -6,6 +6,33 @@ The roadmap work log has the detail and wins if they disagree.
 The package version in `pyproject.toml` is `0.2.0`. TODO: UNCONFIRMED release and tagging practice. Tagged,
 attested releases are planned (S5).
 
+## 2026-11-27
+
+- **Harness and delivery process separated (docs and site only).** Feedback from a stakeholder feedback session
+  was that the harness was "small in thinking". The harness stays as the software controls. A new
+  [Delivery process](DELIVERY.md) page proposes lanes (Prototype, Verify, Harden, Operate) with exit
+  requirements, maps them to the eight golden stages, and says what enforces each exit today or marks it
+  **Partly built** or **Not built** with a roadmap ID. **Demo-ready** (Prototype exit) and **MVP-ready** (Verify
+  exit) are separate bars, and MVP-ready starts Harden. The deterministic controls apply in every lane. "Built"
+  means the check exists and is tested; nothing is enforced on real PRs until R1.
+- **Who runs the process.** An external process orchestrator is proposed to run the delivery process and its
+  human steps, with the harness supplying deterministic evidence and decisions and GitHub enforcing merges
+  (D-17). W5 now refers to an external process orchestrator.
+- **Personas.** [Personas](PERSONAS.md) has one section per policy role, a note on the requester, and approvals
+  taken from `policy/` as it is.
+- **Platform scope and maturity.** [Vision](VISION.md) now describes a harness and delivery process for a
+  multi-agent system, lists Google services, integrations, orchestration, identity and adjacent technologies, and
+  states that the design is untested on real work and not deployed.
+- **Reliability and standards.** DELIVERY.md brings together CI/CD checks, developer-agent skills (including a
+  proposed spec-gap skill) and the adversarial reviewer, with built and planned parts. Its standards tables are
+  a traceability structure only. Standards content is `TODO(owner)`, **TODO: UNCONFIRMED** (Q23).
+- **Proposals, not policy.** D-16 (a lane-aware RACI, with compensating controls and a trusted lane source) and
+  D-17 are Proposed, owner unassigned, Built: No. `policy/raci.yaml` and `policy/risk_tiers.yaml` did not change.
+  New open questions Q19 to Q23. New milestones M10 (delivery process), M11 (platform scope) and M12 (pilot on
+  real work) with items DP1 to DP11; DP1 is this change.
+- **Site.** New "Two layers" and "Your path" sections (the orchestrator is in the diagram), a reframed hero and
+  vision, a maturity statement in the status section, and cards for M10 to M12. The gate replay is unchanged.
+
 ## 2026-11-26
 
 - **Site refreshed.** The site now has a roadmap page (what each milestone is worth, the next few steps, what is
